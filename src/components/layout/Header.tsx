@@ -1,21 +1,42 @@
-import {Container, Navbar, Nav, NavDropdown} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 
 const Header = () => {
+
+    const signedIn = true;
+
     return (
-        <Navbar>
-            <Container>
-                <Navbar.Brand href="/">Triplog</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Nav className="me-auto">
-                    <Nav.Link href="/">Home</Nav.Link>
-                </Nav>
-                <Nav>
-                    <NavDropdown title="Marc" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#">Logout</NavDropdown.Item>
-                    </NavDropdown>
-                </Nav>
-            </Container>
-        </Navbar>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <div className="container">
+                <a className="navbar-brand" href="#">Triplog</a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="mainNavbar">
+                    <ul className="navbar-nav me-auto">
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" aria-current="page">Home</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" aria-current="page">Blog</Link>
+                        </li>
+                    </ul>
+                    <ul className="navbar-nav">
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                Marc
+                            </a>
+                            <ul className="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+                                <li><Link to='/' className="dropdown-item" aira-current="page">Logout</Link></li>
+                            </ul>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     );
 }
 
