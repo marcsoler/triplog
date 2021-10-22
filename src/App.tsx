@@ -1,19 +1,24 @@
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 import './App.scss';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
+import Blog from './components/Blog';
+
+
 function App() {
     return (
         <BrowserRouter>
             <div className="App">
                 <Header/>
-                <div className="container">
-                    <h1>Triplog</h1>
-                </div>
+                <main>
+                    <Switch>
+                        <Route exact path='/' component={Blog} />
+                    </Switch>
+                </main>
                 <Footer/>
             </div>
         </BrowserRouter>

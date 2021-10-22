@@ -1,8 +1,8 @@
 import {Link} from 'react-router-dom';
+import SingedInLinks from './navigation/SingedInLinks';
+import SignedOutLinks from './navigation/SignedOutLinks';
 
 const Header = () => {
-
-    const signedIn = true;
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,16 +23,8 @@ const Header = () => {
                         </li>
                     </ul>
                     <ul className="navbar-nav">
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                Marc
-                            </a>
-                            <ul className="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                                <li><Link to='/' className="dropdown-item" aira-current="page">Logout</Link></li>
-                            </ul>
-
-                        </li>
+                        <SingedInLinks />
+                        <SignedOutLinks />
                     </ul>
                 </div>
             </div>
