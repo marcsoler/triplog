@@ -1,5 +1,6 @@
-import Post from './layout/blog/Post';
-import PostList from './layout/blog/PostList';
+import Post from './Post';
+import PostList from './PostList';
+import Map from './Map';
 
 const Blog = () => {
     return (
@@ -15,7 +16,7 @@ const Blog = () => {
                 </div>
             </div>
             <div className="map">
-                <h3>Map comes here</h3>
+                <Map />
             </div>
         </>
     )

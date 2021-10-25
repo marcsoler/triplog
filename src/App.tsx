@@ -6,7 +6,7 @@ import './App.scss';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
-import Blog from './components/Blog';
+import Blog from './components/blog/Blog';
 
 
 function App() {
