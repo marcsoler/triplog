@@ -2,6 +2,7 @@ import {useState} from 'react';
 
 const PostList = () => {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [posts, setPosts] = useState([
         {
             id: 1,
@@ -26,7 +27,7 @@ const PostList = () => {
     return (
         <ul>
             {posts.map((post) => {
-                return(<li>{post.title}</li>)
+                return(<li key={post.id}>{post.title}</li>)
             })}
         </ul>
     )

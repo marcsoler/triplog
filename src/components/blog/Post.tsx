@@ -1,4 +1,4 @@
-const Post = () => {
+const Post = (props: any) => {
   return (
       <article>
           <h2>A new journey begins!</h2>

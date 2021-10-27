@@ -8,6 +8,10 @@ import Footer from './components/layout/Footer';
 
 import Blog from './components/blog/Blog';
 
+//Auth:
+import SignIn from './components/auth/SignIn';
+import SignUp from './components/auth/SignUp';
+
 
 function App() {
     return (
@@ -17,6 +21,9 @@ function App() {
                 <main>
                     <Switch>
                         <Route exact path='/' component={Blog} />
+                        <Route path='/post/:id' component={Blog} />
+                        <Route path='/login' component={SignIn} />
+                        <Route path='/register' component={SignUp} />
                     </Switch>
                 </main>
                 <Footer/>
