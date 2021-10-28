@@ -1,35 +1,15 @@
-import {useState} from 'react';
+import PostSummary from './PostSummary';
 
-const PostList = () => {
+const PostList = ({posts}: any) => {
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [posts, setPosts] = useState([
-        {
-            id: 1,
-            title: 'Title 1',
-            body: 'Zetas unda in grandis brema!',
-            created_at: '2021-10-18 12:00:00',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            body: 'Urbss accelerare! Aww, grace!',
-            created_at: '2021-10-18 12:00:00',
-        },
-        {
-            id: 3,
-            title: 'Title 3',
-            body: 'Lorem ipsum',
-            created_at: '2021-10-18 12:00:00',
-        },
-    ]);
+    console.log(posts);
 
     return (
-        <ul>
-            {posts.map((post) => {
-                return(<li key={post.id}>{post.title}</li>)
+        <div className="list-group">
+            {posts && posts.map((post: any) => {
+                return(<PostSummary key={post.id} post={post} />)
             })}
-        </ul>
+        </div>
     )
 }
 
