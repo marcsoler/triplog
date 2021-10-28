@@ -1,13 +1,14 @@
 import Post from './Post';
 import PostList from './PostList';
 import Map from './Map';
+import {RouteComponentProps} from 'react-router-dom';
 
-type BlogProps = {
-    id: number,
+type BlogParams = {
+    id?: string,
 }
 
-const Blog = (props: any) => {
-    const id = props.match.params.id;
+const Blog = ({match}: RouteComponentProps<BlogParams>) => {
+    const id = match.params.id ? match.params.id : 1; //Todo: get latest post if none defined
     console.log('ID: #' + id);
     return (
         <>

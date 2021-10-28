@@ -18,28 +18,29 @@ const SignUp = () => {
         <div className="row justify-content-center">
             <div className="col-sm-12 col-md-6 col-lg-4">
                 <form onSubmit={handleSubmit}>
-                    <h1 className="h3 mb-3 fw-normal">Sign Up</h1>
-                    <div className="form-floating">
-                        <input type="firstname" className="form-control" id="floatingInput" placeholder="First name"
-                               onChange={(e) => setFirstname(e.target.value)}/>
-                        <label htmlFor="floatingInput">First name</label>
+
+                    <div className="row g-3">
+                        <div className="col-sm-6">
+                            <label htmlFor="firstname" className="form-label">First name</label>
+                            <input type="text" className="form-control" id="firstname" required onChange={(e) => setFirstname(e.target.value)}/>
+                        </div>
+                        <div className="col-sm-6">
+                            <label htmlFor="lastname" className="form-label">Last name</label>
+                            <input type="text" className="form-control" id="lastname" required onChange={(e) => setLastname(e.target.value)}/>
+                        </div>
+                        <div className="col-12">
+                            <label htmlFor="email" className="form-label">Email</label>
+                            <input type="email" className="form-control" id="email" placeholder="you@example.com" onChange={(e) => setEmail(e.target.value)}/>
+                        </div>
+                        <div className="col-12">
+                            <label htmlFor="password" className="form-label">Password</label>
+                            <input type="password" className="form-control" id="password"  onChange={(e) => setPassword(e.target.value)}/>
+                        </div>
                     </div>
-                    <div className="form-floating">
-                        <input type="lastname" className="form-control" id="floatingInput" placeholder="Last name"
-                               onChange={(e) => setLastname(e.target.value)}/>
-                        <label htmlFor="floatingInput">Last name</label>
-                    </div>
-                    <div className="form-floating">
-                        <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"
-                               onChange={(e) => setEmail(e.target.value)}/>
-                        <label htmlFor="floatingInput">Email address</label>
-                    </div>
-                    <div className="form-floating">
-                        <input type="password" className="form-control" id="floatingPassword" placeholder="Password"
-                               onChange={(e) => setPassword(e.target.value)}/>
-                        <label htmlFor="floatingPassword">Password</label>
-                    </div>
-                    <button className="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+
+                    <hr className="my-4" />
+
+                    <button className="w-100 btn btn-primary btn-lg" type="submit">Register</button>
                 </form>
             </div>
         </div>

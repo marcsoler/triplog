@@ -1,5 +1,7 @@
 import {FormEvent, useState} from 'react';
 
+import './SignIn.scss';
+
 
 const SignIn = () => {
 
@@ -9,13 +11,13 @@ const SignIn = () => {
 
     const handleSubmit = (e: FormEvent) => {
       e.preventDefault();
-      console.log(e);
+      console.log(email, password);
     }
 
     return (
         <div className="row justify-content-center">
             <div className="col-sm-12 col-md-6 col-lg-4">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="form-signin">
                     <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
                     <div className="form-floating">
                         <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"
@@ -27,6 +29,7 @@ const SignIn = () => {
                                onChange={(e) => setPassword(e.target.value)}/>
                         <label htmlFor="floatingPassword">Password</label>
                     </div>
+                    <hr className="my-4" />
                     <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
                 </form>
             </div>
