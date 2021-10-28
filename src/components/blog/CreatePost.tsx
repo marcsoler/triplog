@@ -1,14 +1,19 @@
 import {FormEvent, useState} from 'react';
+import {connect} from 'react-redux';
+import { createPost} from '../../store/actions/postActions';
 
-const CreatePost = () => {
+const CreatePost = (props: any) => {
 
-    const [title, setTitle] = useState<string|null>(null);
-    const [content, setContent] = useState<string|null>(null);
+    const [title, setTitle] = useState<string | null>(null);
+    const [content, setContent] = useState<string | null>(null);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
 
-        console.log(title, content);
+        props.createPost({
+            title,
+            content,
+        });
 
     }
 
@@ -24,15 +29,17 @@ const CreatePost = () => {
                     <div className="row g-3">
                         <div className="col-12">
                             <label htmlFor="title" className="form-label">Title</label>
-                            <input type="text" className="form-control" id="title" required onChange={(e) => setTitle(e.target.value)}/>
+                            <input type="text" className="form-control" id="title" required
+                                   onChange={(e) => setTitle(e.target.value)}/>
                         </div>
                         <div className="col-12">
                             <label htmlFor="content" className="form-label">Content</label>
-                            <textarea id="content" className="form-control" onChange={(e) => setContent(e.target.value)}/>
+                            <textarea id="content" className="form-control"
+                                      onChange={(e) => setContent(e.target.value)}/>
                         </div>
                     </div>
 
-                    <hr className="my-4" />
+                    <hr className="my-4"/>
 
                     <button className="w-100 btn btn-primary btn-lg" type="submit">Post</button>
 
@@ -42,4 +49,10 @@ const CreatePost = () => {
     )
 }
 
-export default CreatePost;
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        createPost: (post: any) => dispatch(createPost(post))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(CreatePost);
