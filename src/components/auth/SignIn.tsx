@@ -17,8 +17,8 @@ const SignIn = () => {
     return (
         <div className="row justify-content-center">
             <div className="col-sm-12 col-md-6 col-lg-4">
+                <h3>Sign in</h3>
                 <form onSubmit={handleSubmit} className="form-signin">
-                    <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
                     <div className="form-floating">
                         <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"
                                onChange={(e) => setEmail(e.target.value)}/>

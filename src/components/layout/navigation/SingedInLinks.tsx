@@ -7,9 +7,9 @@ const SingedInLinks = () => {
                 Marc
             </NavLink>
             <ul className="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                <li><NavLink className="dropdown-item" to='/create'>New Article</NavLink></li>
+                <li><NavLink className="dropdown-item" to='/dashboard/create'>New Post</NavLink></li>
                 <hr className="dropdown-divider" />
-                <li><NavLink className="dropdown-item" to='/' aira-current="page">Logout</NavLink></li>
+                <li><NavLink className="dropdown-item" to='/logout' aira-current="page">Logout</NavLink></li>
             </ul>
 
         </li>
