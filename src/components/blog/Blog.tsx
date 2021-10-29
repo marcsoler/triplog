@@ -1,15 +1,8 @@
 import Post from './Post';
 import PostList from './PostList';
 import Map from './Map';
-import {RouteComponentProps} from 'react-router-dom';
 import {connect} from 'react-redux';
 
-type BlogParams = {
-    match?: {
-        id?: string
-    }
-
-}
 
 const Blog = (props: any) => {
     console.log(props);
@@ -37,11 +30,5 @@ const Blog = (props: any) => {
     )
 }
 
-// @ts-ignore
-const mapStateToProps = (state) => {
-  return {
-      posts: state.post.posts
-  }
-}
 
-export default connect(mapStateToProps)(Blog);
+export default Blog;
