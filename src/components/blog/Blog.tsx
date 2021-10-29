@@ -1,25 +1,22 @@
+import {FC} from 'react';
+
 import Post from './Post';
 import PostList from './PostList';
 import Map from './Map';
-import {connect} from 'react-redux';
 
 
-const Blog = (props: any) => {
-    console.log(props);
-    const id = props.match.params.id ? props.match.params.id : 1; //Todo: get latest post if none defined
-
-
+const Blog: FC = () => {
 
     return (
         <>
             <div className="container">
                 <div className="row">
                     <article className="col-8">
-                        <Post id={id}/>
+                        <Post />
                     </article>
                     <aside className="col-4">
                         <h4>Recent posts</h4>
-                        <PostList posts={props.posts}/>
+                        <PostList />
                     </aside>
                 </div>
             </div>

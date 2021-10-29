@@ -8,7 +8,7 @@ interface Props extends RouteProps {
     component: any;
 }
 
-const PublicRouter: FC<any> = ({ component: Component, ...rest}) => {
+const PublicRoute: FC<any> = ({ component: Component, ...rest}) => {
   const { authenticated } = useSelector((state: RootState) => state.auth);
 
   return(
@@ -17,4 +17,4 @@ const PublicRouter: FC<any> = ({ component: Component, ...rest}) => {
 
 }
 
-export default PublicRouter;
+export default PublicRoute;

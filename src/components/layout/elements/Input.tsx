@@ -1,5 +1,4 @@
 import {FC, InputHTMLAttributes} from 'react';
-import {auto} from '@popperjs/core';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement>{
     label: string;
@@ -7,9 +6,9 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement>{
 
 const Input: FC<InputProps> = ({ type = 'text', placeholder, value, name, onChange, label}) => {
     return(
-        <div className="col-auto">
-            <label htmlFor="{name}">{label}</label>
-            <input type="{type}" placeholder={placeholder} value={value} name={name} id={name} onChange={onChange} required />
+        <div className="col">
+            <label htmlFor={name} className="form-label">{label}</label>
+            <input type={type} placeholder={placeholder} value={value} name={name} id={name} onChange={onChange} className="form-control" required />
         </div>
     )
 }

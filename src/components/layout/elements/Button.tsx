@@ -5,9 +5,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     className?: string;
 }
 
-const Button: FC<ButtonProps> = ({text, className, onClick, type, disabled}) => {
+const Button: FC<ButtonProps> = ({text, className = 'btn-primary', onClick, type, disabled}) => {
     return (
-        <button type={type} className={`b ${className}`} onClick={onClick} disabled={disabled}>
+        <button type={type} className={`btn ${className}`} onClick={onClick} disabled={disabled}>
             {text}
         </button>
     )

@@ -2,7 +2,7 @@ import {FC} from 'react';
 
 interface AlertProps {
     message: string;
-    type: 'primary' | 'secondary' | 'success' | 'alert' | 'warning' | 'info' | 'light' | 'dark';
+    type: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
 }
 
 const Alert: FC<AlertProps> = ({ message, type = 'primary'}) => {
