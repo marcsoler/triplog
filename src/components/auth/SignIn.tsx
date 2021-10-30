@@ -17,6 +17,7 @@ const SignIn: FC = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    // @ts-ignore
     const {error} = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {

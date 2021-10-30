@@ -8,11 +8,11 @@ interface Props extends RouteProps {
     component: any;
 }
 
-const PublicRoute: FC<any> = ({ component: Component, ...rest}) => {
+const PublicRoute: FC<Props> = ({ component: Component, ...rest}) => {
   const { authenticated } = useSelector((state: RootState) => state.auth);
 
   return(
-      <Route {...rest} render={props => !authenticated ? <Component {...props} /> : <Redirect to='/'  /> } />
+      <Route {...rest} render={props => <Component {...props} /> } />
   )
 
 }
