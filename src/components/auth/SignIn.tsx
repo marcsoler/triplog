@@ -1,36 +1,62 @@
-import {FormEvent, useState} from 'react';
+import {FC, FormEvent, useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {Link} from 'react-router-dom';
 
-import './SignIn.scss';
+import Input from '../layout/elements/Input';
+import Button from '../layout/elements/Button';
+
+import {signin, setError} from '../../store/actions/authActions';
+
+import {RootState} from '../../store';
+import Alert from '../layout/elements/Alert';
 
 
-const SignIn = () => {
+const SignIn: FC = () => {
 
-    const [email, setEmail] = useState<string | null>(null);
-    const [password, setPassword] = useState<string | null>(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+    // @ts-ignore
+    const {error} = useSelector((state: RootState) => state.auth);
+
+    useEffect(() => {
+        return () => {
+            if (error) {
+                dispatch(setError(''));
+            }
+        }
+    }, [error, dispatch])
 
 
     const handleSubmit = (e: FormEvent) => {
-      e.preventDefault();
-      console.log(email, password);
+        e.preventDefault();
+        setLoading(true);
+        dispatch(signin({email, password}, () => setLoading(false)));
+        console.log('yep...');
     }
 
     return (
         <div className="row justify-content-center">
             <div className="col-sm-12 col-md-6 col-lg-4">
-                <h3>Sign in</h3>
-                <form onSubmit={handleSubmit} className="form-signin">
-                    <div className="form-floating">
-                        <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com"
-                               onChange={(e) => setEmail(e.target.value)}/>
-                        <label htmlFor="floatingInput">Email address</label>
+
+                <h3>Login</h3>
+
+                <form onSubmit={handleSubmit}>
+
+                    {error && <Alert message={error} type={'danger'}/>}
+
+                    <div className="row row-cols-1">
+                        <Input label="E-Mail" name="email" type="email"
+                               onChange={(e) => setEmail(e.currentTarget.value)}/>
                     </div>
-                    <div className="form-floating">
-                        <input type="password" className="form-control" id="floatingPassword" placeholder="Password"
-                               onChange={(e) => setPassword(e.target.value)}/>
-                        <label htmlFor="floatingPassword">Password</label>
+                    <div className="row row-cols-1">
+                        <Input label="Password" name="password" type="password"
+                               onChange={(e) => setPassword(e.currentTarget.value)}/>
                     </div>
-                    <hr className="my-4" />
-                    <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                    <hr className="my-4"/>
+                    <Button text={loading ? 'Loading...' : 'Login'} className="btn-primary w-100" disabled={loading}/>
+                    <p><Link to="/recover">Forgot something?</Link></p>
                 </form>
             </div>
         </div>

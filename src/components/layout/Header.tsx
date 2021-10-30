@@ -1,8 +1,17 @@
-import {Link} from 'react-router-dom';
+import {FC} from 'react';
+import {useHistory, Link} from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootState} from '../../store';
+import {signout} from '../../store/actions/authActions';
+
 import SingedInLinks from './navigation/SingedInLinks';
 import SignedOutLinks from './navigation/SignedOutLinks';
 
-const Header = () => {
+const Header: FC = () => {
+
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const { authenticated } = useSelector((state: RootState) => state.auth);
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -17,8 +26,7 @@ const Header = () => {
                     <ul className="navbar-nav me-auto">
                     </ul>
                     <ul className="navbar-nav">
-                        <SingedInLinks/>
-                        <SignedOutLinks/>
+                        {!authenticated ? <SignedOutLinks /> : <SingedInLinks /> }
                     </ul>
                 </div>
             </div>
