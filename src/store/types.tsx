@@ -6,10 +6,10 @@ export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
 
 export interface User {
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
-    id: string;
     createdAt: any;
 }
 
@@ -71,3 +71,11 @@ export type AuthAction =
     | SetErrorAction
     | NeedVerificationAction
     | SetSuccessAction;
+
+export interface PostState {
+    id: number;
+    author: User;
+    title: string;
+    published: boolean;
+    createtAt: any;
+}

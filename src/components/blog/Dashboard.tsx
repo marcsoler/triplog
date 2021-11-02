@@ -1,7 +1,6 @@
 import { FC, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import Alert from '../layout/elements/Alert';
 import {setSuccess} from '../../store/actions/authActions';
 import {RootState} from '../../store';
 
@@ -19,10 +18,7 @@ const Dashboard: FC = () => {
 
     return (
         <div>
-
-
             <h1>Welcome !!</h1>
-
         </div>
     )
 }

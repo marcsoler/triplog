@@ -4,8 +4,13 @@ import Post from './Post';
 import PostList from './PostList';
 import Map from './Map';
 
+import { useSelector } from 'react-redux';
+import {RootState} from '../../store';
+
 
 const Blog: FC = () => {
+
+    const { posts } = useSelector((state: RootState) => state.posts);
 
     return (
         <>

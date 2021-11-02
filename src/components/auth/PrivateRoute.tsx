@@ -8,7 +8,7 @@ interface Props extends RouteProps {
     component: any;
 }
 
-const PrivateRoute: FC<any> = ({ component: Component, ...rest}) => {
+const PrivateRoute: FC<Props> = ({ component: Component, ...rest}) => {
   const { authenticated } = useSelector((state: RootState) => state.auth);
 
   return(

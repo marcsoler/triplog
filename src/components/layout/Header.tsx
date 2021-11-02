@@ -1,16 +1,14 @@
 import {FC} from 'react';
-import {useHistory, Link} from 'react-router-dom';
-import {useSelector, useDispatch} from 'react-redux';
+import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import {RootState} from '../../store';
-import {signout} from '../../store/actions/authActions';
 
 import SingedInLinks from './navigation/SingedInLinks';
 import SignedOutLinks from './navigation/SignedOutLinks';
 
 const Header: FC = () => {
 
-    const history = useHistory();
-    const dispatch = useDispatch();
+
     const { authenticated } = useSelector((state: RootState) => state.auth);
 
     return (
@@ -26,7 +24,7 @@ const Header: FC = () => {
                     <ul className="navbar-nav me-auto">
                     </ul>
                     <ul className="navbar-nav">
-                        {!authenticated ? <SignedOutLinks /> : <SingedInLinks /> }
+                        { authenticated ? <SingedInLinks /> : <SignedOutLinks /> }
                     </ul>
                 </div>
             </div>

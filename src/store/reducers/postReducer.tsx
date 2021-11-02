@@ -1,4 +1,4 @@
-const initState = {
+const initialState = {
     posts: [
         {
             id: 1,
@@ -19,9 +19,9 @@ const initState = {
             created_at: '2021-10-18 12:00:00',
         },
     ]
-};
+}
 
-const postReducer = (state = initState, action: any) => {
+const postReducer = (state = initialState, action: any) => {
 
     switch (action.type) {
         case 'CREATE_POST':

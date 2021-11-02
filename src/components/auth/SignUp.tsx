@@ -8,6 +8,7 @@ import {signup, setError} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
 import Alert from '../layout/elements/Alert';
+import {Redirect} from 'react-router-dom';
 
 
 const SignUp: FC = () => {
@@ -31,9 +32,14 @@ const SignUp: FC = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        console.log(firstName, lastName, email, password);
         setLoading(true);
         dispatch(signup({ firstName, lastName, email, password }, () => setLoading(false)));
+    }
+
+    const { authenticated } = useSelector((state: RootState) => state.auth);
+
+    if(authenticated) {
+        return (<Redirect to={'/'}/>);
     }
 
     return (
