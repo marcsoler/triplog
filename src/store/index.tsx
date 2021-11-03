@@ -7,7 +7,7 @@ import postReducer from './reducers/postReducer';
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    posts: postReducer,
+    post: postReducer,
 });
 
 const store = createStore(

@@ -72,10 +72,23 @@ export type AuthAction =
     | NeedVerificationAction
     | SetSuccessAction;
 
-export interface PostState {
-    id: number;
-    author: User;
+
+export const SET_POST = 'SET_POST';
+
+export interface Post {
+    id: string;
     title: string;
-    published: boolean;
-    createtAt: any;
+    content: string;
+    created_at: any;
 }
+
+export interface PostState {
+    post?: Post;
+}
+
+interface SetPostAction {
+    type: typeof SET_POST;
+    payload: Post;
+}
+
+export type PostAction = SetPostAction;

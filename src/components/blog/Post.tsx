@@ -1,4 +1,6 @@
 const Post = (props: any) => {
+
+    console.log('Post (props) => ', props);
   return (
       <article>
           <h2>A new journey begins!</h2>

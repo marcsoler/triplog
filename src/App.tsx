@@ -53,6 +53,7 @@ function App() {
                 <main>
                     <Switch>
                         <PublicRoute path="/" component={Blog} exact />
+                        <PublicRoute path="/post/:id" component={Blog} exact />
                         <PublicRoute path="/register" component={SignUp} exact />
                         <PublicRoute path="/login" component={SignIn} exact />
                         <PublicRoute path="/recover" component={ForgotPassword} exact />
