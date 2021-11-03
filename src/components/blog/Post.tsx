@@ -1,3 +1,5 @@
+import moment from 'moment/moment';
+
 const Post = ({post}: any) => {
   return (
 
@@ -6,7 +8,7 @@ const Post = ({post}: any) => {
               <code>{JSON.stringify(post)}</code>
           </pre>
           <h2>{post.title}</h2>
-          <p><small>Posted on {post.created_at.seconds}</small></p>
+          <p><small>Posted on {moment.unix(post.created_at.seconds).format('MMMM Do YYYY, h:mm:ss a')}</small></p>
           { post.content }
       </article>
   )
