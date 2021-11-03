@@ -28,15 +28,15 @@ export const getPostById = (id: string): ThunkAction<void, any, null, PostAction
     console.log('postAction:getPostById')
     return async dispatch => {
         try {
-            const post = await firebase.firestore().collection('posts').doc(id).get().then((snapshot) => {
-                return snapshot;
-            });
+            const post = await firebase.firestore().collection('posts').doc(id).get();
             if(post.exists) {
                 const postData = post.data() as Post;
                 dispatch({
                     type: SET_POST,
                     payload: postData
                 });
+            } else {
+                console.log('Post #' + id + ' not found... setError?');
             }
         } catch (err) {
             console.error('Error on getPostById', err);

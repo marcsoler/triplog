@@ -32,7 +32,7 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
             <div className="container">
                 <div className="row">
                     <article className="col-8">
-                        <Post post={post}/>
+                        { post && <Post post={post} /> }
                     </article>
                     <aside className="col-4">
                         <h4>Recent posts</h4>
