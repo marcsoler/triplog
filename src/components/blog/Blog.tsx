@@ -7,7 +7,7 @@ import Map from './Map';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store';
 import {RouteComponentProps} from 'react-router-dom';
-import {getPostById, getLatestPost} from '../../store/actions/postActions';
+import {getPostById, getLatestPost, getPosts} from '../../store/actions/postActions';
 
 
 const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
@@ -22,9 +22,14 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
         } else {
             dispatch(getLatestPost());
         }
+        dispatch(getPosts());
     }, [dispatch, postId]);
 
     const {post} = useSelector((state: RootState) => state.post);
+
+    const {posts} = useSelector((state: RootState) => state.posts);
+
+
 
 
     return (
@@ -36,7 +41,7 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
                     </article>
                     <aside className="col-4">
                         <h4>Recent posts</h4>
-                        <PostList/>
+                        { posts && <PostList posts={posts} /> }
                     </aside>
                 </div>
             </div>

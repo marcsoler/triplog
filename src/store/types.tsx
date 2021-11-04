@@ -74,12 +74,16 @@ export type AuthAction =
 
 
 export const SET_POST = 'SET_POST';
+export const SET_POSTS = 'SET_POSTS';
 
 export interface Post {
     id: string;
     title: string;
     content: string;
-    created_at: any;
+    created_at: {
+        seconds: number,
+        nanoseconds: number,
+    };
 }
 
 export interface PostState {
@@ -91,4 +95,14 @@ interface SetPostAction {
     payload: Post;
 }
 
+export interface PostsState {
+    posts?: Array<Post>;
+}
+
+interface SetPostsAction {
+    type: typeof SET_POSTS;
+    payload: Array<Post>;
+}
+
 export type PostAction = SetPostAction;
+export type PostsAction = SetPostsAction;

@@ -1,7 +1,6 @@
 import PostSummary from './PostSummary';
 
 const PostList = ({posts}: any) => {
-
     return (
         <div className="list-group">
             {posts && posts.map((post: any) => {
