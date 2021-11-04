@@ -1,5 +1,4 @@
 import {GoogleMap, LoadScript} from '@react-google-maps/api';
-import {useState} from 'react';
 
 const Map = () => {
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {BrowserRouter, Switch} from 'react-router-dom';
 
 import './App.scss';
@@ -21,13 +21,11 @@ import PublicRoute from './components/auth/PublicRoute';
 
 import firebase from './firebase/config';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
-import {RootState} from './store';
 
 
 function App() {
 
     const dispatch = useDispatch();
-    const { loading } = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         dispatch(setLoading(true));

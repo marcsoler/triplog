@@ -6,7 +6,7 @@ import {RootState} from '../../store';
 
 const Dashboard: FC = () => {
 
-    const {user, needVerification, success } = useSelector((state: RootState) => state.auth);
+    const { success } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
 
     useEffect(() => {

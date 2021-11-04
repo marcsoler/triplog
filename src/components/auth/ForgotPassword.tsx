@@ -26,7 +26,7 @@ const ForgotPassword: FC = () => {
                 dispatch(setSuccess(''));
             }
         }
-    }, [error, dispatch])
+    }, [error, success, dispatch])
 
 
     const handleSubmit = (e: FormEvent) => {
