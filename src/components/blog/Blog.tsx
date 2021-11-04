@@ -1,3 +1,7 @@
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import {FC, useEffect} from 'react';
 
 import Post from './Post';
@@ -8,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store';
 import {RouteComponentProps} from 'react-router-dom';
 import {getPostById, getLatestPost, getPosts} from '../../store/actions/postActions';
+
 
 
 const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
@@ -34,17 +39,16 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
 
     return (
         <>
-            <div className="container">
-                <div className="row">
-                    <article className="col-8">
+            <Container>
+                <Row>
+                    <Col as={'article'} md={8}>
                         { post && <Post post={post} /> }
-                    </article>
-                    <aside className="col-4">
-                        <h4>Recent posts</h4>
+                    </Col>
+                    <Col as={'aside'} md={4}>
                         { posts && <PostList posts={posts} /> }
-                    </aside>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
             <div className="map">
                 <Map/>
             </div>

@@ -1,6 +1,7 @@
 import {NavLink} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { signout } from '../../../store/actions/authActions';
+import {RootState} from '../../../store';
 
 const SingedInLinks = () => {
 
@@ -9,6 +10,10 @@ const SingedInLinks = () => {
     const logoutHandler = () => {
         dispatch(signout());
     }
+
+    const { authenticated } = useSelector((state: RootState) => state.auth);
+
+    console.log('authed', authenticated);
 
 
     return (
