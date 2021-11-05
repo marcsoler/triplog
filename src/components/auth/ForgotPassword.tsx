@@ -3,6 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
 //import Input from '../layout/elements/Input';
 
@@ -10,7 +13,6 @@ import Button from 'react-bootstrap/Button';
 import {sendPasswordResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
-import Form from 'react-bootstrap/Form';
 
 
 const ForgotPassword: FC = () => {
@@ -39,16 +41,14 @@ const ForgotPassword: FC = () => {
     }
 
     return (
-        <div className="row justify-content-center">
-            <div className="col-sm-12 col-md-6 col-lg-4">
+        <Row className="justify-content-center">
+            <Col sm={12} md={6} lg={4}>
+
+                {error && <Alert variant="danger">{error}</Alert>}
+                {success && <Alert variant="success">{success}</Alert>}
 
                 <h3>Password recovery</h3>
-
-                <form onSubmit={handleSubmit}>
-
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    {success && <Alert variant="success">{success}</Alert>}
-
+                <Form onSubmit={handleSubmit}>
 
                     <Form.Group className="mb-3" controlId="formEmail">
                         <Form.Label>E-Mail</Form.Label>
@@ -57,9 +57,9 @@ const ForgotPassword: FC = () => {
 
                     <hr className="my-4"/>
                     <Button variant="primary" type="submit">{isLoading ? 'Loading...' : 'Reset password'}</Button>
-                </form>
-            </div>
-        </div>
+                </Form>
+            </Col>
+        </Row>
     );
 }
 

@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 //import Input from '../layout/elements/Input';
 
@@ -46,14 +48,14 @@ const SignUp: FC = () => {
     }
 
     return (
-        <div className="row justify-content-center">
-            <div className="col-sm-12 col-md-6 col-lg-4">
+        <Row className="justify-content-center">
+            <Col sm={12} md={6} lg={4}>
+
+                {error && <Alert variant="danger">{error}</Alert>}
 
                 <h3>Signup</h3>
 
                 <Form onSubmit={handleSubmit}>
-
-                    {error && <Alert variant="danger">{error}</Alert>}
 
                     <Form.Group className="mb-3">
                         <Form.Label>First name</Form.Label>
@@ -77,8 +79,8 @@ const SignUp: FC = () => {
                     <hr className="my-4"/>
                     <Button type="submit" disabled={isLoading}>{isLoading ? 'Loading...' : 'Sign Up'}</Button>
                 </Form>
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 }
 

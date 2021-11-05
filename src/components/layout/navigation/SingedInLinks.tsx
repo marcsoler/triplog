@@ -1,6 +1,9 @@
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Nav from 'react-bootstrap/Nav';
+
 import {NavLink} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
-import { signout } from '../../../store/actions/authActions';
+import {signout} from '../../../store/actions/authActions';
 
 const SingedInLinks = () => {
 
@@ -12,19 +15,11 @@ const SingedInLinks = () => {
 
 
     return (
-        <li className="nav-item dropdown">
-            <NavLink to="/" className="nav-link dropdown-toggle" id="offCanvasNavbarDropdown" role="button"
-                     data-bs-toggle="dropdown" aria-expanded="false">
-                Marc
-            </NavLink>
-            <ul className="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                <li><NavLink className="dropdown-item" to="/dashboard/create">New Post</NavLink></li>
-                <hr className="dropdown-divider"/>
-                <li><NavLink className="dropdown-item" to="/logout" aira-current="page"
-                             onClick={logoutHandler}>Logout</NavLink></li>
-            </ul>
-
-        </li>
+        <NavDropdown title="Yolo" id="yolo">
+            <NavDropdown.Item>New Post</NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item>Logout</NavDropdown.Item>
+        </NavDropdown>
     )
 }
 
