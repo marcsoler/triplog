@@ -6,7 +6,7 @@ import {FC, useEffect} from 'react';
 
 import Post from './Post';
 import PostList from './PostList';
-import Map from './Map';
+//import Map from './Map';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store';

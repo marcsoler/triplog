@@ -12,7 +12,7 @@ export const getLatestPost = (): ThunkAction<void, RootState, null, PostAction> 
                 return querySnapshot.docs[0];
             });
             if (post.exists) {
-                const postData = post.data() as Post;
+                const postData = { id: post.id, ...post.data() } as Post;
                 dispatch({
                     type: SET_POST,
                     payload: postData,
@@ -50,8 +50,8 @@ export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
     return async dispatch => {
         try {
             const posts = await firebase.firestore().collection('posts').orderBy('created_at', 'desc').get().then(querySnapshot => {
-                return querySnapshot.docs.map((p) => {
-                    return {id: p.id, ...p.data()};
+                return querySnapshot.docs.map((post) => {
+                    return {id: post.id, ...post.data()};
                 });
             });
             if (posts.length) {

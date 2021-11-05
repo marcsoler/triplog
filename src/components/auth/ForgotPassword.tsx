@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import {sendPasswordResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
+import Form from 'react-bootstrap/Form';
 
 
 const ForgotPassword: FC = () => {
@@ -48,13 +49,12 @@ const ForgotPassword: FC = () => {
                     {error && <Alert variant="danger">{error}</Alert>}
                     {success && <Alert variant="success">{success}</Alert>}
 
-                    {/*
 
-                    <div className="row row-cols-1">
-                        <Input label="E-Mail" name="email" type="email"
-                               onChange={(e) => setEmail(e.currentTarget.value)}/>
-                    </div>
-                    */}
+                    <Form.Group className="mb-3" controlId="formEmail">
+                        <Form.Label>E-Mail</Form.Label>
+                        <Form.Control type="email" onChange={(e) => setEmail(e.currentTarget.value)}/>
+                    </Form.Group>
+
                     <hr className="my-4"/>
                     <Button variant="primary" type="submit">{isLoading ? 'Loading...' : 'Reset password'}</Button>
                 </form>

@@ -1,12 +1,14 @@
+import ListGroup from 'react-bootstrap/ListGroup';
+
 import PostSummary from './PostSummary';
 
 const PostList = ({posts}: any) => {
     return (
-        <div className="list-group">
+        <ListGroup>
             {posts && posts.map((post: any) => {
                 return(<PostSummary key={post.id} post={post} />)
             })}
-        </div>
+        </ListGroup>
     )
 }
 
