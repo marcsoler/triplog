@@ -4,11 +4,11 @@ import {Link, Redirect} from 'react-router-dom';
 
 import Input from '../layout/elements/Input';
 import Button from '../layout/elements/Button';
+import Alert from 'react-bootstrap/Alert';
 
 import {signin, setError} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
-import Alert from '../layout/elements/Alert';
 
 
 const SignIn: FC = () => {
@@ -49,7 +49,7 @@ const SignIn: FC = () => {
 
                 <form onSubmit={handleSubmit}>
 
-                    {error && <Alert message={error} type={'danger'}/>}
+                    {error && <Alert variant="danger">{error}</Alert>}
 
                     <div className="row row-cols-1">
                         <Input label="E-Mail" name="email" type="email"

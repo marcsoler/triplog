@@ -1,13 +1,13 @@
 import {FC, FormEvent, useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
+import Alert from 'react-bootstrap/Alert';
 import Input from '../layout/elements/Input';
 import Button from '../layout/elements/Button';
 
 import {signup, setError} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
-import Alert from '../layout/elements/Alert';
 import {Redirect} from 'react-router-dom';
 
 
@@ -50,7 +50,7 @@ const SignUp: FC = () => {
 
                 <form onSubmit={handleSubmit}>
 
-                    {error && <Alert message={error} type={'danger'} />}
+                    {error && <Alert variant="danger">{error}</Alert>}
 
                     <div className="row row-cols-2">
                         <Input label="First name" name="firstname" onChange={(e) => setFirstName(e.currentTarget.value)} />
