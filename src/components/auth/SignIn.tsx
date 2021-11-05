@@ -2,8 +2,8 @@ import {FC, FormEvent, useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
 
+import Button from 'react-bootstrap/Button';
 import Input from '../layout/elements/Input';
-import Button from '../layout/elements/Button';
 import Alert from 'react-bootstrap/Alert';
 
 import {signin, setError} from '../../store/actions/authActions';
@@ -15,7 +15,7 @@ const SignIn: FC = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const {error} = useSelector((state: RootState) => state.auth);
 
@@ -30,8 +30,8 @@ const SignIn: FC = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        dispatch(signin({email, password}, () => setLoading(false)));
+        setIsLoading(true);
+        dispatch(signin({email, password}, () => setIsLoading(false)));
     }
 
     const { authenticated } = useSelector((state: RootState) => state.auth);
@@ -60,8 +60,7 @@ const SignIn: FC = () => {
                                onChange={(e: FormEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)}/>
                     </div>
                     <hr className="my-4"/>
-                    <Button text={loading ? 'Loading...' : 'Login'} className="btn-primary w-100"
-                            disabled={loading}/>
+                    <Button variant="primary" type="submit" disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</Button>
                     <p><Link to="/recover">Forgot something?</Link></p>
                 </form>
             </div>

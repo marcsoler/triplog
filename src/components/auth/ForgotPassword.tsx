@@ -2,9 +2,10 @@ import {FC, FormEvent, useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
 
 import Input from '../layout/elements/Input';
-import Button from '../layout/elements/Button';
+
 
 import {sendPasswordResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
@@ -14,7 +15,7 @@ import {RootState} from '../../store';
 const ForgotPassword: FC = () => {
 
     const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const {error, success} = useSelector((state: RootState) => state.auth);
 
@@ -32,7 +33,7 @@ const ForgotPassword: FC = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        setLoading(true);
+        setIsLoading(true);
         dispatch(sendPasswordResetEmail(email, 'E-mail sent!'));
     }
 
@@ -52,8 +53,7 @@ const ForgotPassword: FC = () => {
                                onChange={(e) => setEmail(e.currentTarget.value)}/>
                     </div>
                     <hr className="my-4"/>
-                    <Button text={loading ? 'Loading...' : 'Reset password'} className="btn-primary w-100"
-                            disabled={loading}/>
+                    <Button variant="primary" type="submit">{isLoading ? 'Loading...' : 'Reset password'}</Button>
                 </form>
             </div>
         </div>
