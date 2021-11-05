@@ -50,7 +50,6 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
                 </Row>
             </Container>
             <div className="map">
-                <Map/>
             </div>
         </>
     )

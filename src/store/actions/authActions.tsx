@@ -25,8 +25,8 @@ export const signup = (data: SignUpData, onError: () => void): ThunkAction<void,
             if(res.user) {
                 const userData: User = {
                     email: data.email,
-                    firstName: data.firstName,
-                    lastName: data.lastName,
+                    firstname: data.firstname,
+                    lastname: data.lastname,
                     id: res.user.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };

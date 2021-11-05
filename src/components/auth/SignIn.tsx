@@ -2,9 +2,11 @@ import {FC, FormEvent, useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
 
-import Button from 'react-bootstrap/Button';
-import Input from '../layout/elements/Input';
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
 import {signin, setError} from '../../store/actions/authActions';
 
@@ -34,37 +36,39 @@ const SignIn: FC = () => {
         dispatch(signin({email, password}, () => setIsLoading(false)));
     }
 
-    const { authenticated } = useSelector((state: RootState) => state.auth);
+    const {authenticated} = useSelector((state: RootState) => state.auth);
 
-    if(authenticated) {
+    if (authenticated) {
         return (<Redirect to={'/'}/>);
     }
 
     return (
-        <div className="row justify-content-center">
-            <div className="col-sm-12 col-md-6 col-lg-4">
+        <Row className="justify-content-center">
+            <Col xs={12} md={6} lg={4}>
+
+                {error && <Alert variant="danger">{error}</Alert>}
 
                 <h3>Login</h3>
 
+                <Form onSubmit={handleSubmit}>
 
-                <form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="formEmail">
+                        <Form.Label>E-Mail</Form.Label>
+                        <Form.Control type="email" onChange={(e) => setEmail(e.currentTarget.value)}/>
+                    </Form.Group>
 
-                    {error && <Alert variant="danger">{error}</Alert>}
+                    <Form.Group className="mb-3" controlId="formPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" onChange={(e) => setPassword(e.currentTarget.value)}/>
+                    </Form.Group>
 
-                    <div className="row row-cols-1">
-                        <Input label="E-Mail" name="email" type="email"
-                               onChange={(e: FormEvent<HTMLInputElement>) => setEmail(e.currentTarget.value)}/>
-                    </div>
-                    <div className="row row-cols-1">
-                        <Input label="Password" name="password" type="password"
-                               onChange={(e: FormEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)}/>
-                    </div>
                     <hr className="my-4"/>
-                    <Button variant="primary" type="submit" disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</Button>
+                    <Button variant="primary" type="submit"
+                            disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</Button>
                     <p><Link to="/recover">Forgot something?</Link></p>
-                </form>
-            </div>
-        </div>
+                </Form>
+            </Col>
+        </Row>
 
     );
 }

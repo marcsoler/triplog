@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
-import Input from '../layout/elements/Input';
+//import Input from '../layout/elements/Input';
 
 
 import {sendPasswordResetEmail, setError, setSuccess} from '../../store/actions/authActions';
@@ -48,10 +48,13 @@ const ForgotPassword: FC = () => {
                     {error && <Alert variant="danger">{error}</Alert>}
                     {success && <Alert variant="success">{success}</Alert>}
 
+                    {/*
+
                     <div className="row row-cols-1">
                         <Input label="E-Mail" name="email" type="email"
                                onChange={(e) => setEmail(e.currentTarget.value)}/>
                     </div>
+                    */}
                     <hr className="my-4"/>
                     <Button variant="primary" type="submit">{isLoading ? 'Loading...' : 'Reset password'}</Button>
                 </form>

@@ -7,8 +7,8 @@ export const SET_SUCCESS = 'SET_SUCCESS';
 
 export interface User {
     id: string;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     createdAt: any;
 }
@@ -23,8 +23,8 @@ export interface AuthState {
 }
 
 export interface SignUpData {
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     password: string;
 }

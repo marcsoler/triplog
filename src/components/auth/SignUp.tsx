@@ -4,28 +4,29 @@ import {useDispatch, useSelector} from 'react-redux';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 
-import Input from '../layout/elements/Input';
+//import Input from '../layout/elements/Input';
 
 
 import {signup, setError} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
 import {Redirect} from 'react-router-dom';
+import Form from 'react-bootstrap/Form';
 
 
 const SignUp: FC = () => {
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const { error } = useSelector((state: RootState) => state.auth);
+    const {error} = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         return () => {
-            if(error) {
+            if (error) {
                 dispatch(setError(''));
             }
         }
@@ -35,12 +36,12 @@ const SignUp: FC = () => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        dispatch(signup({ firstName, lastName, email, password }, () => setIsLoading(false)));
+        dispatch(signup({firstname, lastname, email, password}, () => setIsLoading(false)));
     }
 
-    const { authenticated } = useSelector((state: RootState) => state.auth);
+    const {authenticated} = useSelector((state: RootState) => state.auth);
 
-    if(authenticated) {
+    if (authenticated) {
         return (<Redirect to={'/'}/>);
     }
 
@@ -50,23 +51,32 @@ const SignUp: FC = () => {
 
                 <h3>Signup</h3>
 
-                <form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit}>
 
                     {error && <Alert variant="danger">{error}</Alert>}
 
-                    <div className="row row-cols-2">
-                        <Input label="First name" name="firstname" onChange={(e) => setFirstName(e.currentTarget.value)} />
-                        <Input label="Last name" name="lastname" onChange={(e) => setLastName(e.currentTarget.value)} />
-                    </div>
-                    <div className="row row-cols-1">
-                        <Input label="E-Mail" name="email" type="email" onChange={(e) => setEmail(e.currentTarget.value)} />
-                    </div>
-                    <div className="row row-cols-1">
-                        <Input label="Password" name="password" type="password" onChange={(e) => setPassword(e.currentTarget.value)} />
-                    </div>
+                    <Form.Group className="mb-3">
+                        <Form.Label>First name</Form.Label>
+                        <Form.Control type="firstname" onChange={(e) => setFirstname(e.currentTarget.value)}/>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Last name</Form.Label>
+                        <Form.Control type="lastname" onChange={(e) => setLastname(e.currentTarget.value)}/>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formEmail">
+                        <Form.Label>E-Mail</Form.Label>
+                        <Form.Control type="email" onChange={(e) => setEmail(e.currentTarget.value)}/>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" onChange={(e) => setPassword(e.currentTarget.value)}/>
+                    </Form.Group>
                     <hr className="my-4"/>
-                    <Button disabled={isLoading}>{isLoading ? "Loading..." : "Sign Up"}</Button>
-                </form>
+                    <Button type="submit" disabled={isLoading}>{isLoading ? 'Loading...' : 'Sign Up'}</Button>
+                </Form>
             </div>
         </div>
     );
