@@ -10,7 +10,7 @@ import Row from 'react-bootstrap/Row';
 //import Input from '../layout/elements/Input';
 
 
-import {sendPasswordResetEmail, setError, setSuccess} from '../../store/actions/authActions';
+import {sendResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
 import {RootState} from '../../store';
 
@@ -37,7 +37,7 @@ const ForgotPassword: FC = () => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        dispatch(sendPasswordResetEmail(email, 'E-mail sent!'));
+        dispatch(sendResetEmail(email, 'E-mail sent!'));
     }
 
     return (

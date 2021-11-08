@@ -1,7 +1,11 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
-import firebase from '../../firebase/config';
+import firebaseApp from '../../firebase/config';
 import {Post, PostAction, SET_POST, PostsAction, SET_POSTS} from '../types';
+import {getFirestore, collection, doc, getDoc} from 'firebase/firestore';
+
+const db = getFirestore(firebaseApp);
+
 
 
 // get latest post:
@@ -29,9 +33,12 @@ export const getLatestPost = (): ThunkAction<void, RootState, null, PostAction> 
 export const getPostById = (id: string): ThunkAction<void, RootState, null, PostAction> => {
     return async dispatch => {
         try {
-            const post = await firebase.firestore().collection('posts').doc(id).get();
-            if (post.exists) {
-                const postData = post.data() as Post;
+
+            const docRef = doc(db, 'posts', id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const postData = docSnap.data() as Post;
                 dispatch({
                     type: SET_POST,
                     payload: postData
