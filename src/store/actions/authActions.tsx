@@ -13,41 +13,21 @@ import {
     SET_SUCCESS
 } from '../types';
 
-import { RootState } from '../index';
+import {RootState} from '../index';
 
-import firebase from '../../firebase/config';
+import firebaseApp from '../../firebase/config';
+import {getAuth, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithEmailAndPassword} from 'firebase/auth';
+import {getFirestore, doc, getDoc} from 'firebase/firestore';
+
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 // Create user
 export const signup = (data: SignUpData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
     return async dispatch => {
-        try {
-            const res = await firebase.auth().createUserWithEmailAndPassword(data.email, data.password);
-            if(res.user) {
-                const userData: User = {
-                    email: data.email,
-                    firstname: data.firstname,
-                    lastname: data.lastname,
-                    id: res.user.uid,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                await firebase.firestore().collection('/users').doc(res.user.uid).set(userData);
-                await res.user.sendEmailVerification();
-                dispatch({
-                    type: NEED_VERIFICATION
-                });
-                dispatch({
-                    type: SET_USER,
-                    payload: userData
-                });
-            }
-        } catch (err: any) {
-            console.log(err);
-            onError();
-            dispatch({
-                type: SET_ERROR,
-                payload: err.message
-            });
-        }
+        await createUserWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
+            dispatch(setError(`${error.code}: ${error.message}`));
+        });
     }
 }
 
@@ -55,12 +35,15 @@ export const signup = (data: SignUpData, onError: () => void): ThunkAction<void,
 export const getUserById = (id: string): ThunkAction<void, RootState, null, AuthAction> => {
     return async dispatch => {
         try {
-            const user = await firebase.firestore().collection('users').doc(id).get();
-            if(user.exists) {
-                const userData = user.data() as User;
+
+            const docRef = doc(db, 'users', id);
+            const docSnap = await getDoc(docRef);
+
+            if(docSnap.exists()) {
+                const userData = docSnap.data() as User;
                 dispatch({
                     type: SET_USER,
-                    payload: userData
+                    payload: userData,
                 });
             }
         } catch (err) {
@@ -80,30 +63,25 @@ export const setLoading = (value: boolean): ThunkAction<void, RootState, null, A
 
 // Login in
 export const signin = (data: SignInData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
-  return async dispatch => {
-      try {
-          await firebase.auth().signInWithEmailAndPassword(data.email, data.password);
-      } catch (err: any) {
-          console.log(err);
-          onError();
-          dispatch(setError(err.message));
-      }
-  }
+    return async dispatch => {
+        await signInWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
+            onError();
+            dispatch(setError(`${error.code}: ${error.message}`));
+        });
+    }
 }
 
 export const signout = (): ThunkAction<void, RootState, null, AuthAction> => {
-  return async dispatch => {
-      try {
-          dispatch(setLoading(true));
-          await firebase.auth().signOut();
-          dispatch({
-              type: SIGN_OUT
-          })
-      } catch (err) {
-          console.log(err);
-          dispatch(setLoading(false));
-      }
-  }
+    return async dispatch => {
+        dispatch(setLoading(true));
+        await signOut(auth).then(() => {
+            dispatch({
+                type: SIGN_OUT
+            });
+        }).catch((error) => {
+            setError(`${error.code}: ${error.message}`);
+        })
+    }
 }
 
 // Set error
@@ -137,15 +115,12 @@ export const setSuccess = (msg: string): ThunkAction<void, RootState, null, Auth
 }
 
 // Password recovery
-
-export const sendPasswordResetEmail = (email: string, successMsg: string): ThunkAction<void, RootState, null, AuthAction> => {
-  return async dispatch => {
-      try {
-          await firebase.auth().sendPasswordResetEmail(email);
-          dispatch(setSuccess(successMsg));
-      } catch(err: any) {
-          console.log(err);
-          dispatch(setError(err.message));
-      }
-  }
+export const sendResetEmail = (email: string, successMsg: string): ThunkAction<void, RootState, null, AuthAction> => {
+    return async dispatch => {
+        await sendPasswordResetEmail(auth, email).then(() => {
+            dispatch(setSuccess(successMsg));
+        }).catch((error) => {
+            dispatch(setError(`${error.code}: ${error.message}`));
+        });
+    }
 }
