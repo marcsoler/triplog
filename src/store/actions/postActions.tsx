@@ -1,6 +1,6 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
-import firebaseApp from '../../firebase/config';
+import firebaseApp from '../../firebase/firebaseApp';
 import {Post, PostAction, SET_POST, PostsAction, SET_POSTS} from '../types';
 import {getFirestore, collection, doc, getDoc, getDocs, query, orderBy, limit} from 'firebase/firestore';
 import {setError} from './authActions';

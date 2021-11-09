@@ -18,7 +18,7 @@ import PrivateRoute from './components/auth/PrivateRoute';
 import PublicRoute from './components/auth/PublicRoute';
 import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
 
-import firebaseApp from './firebase/config';
+import firebaseApp from './firebase/firebaseApp';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
 

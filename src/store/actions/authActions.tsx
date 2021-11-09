@@ -15,7 +15,7 @@ import {
 
 import {RootState} from '../index';
 
-import firebaseApp from '../../firebase/config';
+import firebaseApp from '../../firebase/firebaseApp';
 import {getAuth, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithEmailAndPassword} from 'firebase/auth';
 import {getFirestore, doc, getDoc} from 'firebase/firestore';
 
