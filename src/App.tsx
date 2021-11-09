@@ -68,6 +68,7 @@ function App() {
             <div className="App">
                 <Header/>
                 <main>
+
                     <Switch>
                         <PublicRoute path="/" component={Blog} exact />
                         <PublicRoute path="/post/:id" component={Blog} exact />
