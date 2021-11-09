@@ -17,7 +17,7 @@ import {RootState} from '../index';
 
 import firebaseApp from '../../firebase/config';
 import {getAuth, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithEmailAndPassword} from 'firebase/auth';
-import {getFirestore, collection, doc, getDoc} from 'firebase/firestore';
+import {getFirestore, doc, getDoc} from 'firebase/firestore';
 
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
@@ -26,7 +26,7 @@ const db = getFirestore(firebaseApp);
 export const signup = (data: SignUpData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
     return async dispatch => {
         await createUserWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
-            console.error(`${error.code}: ${error.message}`);
+            dispatch(setError(`${error.code}: ${error.message}`));
         });
     }
 }
@@ -46,18 +46,6 @@ export const getUserById = (id: string): ThunkAction<void, RootState, null, Auth
                     payload: userData,
                 });
             }
-
-            /*
-            const user = await firebase.firestore().collection('users').doc(id).get();
-            if (user.exists) {
-                const userData = user.data() as User;
-                dispatch({
-                    type: SET_USER,
-                    payload: userData
-                });
-            }
-
-             */
         } catch (err) {
             console.log(err);
         }
@@ -76,20 +64,10 @@ export const setLoading = (value: boolean): ThunkAction<void, RootState, null, A
 // Login in
 export const signin = (data: SignInData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
     return async dispatch => {
-
-        await createUserWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
+        await signInWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
             onError();
             dispatch(setError(`${error.code}: ${error.message}`));
-        })
-
-        /*
-        try {
-            await firebase.auth().signInWithEmailAndPassword(data.email, data.password);
-        } catch (err: any) {
-            onError();
-            dispatch(setError(err.message));
-        }
-         */
+        });
     }
 }
 
