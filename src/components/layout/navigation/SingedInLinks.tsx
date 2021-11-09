@@ -1,5 +1,4 @@
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import Nav from 'react-bootstrap/Nav';
 
 import {NavLink} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
@@ -16,9 +15,9 @@ const SingedInLinks = () => {
 
     return (
         <NavDropdown title="Yolo" id="yolo">
-            <NavDropdown.Item>New Post</NavDropdown.Item>
+            <NavDropdown.Item as={NavLink} to="/dashboard/post/create">New Post</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item>Logout</NavDropdown.Item>
+            <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
         </NavDropdown>
     )
 }

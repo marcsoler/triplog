@@ -1,8 +1,4 @@
-import { FC, useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
-
-import { setSuccess} from '../../store/actions/authActions';
-import { RootState} from '../../store';
+import { FC} from 'react';
 
 const CreatePost: FC = () => {
     return(
