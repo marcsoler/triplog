@@ -1,4 +1,5 @@
 import moment from 'moment/moment';
+import ReactMarkdown from 'react-markdown';
 
 export interface PostProps {
     post: {
@@ -19,7 +20,7 @@ const Post = ({post: {id, title, created_at, content, subtitle}}: PostProps) => 
             <h2>{title}</h2>
             <p><small>Posted on {moment.unix(created_at.seconds).format('MMMM Do YYYY, h:mm:ss a')}</small></p>
             {subtitle && <p className="lead">{subtitle}</p> }
-            {content}
+            <ReactMarkdown>{content}</ReactMarkdown>
         </article>
     )
 }
