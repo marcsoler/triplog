@@ -6,7 +6,7 @@ import {FC, useEffect} from 'react';
 
 import Post from './Post';
 import PostList from './PostList';
-//import Map from './Map';
+import Map from './Map';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store';
@@ -50,6 +50,11 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
                 </Row>
             </Container>
             <div className="map">
+                {
+                    //pseudo code:
+                    //post && <Map route={post.routeId} progress={post.progress} />
+                    post && <Map />
+                }
             </div>
         </>
     )

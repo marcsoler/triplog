@@ -48,7 +48,7 @@ const CreatePost: FC = () => {
     return (
         <Container>
             <Row>
-                <Col xs={12} md={10} lg={8}>
+                <Col xs={12}>
 
                     <h2>New post</h2>
 
@@ -75,6 +75,11 @@ const CreatePost: FC = () => {
                         <Form.Group className="mb-3" controlId="content">
                             <Form.Label>Content</Form.Label>
                             <Form.Control as="textarea" rows={10} onChange={(e) => setContent(e.currentTarget.value)}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="progress">
+                            <Form.Label>Progress</Form.Label>
+                            <Form.Range />
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="status">

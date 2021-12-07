@@ -12,7 +12,7 @@ import {
 const initialState: AuthState = {
     user: undefined,
     authenticated: false,
-    loading: false,
+    loading: true,
     error: '',
     needVerification: false,
     success: ''
