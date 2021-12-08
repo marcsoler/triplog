@@ -1,11 +1,9 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, SignUpData, AuthAction} from '../types';
+import {Post, PostAction, SET_POST, PostsAction, SET_POSTS} from '../types';
 import {getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit, Timestamp, deleteDoc} from 'firebase/firestore';
 import {setError} from './authActions';
-import {createUserWithEmailAndPassword} from 'firebase/auth';
-import firebase from 'firebase/compat';
 
 const db = getFirestore(firebaseApp);
 

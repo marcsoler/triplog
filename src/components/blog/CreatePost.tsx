@@ -91,7 +91,7 @@ const CreatePost: FC = () => {
                                     <Col xs={12} md={6}>
                                         <Form.Group className="mb-3" controlId="route">
                                             <Form.Label>Route</Form.Label>
-                                            <Form.Select aria-label="Select the route">
+                                            <Form.Select aria-label="Select the route" onChange={(e) => setRoute(e.currentTarget.value)}>
                                                 <option disabled>Route list</option>
                                                 <option value="1">Iceland</option>
                                                 <option value="2">Trip across America</option>
@@ -101,7 +101,7 @@ const CreatePost: FC = () => {
                                     <Col xs={12} md={6}>
                                         <Form.Group className="mb-3" controlId="progress">
                                             <Form.Label>Progress</Form.Label>
-                                            <Form.Range className="mt-1"/>
+                                            <Form.Range className="mt-1" onChange={(e) => setProgress(e.currentTarget.value)} />
                                         </Form.Group>
                                     </Col>
                                 </Row>

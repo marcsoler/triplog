@@ -15,7 +15,6 @@ import moment from 'moment';
 const Dashboard: FC = () => {
 
     const {success} = useSelector((state: RootState) => state.auth);
-    const {post} = useSelector((state: RootState) => state.post);
     const {posts} = useSelector((state: RootState) => state.posts);
     const dispatch = useDispatch();
 
