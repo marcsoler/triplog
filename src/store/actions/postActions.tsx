@@ -2,7 +2,7 @@ import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
 import firebaseApp from '../../firebase/firebaseApp';
 import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, SignUpData, AuthAction} from '../types';
-import {getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit, Timestamp} from 'firebase/firestore';
+import {getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit, Timestamp, deleteDoc} from 'firebase/firestore';
 import {setError} from './authActions';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import firebase from 'firebase/compat';
@@ -102,6 +102,15 @@ export const createPost = (post: any, onError: () => void): ThunkAction<void, Ro
         dispatch({type: 'CREATE_POST', post});
     }
      */
+}
+
+export const deletePost = (postId: string): ThunkAction<void, RootState, null, PostAction> => {
+    return async dispatch => {
+        const docRef = doc(db, 'posts', postId);
+        deleteDoc(docRef).catch((error) => {
+            console.error('Some error happened here', 'postActions:deletePost()');
+        });
+    }
 }
 
 // Create user

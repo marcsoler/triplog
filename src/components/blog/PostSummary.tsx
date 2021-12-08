@@ -5,6 +5,8 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store';
 
 
+
+
 const PostSummary = ({post}: any) => {
 
     const activePost = useSelector((state: RootState) => state.post);
