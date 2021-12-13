@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {BrowserRouter, Switch} from 'react-router-dom';
 
 import './App.scss';
@@ -21,6 +21,8 @@ import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
 import firebaseApp from './firebase/firebaseApp';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
+import {RootState} from './store';
+import Loading from './components/Loading';
 
 const auth = getAuth(firebaseApp);
 
@@ -28,6 +30,8 @@ const auth = getAuth(firebaseApp);
 function App() {
 
     const dispatch = useDispatch();
+
+    const {loading} = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -45,28 +49,12 @@ function App() {
         return () => {
             unsubscribe();
         }
-        /*
-        const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-            if(user) {
-                dispatch(setLoading(true));
-                await dispatch(getUserById(user.uid));
-                if(!user.emailVerified) {
-                    dispatch(setNeedVerification());
-                }
-            }
-            dispatch(setLoading(false));
-        });
-        return () => {
-            unsubscribe();
-        }
-
-         */
     }, [dispatch]);
 
     return (
         <BrowserRouter>
             <div className="App">
-                <Header/>
+                { !loading && <Header /> }
                 <main>
 
                     <Switch>
@@ -77,6 +65,7 @@ function App() {
                         <PublicOnlyRoute path="/recover" component={ForgotPassword} exact />
                         <PrivateRoute path="/dashboard" component={Dashboard} exact />
                         <PrivateRoute path="/dashboard/post/create" component={CreatePost} exact />
+                        <PublicRoute path="/loading" component={Loading} exact />
                     </Switch>
                 </main>
                 <Footer/>

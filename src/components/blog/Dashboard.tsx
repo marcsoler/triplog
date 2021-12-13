@@ -1,7 +1,7 @@
-import {FC, useState, useEffect} from 'react';
+import {FC, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {setSuccess} from '../../store/actions/authActions';
+//import {setSuccess} from '../../store/actions/authActions';
 import {deletePost} from '../../store/actions/postActions';
 import {RootState} from '../../store';
 import Button from 'react-bootstrap/Button';
@@ -14,16 +14,9 @@ import moment from 'moment';
 
 const Dashboard: FC = () => {
 
-    const {success} = useSelector((state: RootState) => state.auth);
     const {posts} = useSelector((state: RootState) => state.posts);
+
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (success) {
-            dispatch(setSuccess(''));
-        }
-    }, [success, dispatch]);
-
     const [postToDelete, setPostToDelete] = useState<any>(null);
 
     const promptPostDeletion = (postId: string) => {
@@ -43,11 +36,14 @@ const Dashboard: FC = () => {
 
     const [showModal, setShowModal] = useState(false);
 
+    console.log(posts);
+
 
     return (
         <Container>
             <h1>Dashboard</h1>
 
+            { posts &&
             <Table hover>
                 <caption>Posts</caption>
                 <thead>
@@ -76,7 +72,7 @@ const Dashboard: FC = () => {
                         </tr>)
                     })}
                 </tbody>
-            </Table>
+            </Table> }
 
             <Modal show={showModal} onHide={closeModal}>
                 <Modal.Header>{postToDelete?.title}</Modal.Header>

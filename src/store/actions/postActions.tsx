@@ -59,6 +59,8 @@ export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
 
         const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
 
+        console.log('getPosts...');
+
         try {
             const querySnapshot = await getDocs(q);
             const postsData: Array<Post> = querySnapshot.docs.map((p) => {
