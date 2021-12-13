@@ -12,10 +12,10 @@ interface Props extends RouteProps {
 const PrivateRoute: FC<Props> = ({component: Component, ...rest}) => {
 
     const fallBackUrl = '/login';
-    const {authenticated, loading} = useSelector((state: RootState) => state.auth);
+    const {authenticated } = useSelector((state: RootState) => state.auth);
 
     return (
-        <Route {...rest} render={props => loading ? (<Loading />) : authenticated ? <Component {...props}/> : <Redirect to={fallBackUrl} /> } />
+        <Route {...rest} render={props => authenticated ? <Component {...props}/> : <Redirect to={fallBackUrl} /> } />
         //<Route {...rest} render={props => authenticated ? <Component {...props} /> : <Redirect to={fallBackUrl} />}/>
     )
 
