@@ -14,7 +14,7 @@ import App from './App';
 //const store = createStore(rootReducer, applyMiddleware(thunk));
 import {store, persistor} from './store';
 import {PersistGate} from 'redux-persist/integration/react';
-import Loading from './components/Loading';
+import Loading from './components/misc/Loading';
 
 ReactDOM.render(
     <React.StrictMode>

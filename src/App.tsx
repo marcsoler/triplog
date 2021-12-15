@@ -1,19 +1,13 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {BrowserRouter, Switch} from 'react-router-dom';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 import './App.scss';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
-
-import Blog from './components/blog/Blog';
-import SignIn from './components/auth/SignIn';
-import SignUp from './components/auth/SignUp';
-import ForgotPassword from './components/auth/ForgotPassword';
-import Dashboard from './components/blog/Dashboard';
-import CreatePost from './components/blog/CreatePost';
+import routes from './routes';
 import PrivateRoute from './components/auth/PrivateRoute';
 import PublicRoute from './components/auth/PublicRoute';
 import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
@@ -22,7 +16,7 @@ import firebaseApp from './firebase/firebaseApp';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
 import {RootState} from './store';
-import Loading from './components/Loading';
+import NotFound from './components/misc/NotFound';
 
 const auth = getAuth(firebaseApp);
 
@@ -58,14 +52,19 @@ function App() {
                 <main>
 
                     <Switch>
-                        <PublicRoute path="/" component={Blog} exact />
-                        <PublicRoute path="/post/:id" component={Blog} exact />
-                        <PublicOnlyRoute path="/register" component={SignUp} exact />
-                        <PublicOnlyRoute path="/login" component={SignIn} exact />
-                        <PublicOnlyRoute path="/recover" component={ForgotPassword} exact />
-                        <PrivateRoute path="/dashboard" component={Dashboard} exact />
-                        <PrivateRoute path="/dashboard/post/create" component={CreatePost} exact />
-                        <PublicRoute path="/loading" component={Loading} exact />
+
+                        {routes.map((route, key) => {
+                            switch (route.routeType) {
+                                case 'public':
+                                    return <PublicRoute {...route.params} exact key={key} />
+                                case 'publicOnly':
+                                    return <PublicOnlyRoute {...route.params} exact key={key} />
+                                case 'private':
+                                    return <PrivateRoute {...route.params} exact key={key} />
+                            }
+                            return <></>;
+                        })}
+                        <Route component={NotFound} />
                     </Switch>
                 </main>
                 <Footer/>
