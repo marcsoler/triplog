@@ -8,10 +8,11 @@ import Post from './Post';
 import PostList from './PostList';
 import Map from './Map';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../store';
+import {useDispatch} from 'react-redux';
 import {RouteComponentProps} from 'react-router-dom';
 import {getPostById, getLatestPost, getPosts} from '../../store/actions/postActions';
+import usePostSelector from '../../hooks/usePostSelector';
+import usePostsSelector from '../../hooks/usePostsSelector';
 
 
 
@@ -30,9 +31,9 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
         dispatch(getPosts());
     }, [dispatch, postId]);
 
-    const {post} = useSelector((state: RootState) => state.post);
+    const {post} = usePostSelector();
 
-    const {posts} = useSelector((state: RootState) => state.posts);
+    const {posts} = usePostsSelector();
 
 
 

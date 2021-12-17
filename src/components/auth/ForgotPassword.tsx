@@ -1,5 +1,5 @@
 import {FC, FormEvent, useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -7,12 +7,9 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
-//import Input from '../layout/elements/Input';
-
-
 import {sendResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
-import {RootState} from '../../store';
+import useAuthSelector from '../../hooks/useAuthSelector';
 
 
 const ForgotPassword: FC = () => {
@@ -20,7 +17,7 @@ const ForgotPassword: FC = () => {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const {error, success} = useSelector((state: RootState) => state.auth);
+    const {error, success} = useAuthSelector();
 
     useEffect(() => {
         return () => {

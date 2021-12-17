@@ -1,19 +1,10 @@
-import { Auth, onAuthStateChanged, User } from 'firebase/auth';
-import { useEffect, useMemo } from 'react';
-import { LoadingHook, useLoadingValue } from '../util';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store';
+import {AuthState} from '../store/types';
 
-export type AuthStateHook = LoadingHook<User | null, Error>;
+const useAuthSelector = () => {
+    const auth: AuthState = useSelector((state: RootState) => state.auth);
+    return auth;
+}
 
-export default (auth: Auth): AuthStateHook => {
-    const { error, loading, setError, setValue, value } = useLoadingValue<
-        User | null,
-        Error
-        >(() => auth.currentUser);
-
-    useEffect(() => {
-        return onAuthStateChanged(auth, setValue, setError);
-    }, [auth]);
-
-    const resArray: AuthStateHook = [value, loading, error];
-    return useMemo<AuthStateHook>(() => resArray, resArray);
-};
+export default useAuthSelector;

@@ -1,9 +1,8 @@
 import {FC} from 'react';
-import {useSelector} from 'react-redux';
 import {Route, Redirect, RouteProps} from 'react-router-dom';
 
-import {RootState} from '../../store';
 import Loading from '../misc/Loading';
+import useAuthSelector from '../../hooks/useAuthSelector';
 
 interface Props extends RouteProps {
     component: any;
@@ -12,11 +11,10 @@ interface Props extends RouteProps {
 const PrivateRoute: FC<Props> = ({component: Component, ...rest}) => {
 
     const fallBackUrl = '/login';
-    const {authenticated, loading} = useSelector((state: RootState) => state.auth);
+    const {authenticated, loading} = useAuthSelector();
 
     return (
         <Route {...rest} render={props => loading ? (<Loading />) : authenticated ? <Component {...props}/> : <Redirect to={fallBackUrl} /> } />
-        //<Route {...rest} render={props => authenticated ? <Component {...props} /> : <Redirect to={fallBackUrl} />}/>
     )
 
 }

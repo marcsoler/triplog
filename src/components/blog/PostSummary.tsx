@@ -1,15 +1,14 @@
 import moment from 'moment';
 import {NavLink} from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store';
+import usePostSelector from '../../hooks/usePostSelector';
 
 
 
 
 const PostSummary = ({post}: any) => {
 
-    const activePost = useSelector((state: RootState) => state.post);
+    const activePost = usePostSelector();
 
     return (
         <ListGroup.Item as={NavLink} to={'/post/' + post.id} active={activePost.post && (post.id === activePost.post.id)}>

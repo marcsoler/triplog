@@ -1,10 +1,10 @@
 import {useSelector} from 'react-redux';
 import {RootState} from '../store';
-import {PostState} from '../store/types';
+import {PostsState} from '../store/types';
 
-const usePostSelector = () => {
-  const post: PostState = useSelector((state: RootState) => state.post);
-  return post;
+const usePostsSelector = () => {
+  const posts: PostsState = useSelector((state: RootState) => state.posts);
+  return posts;
 }
 
-export default usePostSelector;
+export default usePostsSelector;

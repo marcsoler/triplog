@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 
 import './App.scss';
@@ -15,8 +15,8 @@ import PublicOnlyRoute from './components/auth/PublicOnlyRoute';
 import firebaseApp from './firebase/firebaseApp';
 import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
-import {RootState} from './store';
 import NotFound from './components/misc/NotFound';
+import useAuthSelector from './hooks/useAuthSelector';
 
 const auth = getAuth(firebaseApp);
 
@@ -25,7 +25,7 @@ function App() {
 
     const dispatch = useDispatch();
 
-    const {loading} = useSelector((state: RootState) => state.auth);
+    const {loading} = useAuthSelector();
 
     useEffect(() => {
         dispatch(setLoading(true));
