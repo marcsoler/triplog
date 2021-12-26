@@ -1,5 +1,5 @@
 import {FC, FormEvent, useState, useEffect} from 'react';
-
+import {useForm, SubmitHandler} from 'react-hook-form';
 import slugify from 'slugify';
 
 import Button from 'react-bootstrap/Button'
@@ -14,41 +14,34 @@ import {useDispatch} from 'react-redux';
 import {createPost} from '../../store/actions/postActions';
 import ReactMarkdown from 'react-markdown';
 
+interface IPostFormInput {
+    title: string;
+    slug: string;
+    subtitle: string;
+    content: string;
+    route: string;
+    progress: string;
+    status: string;
+
+}
 
 const CreatePost: FC = () => {
 
-    const [title, setTitle] = useState('');
-    const [slug, setSlug] = useState('');
-    const [subtitle, setSubtitle] = useState('');
-    const [content, setContent] = useState('');
-    const [route, setRoute] = useState('');
-    const [progress, setProgress] = useState('');
-    const [status, setStatus] = useState('');
 
     const dispatch = useDispatch();
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
 
-        dispatch(createPost({
-            title,
-            slug,
-            subtitle,
-            content,
-            route,
-            progress,
-            status
-        }, () => console.log('hmm?')));
+    const {register, formState: { errors }, handleSubmit, setValue} = useForm<IPostFormInput>();
+    const onSubmit: SubmitHandler<IPostFormInput> = data => {
+        dispatch(createPost(data, () => console.error('An error happened!')));
+    };
 
+    const slugifyTitle = (title: string): void => {
+      setValue('slug', slugify(title, {
+          lower: true,
+          strict: true,
+      }));
     }
-
-    useEffect(() => {
-        return () => {
-            setSlug(slugify(title, {
-                lower: true
-            }));
-        };
-    }, [title]);
 
 
     return (
@@ -56,7 +49,7 @@ const CreatePost: FC = () => {
 
             <Row>
                 <Col xs={12}>
-                    <Form onSubmit={handleSubmit}>
+                    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
 
                         <Tabs defaultActiveKey="write" id="uncontrolled-tab-example" className="mt-3 mb-3">
                             <Tab eventKey="write" title="Write">
@@ -64,34 +57,35 @@ const CreatePost: FC = () => {
 
                                 <Form.Group className="mb-3" controlId="title">
                                     <Form.Label>Title</Form.Label>
-                                    <Form.Control type="text" required
-                                                  onChange={(e) => setTitle(e.currentTarget.value)}/>
+                                    <Form.Control className={(errors.title && 'is-invalid')} type="text" {...register('title', {required: true, onChange: (e) => slugifyTitle(e.currentTarget.value)})} />
+                                    { errors.title && <div className="invalid-feedback">The title is a required field!</div> }
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
                                     <Form.Label>Slug</Form.Label>
                                     <InputGroup>
                                         <InputGroup.Text>{`${window.location.origin}/post/`}</InputGroup.Text>
-                                        <Form.Control type="text" value={slug} readOnly/>
+                                        <Form.Control type="text"
+                                                      readOnly {...register('slug', {pattern: /^[a-z0-9_]+$/i})} />
                                     </InputGroup>
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="subtitle">
                                     <Form.Label>Subtitle</Form.Label>
-                                    <Form.Control type="subtitle" onChange={(e) => setSubtitle(e.currentTarget.value)}/>
+                                    <Form.Control type="subtitle" {...register('subtitle', {required: true})} />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="content">
                                     <Form.Label>Content</Form.Label>
-                                    <Form.Control as="textarea" rows={10}
-                                                  onChange={(e) => setContent(e.currentTarget.value)}/>
+                                    <Form.Control as="textarea" rows={10} {...register('content', {required: true})} />
                                 </Form.Group>
 
                                 <Row>
                                     <Col xs={12} md={6}>
                                         <Form.Group className="mb-3" controlId="route">
                                             <Form.Label>Route</Form.Label>
-                                            <Form.Select aria-label="Select the route" onChange={(e) => setRoute(e.currentTarget.value)}>
+                                            <Form.Select
+                                                aria-label="Select the route" {...register('route', {required: true})}>
                                                 <option disabled>Route list</option>
                                                 <option value="1">Iceland</option>
                                                 <option value="2">Trip across America</option>
@@ -101,7 +95,7 @@ const CreatePost: FC = () => {
                                     <Col xs={12} md={6}>
                                         <Form.Group className="mb-3" controlId="progress">
                                             <Form.Label>Progress</Form.Label>
-                                            <Form.Range className="mt-1" onChange={(e) => setProgress(e.currentTarget.value)} />
+                                            <Form.Range className="mt-1" {...register('progress', {required: true})} />
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -109,9 +103,11 @@ const CreatePost: FC = () => {
 
                             </Tab>
                             <Tab eventKey="profile" title="Preview">
+                                {/*
                                 {title && <h1>{title}</h1>}
                                 {subtitle && <p className="lead">{subtitle}</p>}
                                 {content && <ReactMarkdown>{content}</ReactMarkdown>}
+                                */}
                             </Tab>
                         </Tabs>
 
@@ -119,8 +115,7 @@ const CreatePost: FC = () => {
 
                         <Form.Group className="mb-3" controlId="status">
                             <Form.Label>Status</Form.Label>
-                            <Form.Check type="switch" onChange={(e) => setStatus(e.currentTarget.value)}
-                                        label="Publish"/>
+                            <Form.Check type="switch" label="Publish" {...register('status', {required: true})} />
                         </Form.Group>
 
                         <Button variant="primary" type="submit">
