@@ -47,6 +47,7 @@ const Dashboard: FC = () => {
                 <tr>
                     <th scope="col">Post</th>
                     <th scope="col">Created</th>
+                    <th scope="col">Last updated</th>
                     <th scope="col">Actions</th>
                 </tr>
 
@@ -59,6 +60,7 @@ const Dashboard: FC = () => {
                         return (<tr key={p.id}>
                             <td>{p.title}</td>
                             <td>{moment.unix(p.created_at.seconds).format('DD.MM.YYYY')}</td>
+                            <td>{p.updated_at ? moment.unix(p.updated_at.seconds).format('DD.MM.YYYY') : 'Never'}</td>
                             <td>
                                 <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
                                     <Button href={`/post/${p.id}`} variant="primary">View</Button>

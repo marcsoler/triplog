@@ -21,7 +21,7 @@ interface IPostFormInput {
     content: string;
     route: string;
     progress: string;
-    status: string;
+    published: string;
 
 }
 
@@ -125,9 +125,9 @@ const CreatePost: FC = () => {
 
                         <hr className="mb-3 mt-5"/>
 
-                        <Form.Group className="mb-3" controlId="status">
-                            <Form.Label>Status</Form.Label>
-                            <Form.Check type="switch" label="Publish" {...register('status')} />
+                        <Form.Group className="mb-3" controlId="published">
+                            <Form.Label>Published</Form.Label>
+                            <Form.Check type="switch" label="Publish" {...register('published')} />
                         </Form.Group>
 
                         <Button variant="primary" type="submit">

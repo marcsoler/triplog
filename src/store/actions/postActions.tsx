@@ -2,7 +2,20 @@ import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
 import firebaseApp from '../../firebase/firebaseApp';
 import {Post, PostAction, SET_POST, PostsAction, SET_POSTS} from '../types';
-import {getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit, Timestamp, deleteDoc} from 'firebase/firestore';
+import {
+    getFirestore,
+    collection,
+    doc,
+    getDoc,
+    setDoc,
+    getDocs,
+    query,
+    orderBy,
+    limit,
+    Timestamp,
+    deleteDoc,
+    updateDoc
+} from 'firebase/firestore';
 import {setError} from './authActions';
 
 const db = getFirestore(firebaseApp);
@@ -88,26 +101,30 @@ export const createPost = (post: any, onError: () => void): ThunkAction<void, Ro
             title: post.title,
             subtitle: post.subtitle,
             content: post.content,
-            status: post.status,
-            created_at: Timestamp.now()
+            published: post.published,
+            created_at: Timestamp.now(),
+            updated_at: Timestamp.now(),
         }).catch((error) => {
             console.error('Some error happened here', 'postActions:createPost()');
         });
     }
+}
 
+export const updatePost = (post: any): ThunkAction<void, RootState, null, PostAction> => {
+    return async dispatch => {
 
-    /*
-    return (dispatch: any, getState: any) => {
-        //make async call to db
-        dispatch({type: 'CREATE_POST', post});
+        const docRef = doc(db, 'posts', post.slug);
+        await updateDoc(docRef, post).catch((error) => {
+            console.error('Some error happened here', 'postActions:updatePost()');
+        });
+
     }
-     */
 }
 
 export const deletePost = (postId: string): ThunkAction<void, RootState, null, PostAction> => {
     return async dispatch => {
         const docRef = doc(db, 'posts', postId);
-        deleteDoc(docRef).catch((error) => {
+        await deleteDoc(docRef).catch((error) => {
             console.error('Some error happened here', 'postActions:deletePost()');
         });
     }
