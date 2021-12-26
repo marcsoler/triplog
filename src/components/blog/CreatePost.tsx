@@ -1,4 +1,4 @@
-import {FC, FormEvent, useState, useEffect} from 'react';
+import {FC, FormEvent, useState} from 'react';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import slugify from 'slugify';
 
@@ -26,21 +26,30 @@ interface IPostFormInput {
 }
 
 const CreatePost: FC = () => {
-
+    const [title, setTitle] = useState('');
+    const [subtitle, setSubtitle] = useState('');
+    const [content, setContent] = useState('');
 
     const dispatch = useDispatch();
 
+    const {register, formState: {errors}, handleSubmit, setValue, getValues} = useForm<IPostFormInput>();
 
-    const {register, formState: { errors }, handleSubmit, setValue} = useForm<IPostFormInput>();
     const onSubmit: SubmitHandler<IPostFormInput> = data => {
         dispatch(createPost(data, () => console.error('An error happened!')));
     };
 
     const slugifyTitle = (title: string): void => {
-      setValue('slug', slugify(title, {
-          lower: true,
-          strict: true,
-      }));
+        setValue('slug', slugify(title, {
+            lower: true,
+            strict: true,
+        }), {shouldValidate: true});
+    }
+
+    const generatePreview = (e: FormEvent): void => {
+        const formValues = getValues();
+        setTitle(formValues.title);
+        setSubtitle(formValues.subtitle);
+        setContent(formValues.content);
     }
 
 
@@ -49,7 +58,7 @@ const CreatePost: FC = () => {
 
             <Row>
                 <Col xs={12}>
-                    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <Form onSubmit={handleSubmit(onSubmit)} onChange={(e) => generatePreview(e)}>
 
                         <Tabs defaultActiveKey="write" id="uncontrolled-tab-example" className="mt-3 mb-3">
                             <Tab eventKey="write" title="Write">
@@ -57,8 +66,13 @@ const CreatePost: FC = () => {
 
                                 <Form.Group className="mb-3" controlId="title">
                                     <Form.Label>Title</Form.Label>
-                                    <Form.Control className={(errors.title && 'is-invalid')} type="text" {...register('title', {required: true, onChange: (e) => slugifyTitle(e.currentTarget.value)})} />
-                                    { errors.title && <div className="invalid-feedback">The title is a required field!</div> }
+                                    <Form.Control className={(errors.title && 'is-invalid')}
+                                                  type="text" {...register('title', {
+                                        required: true,
+                                        onChange: (e) => slugifyTitle(e.currentTarget.value)
+                                    })} />
+                                    {errors.title &&
+                                        <div className="invalid-feedback">The title is a required field!</div>}
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
@@ -66,7 +80,7 @@ const CreatePost: FC = () => {
                                     <InputGroup>
                                         <InputGroup.Text>{`${window.location.origin}/post/`}</InputGroup.Text>
                                         <Form.Control type="text"
-                                                      readOnly {...register('slug', {pattern: /^[a-z0-9_]+$/i})} />
+                                                      readOnly {...register('slug')} />
                                     </InputGroup>
                                 </Form.Group>
 
@@ -103,11 +117,9 @@ const CreatePost: FC = () => {
 
                             </Tab>
                             <Tab eventKey="profile" title="Preview">
-                                {/*
                                 {title && <h1>{title}</h1>}
                                 {subtitle && <p className="lead">{subtitle}</p>}
                                 {content && <ReactMarkdown>{content}</ReactMarkdown>}
-                                */}
                             </Tab>
                         </Tabs>
 
@@ -115,7 +127,7 @@ const CreatePost: FC = () => {
 
                         <Form.Group className="mb-3" controlId="status">
                             <Form.Label>Status</Form.Label>
-                            <Form.Check type="switch" label="Publish" {...register('status', {required: true})} />
+                            <Form.Check type="switch" label="Publish" {...register('status')} />
                         </Form.Group>
 
                         <Button variant="primary" type="submit">
