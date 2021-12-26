@@ -1,9 +1,8 @@
 import {FC, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 //import {setSuccess} from '../../store/actions/authActions';
 import {deletePost} from '../../store/actions/postActions';
-import {RootState} from '../../store';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
@@ -11,10 +10,11 @@ import Modal from 'react-bootstrap/Modal';
 import Table from 'react-bootstrap/Table';
 
 import moment from 'moment';
+import usePostsSelector from '../../hooks/usePostsSelector';
 
 const Dashboard: FC = () => {
 
-    const {posts} = useSelector((state: RootState) => state.posts);
+    const {posts} = usePostsSelector();
 
     const dispatch = useDispatch();
     const [postToDelete, setPostToDelete] = useState<any>(null);
@@ -35,9 +35,6 @@ const Dashboard: FC = () => {
     }
 
     const [showModal, setShowModal] = useState(false);
-
-    console.log(posts);
-
 
     return (
         <Container>

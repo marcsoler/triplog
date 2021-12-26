@@ -1,10 +1,9 @@
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import {NavLink} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {signout} from '../../../store/actions/authActions';
-import {RootState} from '../../../store';
-import {AuthState} from '../../../store/types';
+import useAuthSelector from '../../../hooks/useAuthSelector';
 
 const SingedInLinks = () => {
 
@@ -14,7 +13,7 @@ const SingedInLinks = () => {
         dispatch(signout());
     }
 
-    const auth: AuthState = useSelector((state: RootState) => state.auth);
+    const auth = useAuthSelector();
 
     return (
         <NavDropdown title={auth.user?.firstname}>
