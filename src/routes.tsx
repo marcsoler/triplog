@@ -4,6 +4,7 @@ import SignIn from './components/auth/SignIn';
 import ForgotPassword from './components/auth/ForgotPassword';
 import Dashboard from './components/blog/Dashboard';
 import CreatePost from './components/blog/CreatePost';
+import EditPost from './components/blog/EditPost';
 
 interface Route {
     routeType: 'public' | 'private' | 'publicOnly';
@@ -55,6 +56,13 @@ const routes: Route[] = [
         params: {
             path: '/dashboard',
             component: Dashboard,
+        }
+    },
+    {
+        routeType: 'private',
+        params: {
+            path: '/dashboard/post/edit/:id',
+            component: EditPost,
         }
     },
     {
