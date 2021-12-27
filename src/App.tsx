@@ -17,7 +17,6 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
 import NotFound from './components/misc/NotFound';
 import useAuthSelector from './hooks/useAuthSelector';
-import {LoadScript} from '@react-google-maps/api';
 
 const auth = getAuth(firebaseApp);
 

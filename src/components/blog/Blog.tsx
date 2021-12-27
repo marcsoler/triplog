@@ -42,10 +42,10 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
         <>
             <Container>
                 <Row>
-                    <Col as={'article'} md={8}>
+                    <Col as="article" md={8}>
                         { post && <Post post={post} /> }
                     </Col>
-                    <Col as={'aside'} md={4}>
+                    <Col as="aside" md={4}>
                         { posts && <PostList posts={posts} /> }
                     </Col>
                 </Row>
