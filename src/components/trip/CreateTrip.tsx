@@ -24,13 +24,13 @@ const CreateTrip: FC = () => {
 
     const { register, handleSubmit, getValues} = useForm();
 
+    const [mapRef, setMapRef] = useState<google.maps.Map>();
+    const [dirRef, setDirRef] = useState<any>()
     const [origin, setOrigin] = useState<string|google.maps.LatLng|google.maps.Place|google.maps.LatLngLiteral>('');
     const [destination, setDestination] = useState<string|google.maps.LatLng|google.maps.Place|google.maps.LatLngLiteral>('');
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
 
     const onSubmit: SubmitHandler<ITripForm> = data => {
-        console.log('submittion...');
-        console.log(data);
 
         const formValues = getValues();
 
@@ -80,8 +80,8 @@ const CreateTrip: FC = () => {
     }
 
     const onDirectionsChange = (): void => {
-        setResponse(response);
-        console.log('Directions changed...', response);
+        console.log('onDirectionsChange()', dirRef.getDirections());
+
     }
 
     const renderMap = () => {
@@ -124,6 +124,7 @@ const CreateTrip: FC = () => {
                             id="gmap-planner"
                             mapContainerStyle={containerStyle}
                             center={center}
+                            onLoad={map => setMapRef(map)}
                             zoom={4}>
 
                             {!directionsLoaded && (origin && destination && travelMode) && (
@@ -136,7 +137,7 @@ const CreateTrip: FC = () => {
                                     callback={directionCallback}
                                 />)}
 
-                            { directionsLoaded && <DirectionsRenderer directions={response} options={{
+                            { directionsLoaded && <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={response} options={{
                                 draggable: true
                             }} onDirectionsChanged={onDirectionsChange} /> }
                         </GoogleMap>
