@@ -1,4 +1,4 @@
-import {GoogleMap, LoadScript} from '@react-google-maps/api';
+import {GoogleMap} from '@react-google-maps/api';
 
 const Map = () => {
 
@@ -13,14 +13,12 @@ const Map = () => {
     }
 
     return (
-        // @ts-ignore
-        <LoadScript googleMapsApiKey={process.env.REACT_APP_MAPS_API_KEY}>
-            <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={center}
-                zoom={14}
-            />
-        </LoadScript>
+
+        <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={14}
+        />
     )
 }
 

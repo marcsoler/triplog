@@ -18,6 +18,7 @@ const SingedInLinks = () => {
     return (
         <NavDropdown title={auth.user?.firstname}>
             <NavDropdown.Item as={NavLink} to="/dashboard/post/create">New Post</NavDropdown.Item>
+            <NavDropdown.Item as={NavLink} to="/dashboard/trip/create">New Trip</NavDropdown.Item>
             <NavDropdown.Item as={NavLink} to="/dashboard">Dashboard</NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
