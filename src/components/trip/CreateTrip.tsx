@@ -39,19 +39,16 @@ const CreateTrip: FC = () => {
 
         switch (formValues.travelMode) {
             case 'BICYCLING':
-                setDestination(google.maps.TravelMode.BICYCLING);
+                setTravelMode(google.maps.TravelMode.BICYCLING);
                 break;
             case 'WALKING':
-                setDestination(google.maps.TravelMode.WALKING);
+                setTravelMode(google.maps.TravelMode.WALKING);
                 break;
             case 'DRIVING':
             default:
-                setDestination(google.maps.TravelMode.DRIVING);
+                setTravelMode(google.maps.TravelMode.DRIVING);
                 break;
-
-
         }
-        setTravelMode(formValues.travelMode)
 
 
     }
