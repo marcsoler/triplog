@@ -25,7 +25,7 @@ const CreateTrip: FC = () => {
     const { register, handleSubmit, getValues} = useForm();
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
-    const [dirRef, setDirRef] = useState<any>()
+    const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [origin, setOrigin] = useState<string|google.maps.LatLng|google.maps.Place|google.maps.LatLngLiteral>('');
     const [destination, setDestination] = useState<string|google.maps.LatLng|google.maps.Place|google.maps.LatLngLiteral>('');
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
@@ -71,8 +71,6 @@ const CreateTrip: FC = () => {
     const [response, setResponse] = useState(undefined);
 
     const directionCallback = (response: any) => {
-        console.count('directionCallback');
-        console.log(response.status);
         if(response.status === 'OK') {
             setDirectionsLoaded(true);
             setResponse(response);
@@ -80,8 +78,7 @@ const CreateTrip: FC = () => {
     }
 
     const onDirectionsChange = (): void => {
-        console.log('onDirectionsChange()', dirRef.getDirections());
-
+        console.log('onDirectionsChange()', dirRef!.getDirections());
     }
 
     const renderMap = () => {
