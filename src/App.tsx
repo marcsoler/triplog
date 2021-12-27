@@ -48,30 +48,28 @@ function App() {
 
     return (
         <BrowserRouter>
-            <LoadScript googleMapsApiKey={process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : ''}>
-                <div className="App">
-                    { !loading && <Header /> }
-                    <main>
+            <div className="App">
+                { !loading && <Header /> }
+                <main>
 
-                        <Switch>
+                    <Switch>
 
-                            {routes.map((route, key) => {
-                                switch (route.routeType) {
-                                    case 'public':
-                                        return <PublicRoute {...route.params} exact key={key} />
-                                    case 'publicOnly':
-                                        return <PublicOnlyRoute {...route.params} exact key={key} />
-                                    case 'private':
-                                        return <PrivateRoute {...route.params} exact key={key} />
-                                }
-                                return <></>;
-                            })}
-                            <Route component={NotFound} />
-                        </Switch>
-                    </main>
-                    <Footer/>
-                </div>
-            </LoadScript>
+                        {routes.map((route, key) => {
+                            switch (route.routeType) {
+                                case 'public':
+                                    return <PublicRoute {...route.params} exact key={key} />
+                                case 'publicOnly':
+                                    return <PublicOnlyRoute {...route.params} exact key={key} />
+                                case 'private':
+                                    return <PrivateRoute {...route.params} exact key={key} />
+                            }
+                            return <></>;
+                        })}
+                        <Route component={NotFound} />
+                    </Switch>
+                </main>
+                <Footer/>
+            </div>
         </BrowserRouter>
     );
 }

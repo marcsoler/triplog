@@ -1,8 +1,17 @@
-import {FC, useState} from 'react';
+import {FC, useCallback, useState} from 'react';
 
-import {DirectionsRenderer, DirectionsService, GoogleMap} from '@react-google-maps/api';
+import Alert from 'react-bootstrap/Alert';
+import Loading from '../misc/Loading';
+
+import {DirectionsRenderer, DirectionsService, GoogleMap, useJsApiLoader} from '@react-google-maps/api';
 
 const CreateTrip: FC = () => {
+
+    const [directionsLoaded, setDirectionsLoaded] = useState(false);
+
+    const {isLoaded, loadError} = useJsApiLoader({
+        googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
+    });
 
     const [response, setResponse] = useState(undefined);
 
@@ -18,18 +27,46 @@ const CreateTrip: FC = () => {
 
 
     const directionCallback = (response: any) => {
-        setResponse(response);
+        console.log('loaded dir');
+        if(response.status === 'OK') {
+            setDirectionsLoaded(true);
+            setResponse(response);
+        }
     }
 
-    return (
-        <>
+
+    const renderMap = () => {
+        console.log('renders..');
+
+        return (
             <GoogleMap
+                id="gmap-planner"
                 mapContainerStyle={containerStyle}
                 center={center}
-                zoom={4}
-            />
-        </>
-    )
+                zoom={4}>
+                { /* Child components, such as markers, info windows, etc. */}
+
+                {!directionsLoaded && (
+                    <DirectionsService
+                        options={{
+                            destination: 'Steinhausen, Switzerland',
+                            origin: 'Ilanz, Switzerland',
+                            travelMode: google.maps.TravelMode.DRIVING,
+                        }}
+                        callback={directionCallback}
+                    />)}
+
+                { directionsLoaded && <DirectionsRenderer directions={response} /> }
+
+            </GoogleMap>
+        )
+    }
+
+    if (loadError) {
+        return <Alert variant="danger">Map cannot be loaded right now, sorry.</Alert>
+    }
+
+    return isLoaded ? renderMap() : <Loading/>
 }
 
 export default CreateTrip;
