@@ -1,40 +1,89 @@
-import {FC, useEffect} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {FC, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {setSuccess} from '../../store/actions/authActions';
-import {RootState} from '../../store';
-import {Container} from 'react-bootstrap';
+//import {setSuccess} from '../../store/actions/authActions';
+import {deletePost} from '../../store/actions/postActions';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Container from 'react-bootstrap/Container';
+import Modal from 'react-bootstrap/Modal';
+import Table from 'react-bootstrap/Table';
+
+import moment from 'moment';
+import usePostsSelector from '../../hooks/usePostsSelector';
 
 const Dashboard: FC = () => {
 
-    const {success} = useSelector((state: RootState) => state.auth);
-    const {posts} = useSelector((state: RootState) => state.posts);
+    const {posts} = usePostsSelector();
+
     const dispatch = useDispatch();
+    const [postToDelete, setPostToDelete] = useState<any>(null);
 
-    useEffect(() => {
-        if (success) {
-            dispatch(setSuccess(''));
-        }
-    }, [success, dispatch]);
+    const promptPostDeletion = (postId: string) => {
+        setPostToDelete(posts?.find((post) => post.id === postId));
+        setShowModal(true);
+        return;
+    }
 
+    const handlePostDeletion = () => {
+        dispatch(deletePost(postToDelete.id));
+        setShowModal(false);
+    }
+
+    const closeModal = () => {
+        setShowModal(false);
+    }
+
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <Container>
             <h1>Dashboard</h1>
 
-            <table>
+            { posts &&
+            <Table hover>
+                <caption>Posts</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Post</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Last updated</th>
+                    <th scope="col">Actions</th>
+                </tr>
+
+                </thead>
                 <tbody>
 
                 {
                     // @ts-ignore
                     posts.map((p) => {
-                    return (<tr>
-                        <td>{p.title}</td>
-                        <td>sd</td>
-                    </tr>)
-                }) }
+                        return (<tr key={p.id}>
+                            <td>{p.title}</td>
+                            <td>{moment.unix(p.created_at.seconds).format('DD.MM.YYYY')}</td>
+                            <td>{p.updated_at ? moment.unix(p.updated_at.seconds).format('DD.MM.YYYY') : 'Never'}</td>
+                            <td>
+                                <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
+                                    <Button href={`/post/${p.id}`} variant="primary">View</Button>
+                                    <Button href={`/dashboard/post/edit/${p.id}`} variant="secondary">Edit</Button>
+                                    <Button variant="danger" onClick={(e) => promptPostDeletion(p.id)}>Delete</Button>
+                                </ButtonGroup>
+                            </td>
+                        </tr>)
+                    })}
                 </tbody>
-            </table>
+            </Table> }
+
+            <Modal show={showModal} onHide={closeModal}>
+                <Modal.Header>{postToDelete?.title}</Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this post?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+                    <Button variant="danger" onClick={handlePostDeletion}>Yes</Button>
+                </Modal.Footer>
+            </Modal>
+
 
         </Container>
     )

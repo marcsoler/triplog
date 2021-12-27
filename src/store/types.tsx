@@ -79,8 +79,15 @@ export const SET_POSTS = 'SET_POSTS';
 export interface Post {
     id: string;
     title: string;
+    subtitle: string;
     content: string;
+    route: string;
+    published: boolean;
     created_at: {
+        seconds: number,
+        nanoseconds: number,
+    };
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     };

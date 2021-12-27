@@ -1,20 +1,16 @@
 import {FC, FormEvent, useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-//import Input from '../layout/elements/Input';
-
-
 import {signup, setError} from '../../store/actions/authActions';
 
-import {RootState} from '../../store';
 import {Redirect} from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
-
+import useAuthSelector from '../../hooks/useAuthSelector';
 
 const SignUp: FC = () => {
 
@@ -24,7 +20,7 @@ const SignUp: FC = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const {error} = useSelector((state: RootState) => state.auth);
+    const {authenticated, error} = useAuthSelector();
 
     useEffect(() => {
         return () => {
@@ -40,8 +36,6 @@ const SignUp: FC = () => {
         setIsLoading(true);
         dispatch(signup({firstname, lastname, email, password}, () => setIsLoading(false)));
     }
-
-    const {authenticated} = useSelector((state: RootState) => state.auth);
 
     if (authenticated) {
         return (<Redirect to={'/'}/>);

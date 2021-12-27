@@ -1,7 +1,7 @@
 import {PostsAction, PostsState, SET_POSTS} from '../types';
 
 const initialState: PostsState = {
-    posts: undefined,
+    posts: [],
 }
 
 const postsReducer = (state = initialState, action: PostsAction) => {

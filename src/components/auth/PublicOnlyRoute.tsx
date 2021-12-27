@@ -1,7 +1,6 @@
 import {FC} from 'react';
 import {Redirect, Route, RouteProps} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store';
+import useAuthSelector from '../../hooks/useAuthSelector';
 
 
 interface Props extends RouteProps {
@@ -12,7 +11,7 @@ const PublicOnlyRoute: FC<Props> = ({ component: Component, ...rest}) => {
 
     const fallBackUrl = '/';
 
-    const { authenticated } = useSelector((state: RootState) => state.auth);
+    const {authenticated} = useAuthSelector();
 
     return(
         <Route {...rest} render={props => !authenticated ? <Component {...props} /> : <Redirect to={fallBackUrl}  /> } />
