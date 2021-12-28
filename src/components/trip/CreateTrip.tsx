@@ -1,4 +1,4 @@
-import {FC, useEffect, useRef, useState} from 'react';
+import {FC, memo, useEffect, useMemo, useRef, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
@@ -57,22 +57,25 @@ const CreateTrip: FC = () => {
         //first click ist start/second click is finished...
         const wp = e.latLng;
 
-        if(wp && waypoints.length < 2) {
+        if (wp && waypoints.length < 2) {
             waypoints.push(wp);
         }
 
-        if(waypoints.length > 1) {
+        if (waypoints.length > 1) {
             console.log('draw route...');
-
+            displayRoute();
         }
-
-        console.log(waypoints);
-
-        console.log(directionsLoaded, waypoints.length);
-
     }
 
+    const displayRoute = () => {
+        const directionService = new google.maps.DirectionsService();
 
+        directionService.route({
+            origin: waypoints[0],
+            destination: waypoints[waypoints.length - 1],
+            travelMode: google.maps.TravelMode.BICYCLING,
+        }, directionCallback);
+    }
 
 
     const directionCallback = (response: any) => {
@@ -89,27 +92,11 @@ const CreateTrip: FC = () => {
 
         console.log('onDirectionsChange()', dir);
 
-        /*
-        // @ts-ignore
-        if (dir && dir.request && dir.request.waypoints) {
-            // @ts-ignore
-            const waypoints = dir.request.waypoints.map((wp: google.maps.DirectionsWaypoint) => {
-                return {
-                    // @ts-ignore
-                    lat: wp.location.lat(), lng: wp.location.lng(),
-                }
-            })
-
-            setWaypoints(waypoints);
-        }
-         */
-
     }
 
     const containerStyle = {
         width: '100%',
         height: '400px',
-        //display: directionsLoaded ? 'block' : 'none',
     }
 
     const center = {
@@ -137,26 +124,12 @@ const CreateTrip: FC = () => {
                             options={{
                                 draggableCursor: 'crosshair'
                             }}
-                            >
-
-
-
-                            {!directionsLoaded && waypoints.length > 1 && (
-                                <DirectionsService options={{
-                                    origin: waypoints[0],
-                                    destination: waypoints[waypoints.length-1],
-                                    travelMode: google.maps.TravelMode.BICYCLING,
-                                }}
-                               callback={directionCallback}/>
-                            )}
-
-                            { directionsLoaded && <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={response} options={{
-                                draggable: true
-                            }} /> }
-
+                        >
+                            {directionsLoaded &&
+                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={response} options={{
+                                    draggable: true
+                                }} onDirectionsChanged={onDirectionsChange}/>}
                         </GoogleMap>
-
-
 
 
                     </Col>
