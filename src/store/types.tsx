@@ -5,6 +5,10 @@ export const SET_ERROR = 'SET_ERROR';
 export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
 
+/***
+ * User/Auth:
+ */
+
 export interface User {
     id: string;
     firstname: string;
@@ -73,6 +77,10 @@ export type AuthAction =
     | SetSuccessAction;
 
 
+/***
+ * Posts
+ */
+
 export const SET_POST = 'SET_POST';
 export const SET_POSTS = 'SET_POSTS';
 
@@ -113,3 +121,32 @@ interface SetPostsAction {
 
 export type PostAction = SetPostAction;
 export type PostsAction = SetPostsAction;
+
+
+/***
+ * Trip / Routes:
+ */
+
+export interface Trip {
+    name: string;
+    waypoints: Array<Waypoint>
+    created_at: {
+        seconds: number,
+        nanoseconds: number,
+    };
+}
+
+export interface Waypoint {
+    lat: number;
+    lng: number;
+    order: number;
+}
+
+export const SET_TRIP = 'SET_TRIP';
+
+interface SetTripAction {
+    type: typeof SET_TRIP;
+    payload: Trip;
+}
+
+export type TripAction = SetTripAction;

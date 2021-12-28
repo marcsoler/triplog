@@ -1,4 +1,4 @@
-import {FC, useState} from 'react';
+import {FC, useEffect, useRef, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
@@ -10,7 +10,7 @@ import Row from 'react-bootstrap/Row';
 
 import Loading from '../misc/Loading';
 
-import {DirectionsRenderer, DirectionsService, GoogleMap, useJsApiLoader} from '@react-google-maps/api';
+import {DirectionsRenderer, DirectionsService, GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 import {SubmitHandler, useForm} from 'react-hook-form';
 
 interface ITripForm {
@@ -22,22 +22,19 @@ interface ITripForm {
 
 const CreateTrip: FC = () => {
 
-    const { register, handleSubmit, getValues} = useForm();
+    const {register, getValues} = useForm();
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
-    const [origin, setOrigin] = useState<string|google.maps.LatLng|google.maps.Place|google.maps.LatLngLiteral>('');
-    const [destination, setDestination] = useState<string|google.maps.LatLng|google.maps.Place|google.maps.LatLngLiteral>('');
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
 
+    const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
+
+    const [directionsLoaded, setDirectionsLoaded] = useState(false);
+    const [response, setResponse] = useState(undefined);
+
     const onSubmit: SubmitHandler<ITripForm> = data => {
-
-        const formValues = getValues();
-
-        setOrigin(formValues.origin);
-        setDestination(formValues.destination)
-
-        switch (formValues.travelMode) {
+        switch (travelMode) {
             case 'BICYCLING':
                 setTravelMode(google.maps.TravelMode.BICYCLING);
                 break;
@@ -49,17 +46,70 @@ const CreateTrip: FC = () => {
                 setTravelMode(google.maps.TravelMode.DRIVING);
                 break;
         }
-
-
     }
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
     });
 
+    const onMapClick = (e: google.maps.MapMouseEvent): void => {
+
+        //first click ist start/second click is finished...
+        const wp = e.latLng;
+
+        if(wp && waypoints.length < 2) {
+            waypoints.push(wp);
+        }
+
+        if(waypoints.length > 1) {
+            console.log('draw route...');
+
+        }
+
+        console.log(waypoints);
+
+        console.log(directionsLoaded, waypoints.length);
+
+    }
+
+
+
+
+    const directionCallback = (response: any) => {
+        console.log('directionCallback');
+        if (response.status === 'OK') {
+            setDirectionsLoaded(true);
+            setResponse(response);
+        }
+    }
+
+    const onDirectionsChange = () => {
+
+        const dir = dirRef!.getDirections();
+
+        console.log('onDirectionsChange()', dir);
+
+        /*
+        // @ts-ignore
+        if (dir && dir.request && dir.request.waypoints) {
+            // @ts-ignore
+            const waypoints = dir.request.waypoints.map((wp: google.maps.DirectionsWaypoint) => {
+                return {
+                    // @ts-ignore
+                    lat: wp.location.lat(), lng: wp.location.lng(),
+                }
+            })
+
+            setWaypoints(waypoints);
+        }
+         */
+
+    }
+
     const containerStyle = {
         width: '100%',
         height: '400px',
+        //display: directionsLoaded ? 'block' : 'none',
     }
 
     const center = {
@@ -67,19 +117,6 @@ const CreateTrip: FC = () => {
         lng: 8.8156291,
     }
 
-    const [directionsLoaded, setDirectionsLoaded] = useState(false);
-    const [response, setResponse] = useState(undefined);
-
-    const directionCallback = (response: any) => {
-        if(response.status === 'OK') {
-            setDirectionsLoaded(true);
-            setResponse(response);
-        }
-    }
-
-    const onDirectionsChange = (): void => {
-        console.log('onDirectionsChange()', dirRef!.getDirections());
-    }
 
     const renderMap = () => {
         return (
@@ -88,56 +125,40 @@ const CreateTrip: FC = () => {
                 <Row className="mt-3">
                     <Col md={8}>
 
-                        <Form onSubmit={handleSubmit(onSubmit)}>
-                            <Row className="mb-3">
-                                <Col md={4} xs={12}>
-                                    <Form.Group controlId="origin">
-                                        <Form.Control type="text" placeholder="Origin" {...register('origin')} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={4} xs={12}>
-                                    <Form.Group controlId="origin">
-                                        <Form.Control type="text" placeholder="Destination" {...register('destination')} />
-                                    </Form.Group>
-                                </Col>
-                                <Col md={2} xs={8}>
-                                    <Form.Group controlId="travelMode">
-                                        <Form.Select aria-label="Travel mode selection" {...register('travelMode')}>
-                                            <option disabled>Travel mode</option>
-                                            <option value="DRIVING">Driving</option>
-                                            <option value="BICICYLING">Bicycling</option>
-                                            <option value="WALRKING">Walking</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                                <Col md={2} xs={4}>
-                                    <Button variant="primary" type="submit">Search</Button>
-                                </Col>
-                            </Row>
-
-                        </Form>
+                        <h1>Route planner</h1>
 
                         <GoogleMap
                             id="gmap-planner"
                             mapContainerStyle={containerStyle}
                             center={center}
                             onLoad={map => setMapRef(map)}
-                            zoom={4}>
+                            onClick={(e => onMapClick(e))}
+                            zoom={4}
+                            options={{
+                                draggableCursor: 'crosshair'
+                            }}
+                            >
 
-                            {!directionsLoaded && (origin && destination && travelMode) && (
-                                <DirectionsService
-                                    options={{
-                                        destination: destination,
-                                        origin: origin,
-                                        travelMode: travelMode,
-                                    }}
-                                    callback={directionCallback}
-                                />)}
+
+
+                            {!directionsLoaded && waypoints.length > 1 && (
+                                <DirectionsService options={{
+                                    origin: waypoints[0],
+                                    destination: waypoints[waypoints.length-1],
+                                    travelMode: google.maps.TravelMode.BICYCLING,
+                                }}
+                               callback={directionCallback}/>
+                            )}
 
                             { directionsLoaded && <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={response} options={{
                                 draggable: true
-                            }} onDirectionsChanged={onDirectionsChange} /> }
+                            }} /> }
+
                         </GoogleMap>
+
+
+
+
                     </Col>
                     <Col as="aside" md={4}>
                         <h3>Route info</h3>
