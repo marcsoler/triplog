@@ -7,6 +7,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import authReducer from './reducers/authReducer';
 import postReducer from './reducers/postReducer';
 import postsReducer from './reducers/postsReducer';
+import tripsReducer from './reducers/tripsReducer';
 
 const persistConfig = {
     key: 'root',
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     post: postReducer,
     posts: postsReducer,
+    trips: tripsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
