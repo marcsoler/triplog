@@ -5,6 +5,7 @@ import ForgotPassword from './components/auth/ForgotPassword';
 import Dashboard from './components/blog/Dashboard';
 import CreatePost from './components/blog/CreatePost';
 import EditPost from './components/blog/EditPost';
+import CreateTrip from './components/trip/CreateTrip';
 
 interface Route {
     routeType: 'public' | 'private' | 'publicOnly';
@@ -70,6 +71,13 @@ const routes: Route[] = [
         params: {
             path: '/dashboard/post/create',
             component: CreatePost,
+        }
+    },
+    {
+        routeType: 'private',
+        params: {
+            path: '/dashboard/trip/create',
+            component: CreateTrip
         }
     }
 ]
