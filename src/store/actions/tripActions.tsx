@@ -1,5 +1,5 @@
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, PostsAction, SET_POSTS, SET_TRIPS, Trip, TripAction, TripsAction} from '../types';
+import {SET_TRIPS, Trip, TripAction, TripsAction} from '../types';
 
 import {getFirestore, addDoc, collection, Timestamp, GeoPoint, query, getDocs, orderBy} from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';

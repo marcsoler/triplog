@@ -16,12 +16,6 @@ import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {useHistory} from 'react-router-dom';
 
-interface ITripForm {
-    origin: string;
-    destination: string;
-
-}
-
 
 const CreateTrip: FC = () => {
 
