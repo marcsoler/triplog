@@ -127,19 +127,29 @@ export type PostsAction = SetPostsAction;
  * Trip / Routes:
  */
 
+export const SET_TRIPS = 'SET_TRIPS';
+
 export interface Trip {
+    id?: string;
     name: string;
-    waypoints: Array<Waypoint>
-    created_at: {
+    waypoints: Array<google.maps.LatLng>
+    polyline: string,
+    created_at?: {
         seconds: number,
         nanoseconds: number,
     };
+    updated_at?: {
+        seconds: number,
+        nanoseconds: number,
+    }
 }
 
-export interface Waypoint {
-    lat: number;
-    lng: number;
-    order: number;
+export interface TripState {
+    trip?: Trip;
+}
+
+export interface TripsState {
+    trips?: Array<Trip>;
 }
 
 export const SET_TRIP = 'SET_TRIP';
@@ -150,3 +160,11 @@ interface SetTripAction {
 }
 
 export type TripAction = SetTripAction;
+
+
+interface SetTripsAction {
+    type: typeof SET_TRIPS;
+    payload: Array<Trip>;
+}
+
+export type TripsAction = SetTripsAction;

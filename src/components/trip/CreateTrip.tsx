@@ -1,4 +1,4 @@
-import {FC, memo, useEffect, useMemo, useRef, useState} from 'react';
+import {FC, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
@@ -10,7 +10,11 @@ import Row from 'react-bootstrap/Row';
 
 import Loading from '../misc/Loading';
 import {DirectionsRenderer, GoogleMap, useJsApiLoader} from '@react-google-maps/api';
-import {SubmitHandler, useForm} from 'react-hook-form';
+import Modal from 'react-bootstrap/Modal';
+import {useDispatch} from 'react-redux';
+import {storeTrip} from '../../store/actions/tripActions';
+import {Trip} from '../../store/types';
+import {useHistory} from 'react-router-dom';
 
 interface ITripForm {
     origin: string;
@@ -21,21 +25,20 @@ interface ITripForm {
 
 const CreateTrip: FC = () => {
 
-    const {register, getValues} = useForm();
-
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
+    const [name, setName] = useState<string>('');
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
+    const [polyline, setPolyline] = useState<string>('');
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
     const [response, setResponse] = useState();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
     const [distance, setDistance] = useState<number>();
     const [duration, setDuration] = useState<string>()
 
-    const onSubmit: SubmitHandler<ITripForm> = data => {
+    const history = useHistory();
 
-    }
 
     const updateTravelMode = (mode: string) => {
         switch (mode) {
@@ -87,27 +90,38 @@ const CreateTrip: FC = () => {
 
 
     const directionCallback = (res: any) => {
-        console.log('directionCallback', res);
         if (res.status === 'OK') {
             setDirectionsLoaded(true);
             setResponse(res);
-
-            if (res) {
-                const route = res.routes[0];
-                // @ts-ignore
-                console.log('routes', route.legs[0]);
-                setDistance(route.legs[0].distance.value);
-                setDuration(route.legs[0].duration.text);
-            }
-
         }
     }
 
     const onDirectionsChange = () => {
+        const dir: any = dirRef!.getDirections();
+        // Get and print metadata
+        const route = dir?.routes[0];
 
-        const dir = dirRef!.getDirections();
+        console.log(route);
 
-        console.log('onDirectionsChange()', dir);
+        setDistance(route?.legs[0].distance.text);
+        setDuration(route?.legs[0].duration.text);
+        setPolyline(route.overview_polyline);
+
+        //Update waypoints
+        const wps: google.maps.LatLng[] = [];
+
+        //origin:
+        wps.push(route.legs[0].start_location);
+
+        //
+        if(route.legs[0].via_waypoints.length > 0) {
+            route.legs[0].via_waypoints.forEach((wp: google.maps.LatLng) => {
+                wps.push(wp);
+            })
+        }
+        //destination:
+        wps.push(route.legs[0].end_location);
+        setWaypoints(wps);
 
     }
 
@@ -119,6 +133,36 @@ const CreateTrip: FC = () => {
     const center = {
         lat: 47.2238663,
         lng: 8.8156291,
+    }
+
+    const [showModal, setShowModal] = useState(false);
+
+    const dispatch = useDispatch();
+    const handleTripSubmission = () => {
+
+        const newTrip: Trip = {
+            name: name,
+            waypoints: waypoints,
+            polyline: polyline,
+        }
+
+        console.log('todo', name, waypoints);
+
+
+        //dispatch(createPost(data, () => console.error('An error happened!')));
+
+        dispatch(storeTrip(newTrip));
+
+        setShowModal(false);
+
+        history.push('/dashboard');
+
+
+
+
+
+
+
     }
 
 
@@ -164,10 +208,29 @@ const CreateTrip: FC = () => {
 
                         {distance && <p><strong>Distance:</strong> {distance}</p>}
                         {duration && <p><strong>Duration:</strong> {duration}</p>}
+                        {directionsLoaded && <Button variant="success" onClick={e => setShowModal(true)}>Save</Button>}
 
                     </Col>
                 </Row>
+
+                <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header>New trip</Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group className="mb-3" controlId="name">
+                                <Form.Label>Trip name</Form.Label>
+                                <Form.Control type="text" onChange={e => setName(e.currentTarget.value)} />
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={e => setShowModal(false)}>Keep editing</Button>
+                        <Button variant="success" onClick={handleTripSubmission}>Save</Button>
+                    </Modal.Footer>
+                </Modal>
+
             </Container>
+
         )
     }
 
