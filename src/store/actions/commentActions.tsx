@@ -2,6 +2,7 @@ import firebaseApp from '../../firebase/firebaseApp';
 
 import {
     arrayUnion,
+    arrayRemove,
     getFirestore,
     addDoc,
     collection,
@@ -58,10 +59,28 @@ export const getCommentsByPostId = (postId: string): ThunkAction<void, RootState
 export const addReaction = (comment: Comment, user: User): ThunkAction<void, RootState, null, CommentAction> => {
     return async dispatch => {
 
+        const commentDocRef = doc(db, 'comments', comment.id!);
 
-        // @ts-ignore
-        const commentDocRef = doc(db, 'comments', comment.id);
+        if(comment.reactions?.length) {
+            const currentReactions = comment.reactions;
 
+            console.log('currentReactions', currentReactions);
+            const cr = currentReactions.filter((r) => {
+                return r.user_id === user.id;
+            });
+
+            if(cr.length) {
+
+                await updateDoc(commentDocRef, {
+                    reactions: arrayRemove({
+                        user_id: user.id,
+                        created_at: Timestamp.now(),
+                    })
+                });
+                return;
+            }
+
+        }
         await updateDoc(commentDocRef, {
             reactions: arrayUnion({
                 user_id: user.id,
