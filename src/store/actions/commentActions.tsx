@@ -1,9 +1,21 @@
 import firebaseApp from '../../firebase/firebaseApp';
 
-import {getFirestore, addDoc, collection, Timestamp, query, getDocs, orderBy, where} from 'firebase/firestore';
+import {
+    arrayUnion,
+    getFirestore,
+    addDoc,
+    collection,
+    Timestamp,
+    query,
+    getDocs,
+    orderBy,
+    where,
+    doc,
+    setDoc, updateDoc
+} from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
-import {Comment, CommentAction, Comments, CommentsAction, SET_COMMENTS} from '../types';
+import {Comment, CommentAction, Comments, CommentsAction, SET_COMMENTS, User} from '../types';
 
 
 const db = getFirestore(firebaseApp);
@@ -43,26 +55,33 @@ export const getCommentsByPostId = (postId: string): ThunkAction<void, RootState
     }
 }
 
-/*
-// get posts
-export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
+export const addReaction = (comment: Comment, user: User): ThunkAction<void, RootState, null, CommentAction> => {
     return async dispatch => {
-        const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
-        try {
-            const querySnapshot = await getDocs(q);
-            const postsData: Array<Post> = querySnapshot.docs.map((p) => {
-                return {id: p.id, ...p.data()} as Post;
-            });
-
-            dispatch({
-                type: SET_POSTS,
-                payload: postsData,
-            });
 
 
-        } catch (err) {
-            console.error('Error on getPosts', err);
-        }
+        // @ts-ignore
+        const commentDocRef = doc(db, 'comments', comment.id);
+
+        await updateDoc(commentDocRef, {
+            reactions: arrayUnion({
+                user_id: user.id,
+                created_at: Timestamp.now(),
+            })
+        });
+
+    }
+}
+
+
+/*
+export const updatePost = (post: any): ThunkAction<void, RootState, null, PostAction> => {
+    return async dispatch => {
+
+        const docRef = doc(db, 'posts', post.slug);
+        await updateDoc(docRef, post).catch((error) => {
+            console.error('Some error happened here', 'postActions:updatePost()');
+        });
+
     }
 }
  */

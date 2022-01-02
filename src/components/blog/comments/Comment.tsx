@@ -2,21 +2,50 @@ import {FC} from 'react';
 
 import {Comment as CommentType} from '../../../store/types';
 
+import {Row, Col} from 'react-bootstrap';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faChevronUp} from '@fortawesome/free-solid-svg-icons/faChevronUp';
+import {useDispatch} from 'react-redux';
+import useAuthSelector from '../../../hooks/useAuthSelector';
+import {addReaction} from '../../../store/actions/commentActions';
+
+
 interface CommentProps {
-    comment: CommentType;
     key: string;
+    comment: CommentType;
 }
 
 const Comment: FC<CommentProps> = (props) => {
 
-    const comment: CommentType = props.comment;
+    const comment = props.comment;
 
-    console.log(comment);
+    const {authenticated, user} = useAuthSelector();
+
+    const dispatch = useDispatch();
+
+    const handleReaction = () => {
+        if(authenticated) {
+            console.log(`React to comment #${comment.id}`);
+            dispatch(addReaction(comment, user!));
+            return;
+        }
+        window.alert('You need to be authenticated!'); //todo
+    }
+
+    const voteIcon = <FontAwesomeIcon icon={faChevronUp} onClick={handleReaction}/>
 
     return (
         <article className="comment">
-            <h5>{comment.user_id}</h5>
-            <p>{comment.comment}</p>
+            <Row>
+                <Col xs={2} md={1}>
+                    {voteIcon}
+                    <span>5</span>
+                </Col>
+                <Col xs={10} md={11}>
+                    <h5>{comment.user_id}</h5>
+                    <p>{comment.comment}</p>
+                </Col>
+            </Row>
         </article>
     )
 }

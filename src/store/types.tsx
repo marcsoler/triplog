@@ -178,6 +178,7 @@ export interface Comment {
     comment: string;
     user_id?: string;
     post_id: string;
+    reactions?: Array<any>
     created_at?: {
         seconds: number,
         nanoseconds: number,
