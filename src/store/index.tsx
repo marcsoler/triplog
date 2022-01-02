@@ -8,6 +8,7 @@ import authReducer from './reducers/authReducer';
 import postReducer from './reducers/postReducer';
 import postsReducer from './reducers/postsReducer';
 import tripsReducer from './reducers/tripsReducer';
+import commentsReducer from './reducers/commentsReducer';
 
 const persistConfig = {
     key: 'root',
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     post: postReducer,
     posts: postsReducer,
     trips: tripsReducer,
+    comments: commentsReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

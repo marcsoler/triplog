@@ -168,3 +168,51 @@ interface SetTripsAction {
 }
 
 export type TripsAction = SetTripsAction;
+
+/***
+ * Comments:
+ */
+
+export interface Comment {
+    id?: string;
+    comment: string;
+    user_id?: string;
+    post_id: string;
+    created_at?: {
+        seconds: number,
+        nanoseconds: number,
+    };
+    updated_at?: {
+        seconds: number,
+        nanoseconds: number,
+    }
+}
+
+export interface Comments {
+    comments?: Array<Comment>;
+}
+
+export interface CommentState {
+    comment?: Comment;
+}
+
+export interface CommentsState {
+    comments?: Array<Comment>;
+}
+
+export const SET_COMMENT = 'SET_COMMENT';
+export const SET_COMMENTS = 'SET_COMMENTS';
+
+interface SetCommentAction {
+    type: typeof SET_COMMENT;
+    payload: Comment;
+}
+
+export type CommentAction = SetCommentAction;
+
+interface SetCommentsAction {
+    type: typeof SET_COMMENTS;
+    payload: Array<Comment>
+}
+
+export type CommentsAction = SetCommentsAction;
