@@ -34,27 +34,12 @@ const CommentForm: FC = () => {
 
 
     const onSubmit: SubmitHandler<CommentFormInputs> = (data) => {
-        console.log(data);
-
-
-        let displayName;
-        if(authenticated) {
-            console.log('user', user);
-            displayName = user?.firstname ? user.firstname : 'Anonymous';
-        } else {
-            console.log('todo: show popup');
-            displayName = 'Anonymous';
-        }
-
-        console.log(displayName, data.comment, post);
-
         const comment: Comment = {
             comment: data.comment,
-            user_id: authenticated ? user?.id : undefined,
-            post_id: post!.id,
+            user: authenticated ? user : undefined,
+            post_id: post!.id!,
         }
 
-        console.log('storing comment...', comment);
         dispatch(storeComment(comment));
 
 

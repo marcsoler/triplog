@@ -7,6 +7,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import authReducer from './reducers/authReducer';
 import postReducer from './reducers/postReducer';
 import postsReducer from './reducers/postsReducer';
+import tripReducer from './reducers/tripReducer';
 import tripsReducer from './reducers/tripsReducer';
 import commentsReducer from './reducers/commentsReducer';
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     auth: authReducer,
     post: postReducer,
     posts: postsReducer,
+    trip: tripReducer,
     trips: tripsReducer,
     comments: commentsReducer,
 });

@@ -85,17 +85,18 @@ export const SET_POST = 'SET_POST';
 export const SET_POSTS = 'SET_POSTS';
 
 export interface Post {
-    id: string;
+    id?: string;
     title: string;
     subtitle: string;
     content: string;
-    route: string;
+    trip: string;
+    progress: string | number,
     published: boolean;
-    created_at: {
+    created_at?: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at: {
+    updated_at?: {
         seconds: number,
         nanoseconds: number,
     };
@@ -176,7 +177,7 @@ export type TripsAction = SetTripsAction;
 export interface Comment {
     id?: string;
     comment: string;
-    user_id?: string;
+    user?: User;
     post_id: string;
     reactions?: Array<Reaction>
     created_at?: {

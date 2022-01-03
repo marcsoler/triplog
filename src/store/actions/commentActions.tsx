@@ -28,7 +28,7 @@ export const storeComment = (comment: Comment): ThunkAction<void, RootState, nul
     return async dispatch => {
         await addDoc(commentsRef, {
             comment: comment.comment,
-            user_id: comment.user_id,
+            user: comment.user,
             post_id: comment.post_id,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),

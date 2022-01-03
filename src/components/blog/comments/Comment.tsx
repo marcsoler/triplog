@@ -1,4 +1,4 @@
-import {FC, useState, useEffect} from 'react';
+import {FC, useState} from 'react';
 
 import {Comment as CommentType} from '../../../store/types';
 
@@ -44,7 +44,7 @@ const Comment: FC<CommentProps> = (props) => {
                     <span>{votes}</span>
                 </Col>
                 <Col xs={10} md={11}>
-                    <h5>{comment.user_id}</h5>
+                    <h5>{comment.user ? comment.user.firstname : 'Anonymous'}</h5>
                     <p>{comment.comment}</p>
                 </Col>
             </Row>
