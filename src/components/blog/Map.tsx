@@ -1,14 +1,12 @@
-import {FC, useEffect, useState} from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
 
-import {GoogleMap, Polyline, useJsApiLoader} from '@react-google-maps/api';
-import {useCallback} from 'react';
+import {GoogleMap, Marker, Polyline, useJsApiLoader} from '@react-google-maps/api';
 import Alert from 'react-bootstrap/Alert';
 import Loading from '../misc/Loading';
 import useTripSelector from '../../hooks/useTripSelector';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import {getTripByPost} from '../../store/actions/tripActions';
-import {Post} from '../../store/types';
 
 const Map: FC = () => {
 
@@ -22,7 +20,7 @@ const Map: FC = () => {
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
-
+    const [path, setPath] = useState<google.maps.LatLng[]>([]);
 
 
     const {isLoaded, loadError} = useJsApiLoader({
@@ -54,15 +52,8 @@ const Map: FC = () => {
 
 
 
-    const onPolylineLoad = useCallback(
-        () => {
-            ///callback
-        },
-        [],
-    );
 
-
-    const drawPolyline = () => {
+    const drawPolyline = (): google.maps.LatLng[] => {
 
         const encodedPolyline = trip!.polyline;
 
@@ -79,16 +70,30 @@ const Map: FC = () => {
         return decodedPath;
     }
 
+    const loadMarker = () => {
+
+        const encodedPolyline = trip!.polyline;
+
+        const decodedPath = google.maps.geometry.encoding.decodePath(encodedPolyline);
+
+        const progressedPath = Math.ceil(Number(post?.progress) * decodedPath.length / 100);
+
+        console.log(progressedPath);
+
+        return decodedPath[progressedPath];
+    }
+
 
 
     const renderMap = () => {
+
+
         return <GoogleMap
             mapContainerStyle={containerStyle}
             zoom={4}
             onLoad={onMapLoad}>
-            { /* Child components, such as markers, info windows, etc. */}
-            <></>
-            <Polyline onLoad={onPolylineLoad} path={drawPolyline()}  />
+            <Polyline path={drawPolyline()} />
+            <Marker position={loadMarker()} animation={google.maps.Animation.BOUNCE} />
         </GoogleMap>
     }
 
