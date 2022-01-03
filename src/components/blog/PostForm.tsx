@@ -12,13 +12,15 @@ import {createPost, getLatestPost, getPostById, getPosts} from '../../store/acti
 import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
+import useTripsSelector from '../../hooks/useTripsSelector';
+import {Post} from '../../store/types';
 
 interface IPostFormInput {
     title: string;
     slug: string;
     subtitle: string;
     content: string;
-    route: string;
+    trip: string;
     progress: string;
     published: boolean;
 }
@@ -29,11 +31,6 @@ interface PostFormProps {
 
 const PostForm: FC<PostFormProps> = ({postId}) => {
 
-    if(postId) {
-        console.log('editing...', postId);
-    }
-
-
     const [title, setTitle] = useState('');
     const [subtitle, setSubtitle] = useState('');
     const [content, setContent] = useState('');
@@ -43,30 +40,37 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     useEffect(() => {
         if (postId) {
             dispatch(getPostById(postId));
-        } else {
-            dispatch(getLatestPost());
         }
-        dispatch(getPosts());
     }, [dispatch, postId]);
 
 
     const {register, formState: {errors}, handleSubmit, setValue, getValues} = useForm<IPostFormInput>();
 
     const {post} = usePostSelector();
+    const {trips} = useTripsSelector();
 
     useEffect(() => {
-        if(postId) {
+        if(post && post.id) {
             setValue('title', post!.title);
             setValue('slug', post!.id);
             setValue('subtitle', post!.subtitle);
             setValue('content', post!.content);
-            setValue('route', post!.route);
+            setValue('trip', post!.trip);
             setValue('published', post!.published);
         }
-    }, [postId, setValue, post]);
+    }, [setValue, post]);
 
     const onSubmit: SubmitHandler<IPostFormInput> = data => {
-        dispatch(createPost(data, () => console.error('An error happened!')));
+        const post: Post = {
+            id: data.slug,
+            title: data.title,
+            subtitle: data.subtitle,
+            content: data.content,
+            trip: data.trip,
+            progress: data.progress,
+            published: data.published,
+        }
+        dispatch(createPost(post, () => console.error('An error happened!')));
     };
 
     const slugifyTitle = (title: string): void => {
@@ -124,20 +128,21 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
                             <Row>
                                 <Col xs={12} md={6}>
-                                    <Form.Group className="mb-3" controlId="route">
-                                        <Form.Label>Route</Form.Label>
+                                    <Form.Group className="mb-3" controlId="trip">
+                                        <Form.Label>Trip</Form.Label>
                                         <Form.Select
-                                            aria-label="Select the route" {...register('route', {required: true})}>
-                                            <option disabled>Route list</option>
-                                            <option value="1">Iceland</option>
-                                            <option value="2">Trip across America</option>
+                                            aria-label="Select the route" {...register('trip', {required: true})}>
+                                            <option disabled>Trip list</option>
+                                            {trips?.map((t) => {
+                                                return <option value={t.id} key={t.id}>{t.name}</option>
+                                            })}
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3" controlId="progress">
                                         <Form.Label>Progress</Form.Label>
-                                        <Form.Range className="mt-1" {...register('progress', {required: true})} />
+                                        <Form.Range className="mt-1" min={0} max={100} {...register('progress', {required: true})} />
                                     </Form.Group>
                                 </Col>
                             </Row>

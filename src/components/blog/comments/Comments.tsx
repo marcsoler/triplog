@@ -13,7 +13,9 @@ const Comments: FC = () => {
     const {post} = usePostSelector();
 
     useEffect(() => {
-        dispatch(getCommentsByPostId(post!.id));
+        if(post) {
+            dispatch(getCommentsByPostId(post.id!));
+        }
     }, [dispatch, post]);
 
 
@@ -24,8 +26,7 @@ const Comments: FC = () => {
         <>
             <h5>Reactions</h5>
             { comments && comments.map((c) => {
-                // @ts-ignore
-                return <Comment key={c.id} comment={c} />
+                return <Comment key={c.id!} comment={c} />
             })}
         </>
     )

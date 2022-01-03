@@ -73,18 +73,17 @@ const Dashboard: FC = () => {
                     <tbody>
 
                     {
-                        // @ts-ignore
                         posts.map((p) => {
                             return (<tr key={p.id}>
                                 <td>{p.title}</td>
-                                <td>{moment.unix(p.created_at.seconds).format('DD.MM.YYYY')}</td>
+                                <td>{p.created_at && moment.unix(p.created_at.seconds).format('DD.MM.YYYY')}</td>
                                 <td>{p.updated_at ? moment.unix(p.updated_at.seconds).format('DD.MM.YYYY') : 'Never'}</td>
                                 <td>
                                     <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
                                         <Button href={`/post/${p.id}`} variant="primary">View</Button>
                                         <Button href={`/dashboard/post/edit/${p.id}`} variant="secondary">Edit</Button>
                                         <Button variant="danger"
-                                                onClick={(e) => promptPostDeletion(p.id)}>Delete</Button>
+                                                onClick={(e) => promptPostDeletion(p.id!)}>Delete</Button>
                                     </ButtonGroup>
                                 </td>
                             </tr>)
@@ -96,11 +95,12 @@ const Dashboard: FC = () => {
             <Row xs={1} md={3} lg={7}>
                 {trips && trips.map((trip) => {
                     return (
-                        <Col>
-                            <Card key={trip.id}>
+                        <Col key={trip.id}>
+                            <Card>
+                                <Card.Header>{trip.name}</Card.Header>
                                 <Card.Img variant="top" src={staticMapSrc(trip)}/>
                                 <Card.Body>
-                                    <Card.Title></Card.Title>
+
 
                                     <p><strong>Distance:</strong> x KM</p>
                                     <p><strong>Approx. travel time:</strong> x hours</p>
