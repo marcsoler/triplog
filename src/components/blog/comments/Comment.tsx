@@ -1,4 +1,4 @@
-import {FC} from 'react';
+import {FC, useState, useEffect} from 'react';
 
 import {Comment as CommentType} from '../../../store/types';
 
@@ -19,27 +19,29 @@ const Comment: FC<CommentProps> = (props) => {
 
     const comment = props.comment;
 
+    const [votes, setVotes] = useState<number>(comment.reactions ? comment.reactions.length : 0);
+
     const {authenticated, user} = useAuthSelector();
 
     const dispatch = useDispatch();
 
     const handleReaction = () => {
         if(authenticated) {
-            console.log(`React to comment #${comment.id}`);
             dispatch(addReaction(comment, user!));
+            //todo: if success? +1... else -1 (already voted and cancels vote)
+            setVotes(votes+1);
             return;
         }
         window.alert('You need to be authenticated!'); //todo
     }
 
-    const voteIcon = <FontAwesomeIcon icon={faChevronUp} onClick={handleReaction}/>
 
     return (
         <article className="comment">
             <Row>
                 <Col xs={2} md={1}>
-                    {voteIcon}
-                    <span>5</span>
+                    <FontAwesomeIcon icon={faChevronUp} onClick={handleReaction}/>
+                    <span>{votes}</span>
                 </Col>
                 <Col xs={10} md={11}>
                     <h5>{comment.user_id}</h5>

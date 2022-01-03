@@ -22,16 +22,11 @@ const Comments: FC = () => {
 
     return (
         <>
-
             <h5>Reactions</h5>
-
-            {comments && comments.length}
-
             { comments && comments.map((c) => {
                 // @ts-ignore
                 return <Comment key={c.id} comment={c} />
             })}
-
         </>
     )
 }
