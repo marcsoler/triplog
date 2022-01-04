@@ -16,7 +16,7 @@ const CommentForm: FC = () => {
 
     const {authenticated, user} = useAuthSelector();
 
-    const {register, formState: {errors}, handleSubmit, setValue, getValues, reset} = useForm<CommentFormInputs>({
+    const {register, handleSubmit, reset} = useForm<CommentFormInputs>({
         defaultValues: {
             comment: '',
         }
@@ -38,6 +38,7 @@ const CommentForm: FC = () => {
             comment: data.comment,
             user: authenticated ? user : undefined,
             post_id: post!.id!,
+            reactions: [],
         }
 
         dispatch(storeComment(comment));

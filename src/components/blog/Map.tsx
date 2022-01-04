@@ -17,10 +17,10 @@ const Map: FC = () => {
             dispatch(getTripByPost(post));
         }
     }, [dispatch, post]);
+    const {trip} = useTripSelector();
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
-    const [path, setPath] = useState<google.maps.LatLng[]>([]);
 
 
     const {isLoaded, loadError} = useJsApiLoader({
@@ -34,23 +34,13 @@ const Map: FC = () => {
         height: '400px',
     }
 
-    const center = {
-        lat: 47.2238663,
-        lng: 8.8156291,
-    }
-
     const onMapLoad = useCallback(
         (map) => {
             setMapRef(map);
         },
         [],
     );
-
-
-
-    const {trip} = useTripSelector();
-
-
+    
 
 
     const drawPolyline = (): google.maps.LatLng[] => {
@@ -101,7 +91,7 @@ const Map: FC = () => {
         return <Alert variant="danger">Map cannot be loaded right now, sorry.</Alert>
     }
 
-    return isLoaded ? renderMap() : <Loading/>
+    return (isLoaded && trip) ? renderMap() : <Loading/>
 }
 
 export default Map;

@@ -19,6 +19,7 @@ const ForgotPassword: FC = () => {
     const dispatch = useDispatch();
     const {error, success} = useAuthSelector();
 
+    /*
     useEffect(() => {
         return () => {
             if (error) {
@@ -29,6 +30,7 @@ const ForgotPassword: FC = () => {
             }
         }
     }, [error, success, dispatch])
+     */
 
 
     const handleSubmit = (e: FormEvent) => {

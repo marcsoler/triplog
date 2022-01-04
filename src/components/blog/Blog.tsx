@@ -13,8 +13,6 @@ import {RouteComponentProps} from 'react-router-dom';
 import {getPostById, getLatestPost, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
-import {getTripByPost} from '../../store/actions/tripActions';
-import useTripSelector from '../../hooks/useTripSelector';
 
 
 
