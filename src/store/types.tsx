@@ -85,17 +85,18 @@ export const SET_POST = 'SET_POST';
 export const SET_POSTS = 'SET_POSTS';
 
 export interface Post {
-    id: string;
+    id?: string;
     title: string;
     subtitle: string;
     content: string;
-    route: string;
+    trip: string;
+    progress: string | number,
     published: boolean;
-    created_at: {
+    created_at?: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at: {
+    updated_at?: {
         seconds: number,
         nanoseconds: number,
     };
@@ -168,3 +169,56 @@ interface SetTripsAction {
 }
 
 export type TripsAction = SetTripsAction;
+
+/***
+ * Comments:
+ */
+
+export interface Comment {
+    id?: string;
+    comment: string;
+    user?: User;
+    post_id: string;
+    reactions: Array<Reaction>
+    created_at?: {
+        seconds: number,
+        nanoseconds: number,
+    };
+    updated_at?: {
+        seconds: number,
+        nanoseconds: number,
+    }
+}
+
+export interface Reaction {
+    user_id: string;
+}
+
+export interface Comments {
+    comments?: Array<Comment>;
+}
+
+export interface CommentState {
+    comment?: Comment;
+}
+
+export interface CommentsState {
+    comments?: Array<Comment>;
+}
+
+export const SET_COMMENT = 'SET_COMMENT';
+export const SET_COMMENTS = 'SET_COMMENTS';
+
+interface SetCommentAction {
+    type: typeof SET_COMMENT;
+    payload: Comment;
+}
+
+export type CommentAction = SetCommentAction;
+
+interface SetCommentsAction {
+    type: typeof SET_COMMENTS;
+    payload: Array<Comment>
+}
+
+export type CommentsAction = SetCommentsAction;

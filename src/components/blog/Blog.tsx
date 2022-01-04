@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 
 import {FC, useEffect} from 'react';
 
-import Post from './Post';
+import Article from './Article';
 import PostList from './PostList';
 import Map from './Map';
 
@@ -32,31 +32,28 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
     }, [dispatch, postId]);
 
     const {post} = usePostSelector();
-
     const {posts} = usePostsSelector();
-
-
-
 
     return (
         <>
             <Container>
                 <Row>
                     <Col as="article" md={8}>
-                        { post && <Post post={post} /> }
+                        { post && <Article {...post} /> }
                     </Col>
                     <Col as="aside" md={4}>
                         { posts && <PostList posts={posts} /> }
                     </Col>
                 </Row>
             </Container>
-            <div className="map">
-                {
-                    //pseudo code:
-                    //post && <Map route={post.routeId} progress={post.progress} />
-                    post && <Map />
-                }
-            </div>
+            {post && (
+                <div className="map">
+                    {
+                        <Map />
+                    }
+                </div>
+            )}
+
         </>
     )
 }

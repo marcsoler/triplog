@@ -89,15 +89,17 @@ export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
 }
 
 
-export const createPost = (post: any, onError: () => void): ThunkAction<void, RootState, null, PostAction> => {
+export const createPost = (post: Post, onError: () => void): ThunkAction<void, RootState, null, PostAction> => {
 
     return async dispatch => {
-        // Add a new document in collection "cities"
-        await setDoc(doc(db, 'posts', post.slug), {
+        await setDoc(doc(db, 'posts', post.id!), {
             title: post.title,
             subtitle: post.subtitle,
             content: post.content,
+            trip: post.trip,
+            progress: post.progress,
             published: post.published,
+
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
@@ -109,7 +111,7 @@ export const createPost = (post: any, onError: () => void): ThunkAction<void, Ro
 export const updatePost = (post: any): ThunkAction<void, RootState, null, PostAction> => {
     return async dispatch => {
 
-        const docRef = doc(db, 'posts', post.slug);
+        const docRef = doc(db, 'posts', post.id);
         await updateDoc(docRef, post).catch((error) => {
             console.error('Some error happened here', 'postActions:updatePost()');
         });
@@ -117,9 +119,9 @@ export const updatePost = (post: any): ThunkAction<void, RootState, null, PostAc
     }
 }
 
-export const deletePost = (postId: string): ThunkAction<void, RootState, null, PostAction> => {
+export const deletePost = (post: Post): ThunkAction<void, RootState, null, PostAction> => {
     return async dispatch => {
-        const docRef = doc(db, 'posts', postId);
+        const docRef = doc(db, 'posts', post.id!);
         await deleteDoc(docRef).catch((error) => {
             console.error('Some error happened here', 'postActions:deletePost()');
         });

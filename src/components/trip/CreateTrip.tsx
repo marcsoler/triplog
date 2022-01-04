@@ -30,7 +30,6 @@ const CreateTrip: FC = () => {
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
     const [distance, setDistance] = useState<number>();
     const [duration, setDuration] = useState<string>()
-
     const history = useHistory();
 
 
@@ -150,12 +149,6 @@ const CreateTrip: FC = () => {
         setShowModal(false);
 
         history.push('/dashboard');
-
-
-
-
-
-
 
     }
 
