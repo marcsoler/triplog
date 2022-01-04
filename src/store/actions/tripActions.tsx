@@ -1,5 +1,5 @@
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, PostAction, SET_POST, SET_TRIP, SET_TRIPS, Trip, TripAction, TripsAction} from '../types';
+import {Post, SET_TRIP, SET_TRIPS, Trip, TripAction, TripsAction} from '../types';
 
 import {
     getFirestore,
@@ -10,7 +10,6 @@ import {
     query,
     getDocs,
     orderBy,
-    getDoc, doc
 } from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
@@ -84,28 +83,3 @@ export const getTripByPost = (post: Post): ThunkAction<void, RootState, null, Tr
         }
     }
 }
-
-/*
-// get post by ID
-export const getPostById = (id: string): ThunkAction<void, RootState, null, PostAction> => {
-    return async dispatch => {
-        try {
-
-            const postRef = doc(db, 'posts', id);
-            const docSnap = await getDoc(postRef);
-
-            if (docSnap.exists()) {
-                const postData = {id: id, ...docSnap.data()} as Post;
-                dispatch({
-                    type: SET_POST,
-                    payload: postData
-                });
-            } else {
-                console.error('Post #' + id + ' not found... setError?');
-            }
-        } catch (err) {
-            console.error('Error on getPostById', err);
-        }
-    }
-}
- */

@@ -40,7 +40,7 @@ const Map: FC = () => {
         },
         [],
     );
-    
+
 
 
     const drawPolyline = (): google.maps.LatLng[] => {

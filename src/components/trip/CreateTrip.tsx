@@ -30,8 +30,6 @@ const CreateTrip: FC = () => {
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
     const [distance, setDistance] = useState<number>();
     const [duration, setDuration] = useState<string>()
-    const [libraries] = useState<("drawing" | "geometry" | "localContext" | "places" | "visualization")[]>(['geometry']);
-
     const history = useHistory();
 
 

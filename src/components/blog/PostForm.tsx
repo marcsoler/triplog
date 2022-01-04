@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import ReactMarkdown from 'react-markdown';
 import Button from 'react-bootstrap/Button';
 import {SubmitHandler, useForm} from 'react-hook-form';
-import {createPost, getLatestPost, getPostById, getPosts} from '../../store/actions/postActions';
+import {createPost, getPostById} from '../../store/actions/postActions';
 import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
