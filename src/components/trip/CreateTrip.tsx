@@ -20,6 +20,7 @@ import {useHistory} from 'react-router-dom';
 const CreateTrip: FC = () => {
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
+    const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
     const [name, setName] = useState<string>('');
@@ -50,6 +51,7 @@ const CreateTrip: FC = () => {
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
+        libraries: libraries,
     });
 
     const onMapClick = (e: google.maps.MapMouseEvent): void => {

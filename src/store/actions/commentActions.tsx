@@ -12,7 +12,7 @@ import {
     orderBy,
     where,
     doc,
-    updateDoc, getDoc
+    updateDoc, getDoc, setDoc, deleteDoc
 } from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
@@ -27,10 +27,11 @@ const commentsRef = collection(db, 'comments');
 export const storeComment = (comment: Comment): ThunkAction<void, RootState, null, CommentAction> => {
     return async dispatch => {
         await addDoc(commentsRef, {
-            comment: comment.comment,
-            user: comment.user,
+            text: comment.text,
+            user: comment.user ? comment.user : null,
             post_id: comment.post_id,
             reactions: [],
+            approved_at: comment.user ? Timestamp.now() : null,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         } as Comment).catch((error) => {
@@ -92,3 +93,46 @@ export const addReaction = (comment: Comment, user: User, onVote: () => void, on
         return;
     }
 }
+
+
+export const approveComment = (comment: Comment):ThunkAction<void, RootState, null, CommentsAction> => {
+    return async dispatch => {
+        const commentDocRef = doc(db, 'comments', comment.id!);
+        await setDoc(commentDocRef, {
+            approved_at: Timestamp.now()
+        }, {merge: true}).then(async () => {
+
+            const q = query(commentsRef, where('post_id', '==', comment.post_id), orderBy('created_at', 'asc'));
+            const querySnapshot = await getDocs(q);
+
+            const commentsData: any = querySnapshot.docs.map((c) => {
+                return {id: c.id, ...c.data()} as Comment;
+            });
+            dispatch({
+                type: SET_COMMENTS,
+                payload: commentsData,
+            });
+
+        }).catch((error) => console.error('An error happened!'));
+    }
+}
+
+export const deleteComment = (comment: Comment):ThunkAction<void, RootState, null, CommentsAction> => {
+    return async dispatch => {
+        const commentDocRef = doc(db, 'comments', comment.id!);
+
+        await deleteDoc(commentDocRef).then(async () => {
+            const q = query(commentsRef, where('post_id', '==', comment.post_id), orderBy('created_at', 'asc'));
+            const querySnapshot = await getDocs(q);
+
+            const commentsData: any = querySnapshot.docs.map((c) => {
+                return {id: c.id, ...c.data()} as Comment;
+            });
+            dispatch({
+                type: SET_COMMENTS,
+                payload: commentsData,
+            });
+        })
+    }
+}
+//TODO: refactor duplicate code!!!

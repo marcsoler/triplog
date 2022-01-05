@@ -14,7 +14,11 @@ export interface User {
     firstname: string;
     lastname: string;
     email: string;
-    createdAt: any;
+    admin: boolean;
+    created_at: {
+        seconds: number,
+        nanoseconds: number,
+    };
 }
 
 export interface AuthState {
@@ -176,10 +180,14 @@ export type TripsAction = SetTripsAction;
 
 export interface Comment {
     id?: string;
-    comment: string;
+    text: string;
     user?: User;
     post_id: string;
-    reactions: Array<Reaction>
+    reactions: Array<Reaction>;
+    approved_at?: {
+        seconds: number,
+        nanoseconds: number,
+    };
     created_at?: {
         seconds: number,
         nanoseconds: number,
