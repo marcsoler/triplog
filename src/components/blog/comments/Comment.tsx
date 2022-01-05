@@ -12,7 +12,6 @@ interface CommentProps {
 
 const Comment: FC<CommentProps> = ({comment}) => {
 
-
     return (
         <article className="comment mb-3">
             <Row>

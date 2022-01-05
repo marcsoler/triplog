@@ -12,7 +12,7 @@ import {faCheck, faTrash} from '@fortawesome/free-solid-svg-icons';
 
 const CommentText: FC<Comment> = (comment) => {
     const [approved, setApproved] = useState(!!comment.approved_at);
-    const { user } = useAuthSelector();
+    const {user} = useAuthSelector();
     const dispatch = useDispatch();
 
     const handleApproveComment = () => {
@@ -27,32 +27,35 @@ const CommentText: FC<Comment> = (comment) => {
         setApproved(true); // "approved" by the user
     }
 
-    if(user && user.admin) {
+    if (user && user.admin) {
         return (
             <>
                 <div className="mb-3">
                     {comment.text}
                 </div>
                 <ButtonGroup size="sm">
-                    { !approved && <Button variant="outline-primary" onClick={handleApproveComment}><FontAwesomeIcon icon={faCheck} /> Approve</Button> }
-                    <Button variant="outline-danger" onClick={handleDeleteComment}><FontAwesomeIcon icon={faTrash} /> Delete</Button>
+                    {!approved && <Button variant="outline-primary" onClick={handleApproveComment}><FontAwesomeIcon
+                        icon={faCheck}/> Approve</Button>}
+                    <Button variant="outline-danger" onClick={handleDeleteComment}><FontAwesomeIcon
+                        icon={faTrash}/> Delete</Button>
                 </ButtonGroup>
             </>
         )
     }
 
-    if(comment.approved_at) {
+    if (comment.approved_at) {
         return <p>{comment.text}</p>
     }
 
     const commentStyle = {
-        fontSize: approved ? '1em' : '0.85em',
-        color: approved ? 'inherit' : '#ccc',
-        cursor: approved ? 'inherit' : 'pointer',
+        fontSize: '0.85em',
+        color: '#ccc',
+        cursor: 'pointer',
     }
 
     return (
-        <p onClick={showComment} style={commentStyle}>{approved ? comment.text : <em>This comment hasn't been approved yet. Click to view.</em>}</p>
+        <p onClick={showComment} style={commentStyle}>{approved ? comment.text :
+            <em>This comment hasn't been approved yet. Click to view.</em>}</p>
     )
 }
 
