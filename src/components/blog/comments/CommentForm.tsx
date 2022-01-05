@@ -8,7 +8,7 @@ import {storeComment} from '../../../store/actions/commentActions';
 import {Comment} from '../../../store/types';
 
 type CommentFormInputs = {
-    comment: string,
+    text: string,
 }
 
 
@@ -18,7 +18,7 @@ const CommentForm: FC = () => {
 
     const {register, handleSubmit, reset} = useForm<CommentFormInputs>({
         defaultValues: {
-            comment: '',
+            text: '',
         }
     });
 
@@ -35,7 +35,7 @@ const CommentForm: FC = () => {
 
     const onSubmit: SubmitHandler<CommentFormInputs> = (data) => {
         const comment: Comment = {
-            comment: data.comment,
+            text: data.text,
             user: authenticated ? user : undefined,
             post_id: post!.id!,
             reactions: [],
@@ -54,12 +54,12 @@ const CommentForm: FC = () => {
             <p>Comments</p>
 
             <Form onSubmit={handleSubmit(onSubmit)}>
-                <FloatingLabel controlId="comment" label="Leave a comment here">
+                <FloatingLabel controlId="text" label="Leave a comment here">
                     <Form.Control
                         as="textarea"
                         placeholder="Leave a comment here"
                         style={{height: '100px'}}
-                        {...register('comment', {required: true})}
+                        {...register('text', {required: true})}
                     />
                 </FloatingLabel>
                 <Button variant="primary" type="submit">Submit</Button>

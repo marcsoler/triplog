@@ -1,6 +1,8 @@
 import {FC, useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {Link} from 'react-router-dom';
+
 //import {setSuccess} from '../../store/actions/authActions';
 import {deletePost, getPosts} from '../../store/actions/postActions';
 import Button from 'react-bootstrap/Button';
@@ -80,8 +82,8 @@ const Dashboard: FC = () => {
                                 <td>{p.updated_at ? moment.unix(p.updated_at.seconds).format('DD.MM.YYYY') : 'Never'}</td>
                                 <td>
                                     <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
-                                        <Button href={`/post/${p.id}`} variant="primary">View</Button>
-                                        <Button href={`/dashboard/post/edit/${p.id}`} variant="secondary">Edit</Button>
+                                        <Link to={`/post/${p.id}`}><Button  variant="primary">View</Button></Link>
+                                        <Link to={`/dashboard/post/edit/${p.id}`}><Button variant="secondary">Edit</Button></Link>
                                         <Button variant="danger"
                                                 onClick={(e) => promptPostDeletion(p.id!)}>Delete</Button>
                                     </ButtonGroup>
@@ -100,12 +102,8 @@ const Dashboard: FC = () => {
                                 <Card.Header>{trip.name}</Card.Header>
                                 <Card.Img variant="top" src={staticMapSrc(trip)}/>
                                 <Card.Body>
-
-
                                     <p><strong>Distance:</strong> x KM</p>
                                     <p><strong>Approx. travel time:</strong> x hours</p>
-
-
                                     <Card.Link href="#">Edit</Card.Link>
                                     <Card.Link href="#">Delete</Card.Link>
                                 </Card.Body>
