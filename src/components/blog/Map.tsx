@@ -68,8 +68,6 @@ const Map: FC = () => {
 
         const progressedPath = Math.ceil(Number(post?.progress) * decodedPath.length / 100);
 
-        console.log(progressedPath);
-
         return decodedPath[progressedPath];
     }
 

@@ -1,4 +1,4 @@
-import {FC, FormEvent, useEffect, useState} from 'react';
+import {DragEventHandler, FC, FormEvent, useCallback, useEffect, useState} from 'react';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Tabs from 'react-bootstrap/Tabs';
@@ -14,6 +14,8 @@ import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
 import {Post} from '../../store/types';
+import {useDropzone} from 'react-dropzone';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 interface IPostFormInput {
     title: string;
@@ -34,15 +36,9 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     const [title, setTitle] = useState('');
     const [subtitle, setSubtitle] = useState('');
     const [content, setContent] = useState('');
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (postId) {
-            dispatch(getPostById(postId));
-        }
-    }, [dispatch, postId]);
-
 
     const {register, formState: {errors}, handleSubmit, setValue, getValues} = useForm<IPostFormInput>();
 
@@ -50,7 +46,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     const {trips} = useTripsSelector();
 
     useEffect(() => {
-        if(post && post.id) {
+        if (post && post.id) {
             setValue('title', post!.title);
             setValue('slug', post!.id);
             setValue('subtitle', post!.subtitle);
@@ -86,6 +82,48 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         setSubtitle(formValues.subtitle);
         setContent(formValues.content);
     }
+    const onDrop = useCallback(acceptedFiles => {
+        console.log('Do something with the files', acceptedFiles);
+
+        const storage = getStorage();
+
+
+        acceptedFiles.forEach((file: any) => {
+
+            console.log('file to upload', file);
+
+            const storageRef = ref(storage, slugify(file.path));
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                }, (error) => {
+                    switch (error.code) {
+                        case 'storage/unauthorized':
+                            console.error('User doesn\'t have permission to access the object');
+                            break;
+                        case 'storage/canceled':
+                            console.error('Unknown error occurred, inspect error.serverResponse');
+                            break;
+                        case 'storage/unknown':
+                            // Unknown error occurred, inspect error.serverResponse
+                            break;
+                    }
+                }, () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        const curr = getValues('content');
+                        setValue('content', [curr, `![${file.path}](${downloadURL})`].join('\n'));
+
+                    });
+                }
+            )
+        });
+
+
+    }, [])
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
     return (
         <Row>
@@ -101,7 +139,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                 <Form.Control className={(errors.title && 'is-invalid')}
                                               type="text" {...register('title', {
                                     required: true,
-                                    onChange: (e) => !postId ? slugifyTitle(e.currentTarget.value) : void(0)
+                                    onChange: (e) => !postId ? slugifyTitle(e.currentTarget.value) : void (0)
                                 })} />
                                 {errors.title &&
                                     <div className="invalid-feedback">The title is a required field!</div>}
@@ -123,7 +161,17 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
                             <Form.Group className="mb-3" controlId="content">
                                 <Form.Label>Content</Form.Label>
-                                <Form.Control as="textarea" rows={10} {...register('content', {required: true})} />
+                                <div {...getRootProps()}>
+                                    <Form.Control as="textarea" rows={10} {...register('content', {required: true})} />
+                                    {
+                                        isDragActive ?
+                                            <p>Drop the files here ...</p> :
+                                            <p>Drag 'n' drop some files here, or click to select files</p>
+                                    }
+                                    <Form.Text>{uploadProgress}</Form.Text>
+                                </div>
+
+
                             </Form.Group>
 
                             <Row>
@@ -142,7 +190,8 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3" controlId="progress">
                                         <Form.Label>Progress</Form.Label>
-                                        <Form.Range className="mt-1" min={0} max={100} {...register('progress', {required: true})} />
+                                        <Form.Range className="mt-1" min={0}
+                                                    max={100} {...register('progress', {required: true})} />
                                     </Form.Group>
                                 </Col>
                             </Row>
