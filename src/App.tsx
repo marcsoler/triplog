@@ -20,7 +20,6 @@ import useAuthSelector from './hooks/useAuthSelector';
 
 const auth = getAuth(firebaseApp);
 
-
 function App() {
 
     const dispatch = useDispatch();

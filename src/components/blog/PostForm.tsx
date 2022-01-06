@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+
 import {SubmitHandler, useForm, Controller} from 'react-hook-form';
 import {createPost, getPostById} from '../../store/actions/postActions';
 import slugify from 'slugify';
@@ -12,6 +13,7 @@ import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
 import {Post} from '../../store/types';
+
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -30,11 +32,11 @@ interface PostFormProps {
 }
 
 const PostForm: FC<PostFormProps> = ({postId}) => {
-
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (postId) {
+            console.log('editing... dispatch to get last one...');
             dispatch(getPostById(postId));
         }
     }, [dispatch, postId]);
@@ -46,15 +48,15 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     const {trips} = useTripsSelector();
 
     useEffect(() => {
-        if (post && post.id) {
+        if (postId && post) {
             setValue('title', post!.title);
-            setValue('slug', post!.id);
+            setValue('slug', post!.id!);
             setValue('subtitle', post!.subtitle);
             setValue('content', post!.content);
             setValue('trip', post!.trip);
             setValue('published', post!.published);
         }
-    }, [setValue, post]);
+    }, [setValue, post, postId]);
 
     const onSubmit: SubmitHandler<IPostFormInput> = data => {
         const post: Post = {
@@ -111,7 +113,19 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                         <Form.Label>Content</Form.Label>
 
                         <Controller control={control} name="content" render={({field: {onChange, value}}) => (
-                            <ReactQuill onChange={onChange} value={value}/>
+                            <ReactQuill onChange={onChange} value={value} modules={{
+                                toolbar: {
+                                    container: [
+                                        [{'header': [3, 4, 5, 6, false]}],
+                                        ['bold', 'italic', 'underline'],
+                                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                                        [{'align': []}],
+                                        ['link', 'image'],
+                                        ['clean'],
+                                        [{'color': []}]
+                                    ]
+                                }
+                            }}/>
                         )}/>
 
                     </Form.Group>
@@ -149,8 +163,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                         Submit
                     </Button>
                 </Form>
-
-
             </Col>
         </Row>
     )

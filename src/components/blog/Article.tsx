@@ -1,9 +1,10 @@
 import {FC} from 'react';
 import moment from 'moment/moment';
-import ReactMarkdown from 'react-markdown';
 
+import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit} from '@fortawesome/free-solid-svg-icons';
 
@@ -12,7 +13,6 @@ import CommentForm from './comments/CommentForm';
 
 import {Post} from '../../store/types';
 import useAuthSelector from '../../hooks/useAuthSelector';
-import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
 
 export interface PostProps {
@@ -28,8 +28,9 @@ const Article: FC<Post> = (post) => {
             <article>
                 <Row>
                     <Col>
-                        <h2>{post.title}</h2>
-                        <p><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY, h:mm:ss a')}</small></p>
+                        <h1>{post.title}</h1>
+                        {post.subtitle && <h2 className="lead">{post.subtitle}</h2>}
+                        <p><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
                     </Col>
                     {user && user.admin && (
                         <Col xs={2}>
@@ -45,8 +46,8 @@ const Article: FC<Post> = (post) => {
                 </Row>
 
 
-                {post.subtitle && <p className="lead">{post.subtitle}</p>}
-                {post.content}
+
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
 
             </article>
 

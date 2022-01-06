@@ -61,15 +61,9 @@ const Map: FC = () => {
     }
 
     const loadMarker = () => {
-
         const encodedPolyline = trip!.polyline;
-
         const decodedPath = google.maps.geometry.encoding.decodePath(encodedPolyline);
-
         const progressedPath = Math.ceil(Number(post?.progress) * decodedPath.length / 100);
-
-        console.log(progressedPath);
-
         return decodedPath[progressedPath];
     }
 
