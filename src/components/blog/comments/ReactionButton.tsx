@@ -40,9 +40,19 @@ const ReactionButton: FC<Comment> = (comment) => {
         return;
     }
 
+    const divStyle = {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    }
+
+
     return (
         <>
-            <Button type="button" variant="outline-dark" onClick={(e) => handleReaction(e)}>
+            <Button type="button" variant="outline-dark" onClick={(e) => handleReaction(e)}
+                // @ts-ignore
+                style={divStyle}
+            >
                 <FontAwesomeIcon icon={faChevronUp} style={{color: voted ? 'red' : 'inherit'}}/>
                 <span>{votes}</span>
             </Button>
@@ -52,7 +62,7 @@ const ReactionButton: FC<Comment> = (comment) => {
                     <Modal.Title>Sign in</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <SignIn />
+                    <SignIn/>
                 </Modal.Body>
             </Modal>
         </>

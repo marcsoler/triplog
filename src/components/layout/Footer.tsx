@@ -1,7 +1,9 @@
+import moment from 'moment/moment';
+
 const Footer = () => {
   return (
-      <footer className="footer fixed-bottom">
-        <p className="text-center">Triplog &ndash; 2021</p>
+      <footer className="footer">
+        <p className="text-center">Triplog &ndash; {moment().format('YYYY')}</p>
       </footer>
   )
 }

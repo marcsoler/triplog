@@ -4,9 +4,8 @@ import Col from 'react-bootstrap/Col';
 
 import {FC, useEffect} from 'react';
 
-import Article from './Article';
+import BlogArticle from './BlogArticle';
 import PostList from './PostList';
-import Map from './Map';
 
 import {useDispatch} from 'react-redux';
 import {RouteComponentProps} from 'react-router-dom';
@@ -39,20 +38,13 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
             <Container>
                 <Row>
                     <Col as="article" md={8}>
-                        { post && <Article {...post} /> }
+                        { post && <BlogArticle {...post} /> }
                     </Col>
                     <Col as="aside" md={4}>
                         { posts && <PostList posts={posts} /> }
                     </Col>
                 </Row>
             </Container>
-            {post && (
-                <div className="map">
-                    {
-                        <Map />
-                    }
-                </div>
-            )}
 
         </>
     )

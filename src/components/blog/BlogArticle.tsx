@@ -10,6 +10,7 @@ import {faEdit} from '@fortawesome/free-solid-svg-icons';
 
 import Comments from './comments/Comments';
 import CommentForm from './comments/CommentForm';
+import Map from './Map';
 
 import {Post} from '../../store/types';
 import useAuthSelector from '../../hooks/useAuthSelector';
@@ -19,7 +20,7 @@ export interface PostProps {
     post: Post
 }
 
-const Article: FC<Post> = (post) => {
+const BlogArticle: FC<Post> = (post) => {
 
     const {user} = useAuthSelector();
 
@@ -51,6 +52,8 @@ const Article: FC<Post> = (post) => {
 
             </article>
 
+            <Map />
+
             <Comments/>
 
             <CommentForm/>
@@ -59,4 +62,4 @@ const Article: FC<Post> = (post) => {
     )
 }
 
-export default Article;
+export default BlogArticle;
