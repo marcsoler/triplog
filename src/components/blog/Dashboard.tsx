@@ -82,8 +82,8 @@ const Dashboard: FC = () => {
                                 <td>{p.updated_at ? moment.unix(p.updated_at.seconds).format('DD.MM.YYYY') : 'Never'}</td>
                                 <td>
                                     <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
-                                        <Link to={`/post/${p.id}`}><Button  variant="primary">View</Button></Link>
-                                        <Link to={`/dashboard/post/edit/${p.id}`}><Button variant="secondary">Edit</Button></Link>
+                                        <Button variant="primary" href={`/post/${p.id}`}>View</Button>
+                                        <Button variant="secondary" href={`/dashboard/post/edit/${p.id}`}>Edit</Button>
                                         <Button variant="danger"
                                                 onClick={(e) => promptPostDeletion(p.id!)}>Delete</Button>
                                     </ButtonGroup>

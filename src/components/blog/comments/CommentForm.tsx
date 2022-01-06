@@ -11,7 +11,6 @@ type CommentFormInputs = {
     text: string,
 }
 
-
 const CommentForm: FC = () => {
 
     const {authenticated, user} = useAuthSelector();
@@ -31,8 +30,6 @@ const CommentForm: FC = () => {
         };
     }, [post, reset]);
 
-
-
     const onSubmit: SubmitHandler<CommentFormInputs> = (data) => {
         const comment: Comment = {
             text: data.text,
@@ -48,11 +45,8 @@ const CommentForm: FC = () => {
 
     const [showModal, setShowModal] = useState(false);
 
-
     return (
         <>
-            <p>Comments</p>
-
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <FloatingLabel controlId="text" label="Leave a comment here">
                     <Form.Control
