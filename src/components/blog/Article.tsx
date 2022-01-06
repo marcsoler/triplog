@@ -46,7 +46,7 @@ const Article: FC<Post> = (post) => {
 
 
                 {post.subtitle && <p className="lead">{post.subtitle}</p>}
-                <ReactMarkdown>{post.content}</ReactMarkdown>
+                {post.content}
 
             </article>
 
