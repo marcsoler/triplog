@@ -137,6 +137,7 @@ export const SET_TRIPS = 'SET_TRIPS';
 export interface Trip {
     id?: string;
     name: string;
+    imageUrl: string;
     waypoints: Array<google.maps.LatLng>
     polyline: string,
     created_at?: {
@@ -230,3 +231,7 @@ interface SetCommentsAction {
 }
 
 export type CommentsAction = SetCommentsAction;
+
+//Todo:
+// type Trip & type TripData (submissions)
+// see example User, SignUpData...

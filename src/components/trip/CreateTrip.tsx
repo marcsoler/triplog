@@ -1,10 +1,11 @@
-import {FC, useState} from 'react';
+import {FC, useCallback, useEffect, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 
 
@@ -15,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {useHistory} from 'react-router-dom';
+import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 
 
 const CreateTrip: FC = () => {
@@ -24,6 +26,8 @@ const CreateTrip: FC = () => {
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
     const [name, setName] = useState<string>('');
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [imageUrl, setImageUrl] = useState<string>();
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
     const [polyline, setPolyline] = useState<string>('');
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
@@ -93,10 +97,7 @@ const CreateTrip: FC = () => {
 
     const onDirectionsChange = () => {
         const dir: any = dirRef!.getDirections();
-        // Get and print metadata
         const route = dir?.routes[0];
-
-        console.log(route);
 
         setDistance(route?.legs[0].distance.text);
         setDuration(route?.legs[0].duration.text);
@@ -109,7 +110,7 @@ const CreateTrip: FC = () => {
         wps.push(route.legs[0].start_location);
 
         //
-        if(route.legs[0].via_waypoints.length > 0) {
+        if (route.legs[0].via_waypoints.length > 0) {
             route.legs[0].via_waypoints.forEach((wp: google.maps.LatLng) => {
                 wps.push(wp);
             })
@@ -137,14 +138,10 @@ const CreateTrip: FC = () => {
 
         const newTrip: Trip = {
             name: name,
+            imageUrl: '',
             waypoints: waypoints,
             polyline: polyline,
         }
-
-        console.log('todo', name, waypoints);
-
-
-        //dispatch(createPost(data, () => console.error('An error happened!')));
 
         dispatch(storeTrip(newTrip));
 
@@ -153,6 +150,31 @@ const CreateTrip: FC = () => {
         history.push('/dashboard');
 
     }
+
+    const uploadCoverImage = (e: any) => {
+
+        const file = e.target.files[0];
+
+        const storage = getStorage();
+        const storageRef = ref(storage, `/trips/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed', (snapshot) => {
+            setUploadProgress(Math.ceil((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
+        }, (error) => {
+            console.error('An error happened during the upload', error.code);
+            console.error('https://firebase.google.com/docs/storage/web/handle-errors');
+        }, () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setImageUrl(downloadURL);
+            })
+        });
+    }
+
+    useEffect(() => {
+        console.log('imageUrl', imageUrl);
+        setUploadProgress(0);
+    }, [imageUrl]);
 
 
     const renderMap = () => {
@@ -184,6 +206,8 @@ const CreateTrip: FC = () => {
                     </Col>
                     <Col as="aside" md={4}>
                         <Form>
+
+                            <Form.Label>Traveling method</Form.Label>
                             <Form.Select aria-label="Select the transportation mode" onChange={(e) => {
                                 updateTravelMode(e.target.value)
                             }}>
@@ -191,6 +215,12 @@ const CreateTrip: FC = () => {
                                 <option value="DRIVING">Driving</option>
                                 <option value="WALKING">Walking</option>
                             </Form.Select>
+
+                            <Form.Label>Cover Image</Form.Label>
+                            <Form.Control type="file" accept="image/*" onChange={(e) => uploadCoverImage(e)}/>
+                            {uploadProgress > 0 && <Form.Text>{`Uploading... ${uploadProgress}%`}</Form.Text>}
+                            {imageUrl &&
+                                <Image src={imageUrl} thumbnail={true} style={{maxWidth: '100px', height: 'auto'}}/>}
                         </Form>
 
                         <hr/>
@@ -208,8 +238,10 @@ const CreateTrip: FC = () => {
                         <Form>
                             <Form.Group className="mb-3" controlId="name">
                                 <Form.Label>Trip name</Form.Label>
-                                <Form.Control type="text" onChange={e => setName(e.currentTarget.value)} />
+                                <Form.Control type="text" onChange={e => setName(e.currentTarget.value)}/>
+                                {uploadProgress && <Form.Text>Uploading... {uploadProgress}%</Form.Text>}
                             </Form.Group>
+
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
