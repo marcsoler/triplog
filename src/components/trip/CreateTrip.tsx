@@ -29,6 +29,7 @@ const CreateTrip: FC = () => {
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [imageUrl, setImageUrl] = useState<string>();
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
+    const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [polyline, setPolyline] = useState<string>('');
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
@@ -60,8 +61,6 @@ const CreateTrip: FC = () => {
     }
 
     useEffect(() => {
-
-        console.log('mode', mode);
         if (waypoints.length === 1) {
             setStartMarker(new google.maps.Marker({
                 position: waypoints[0],
@@ -74,7 +73,7 @@ const CreateTrip: FC = () => {
             const directionService = new google.maps.DirectionsService();
             const betweenWps: google.maps.DirectionsWaypoint[] = [];
             setStartMarker(undefined);
-            if(waypoints.length > 2) {
+            if (waypoints.length > 2) {
                 waypoints.slice(1, -1).forEach((wp) => {
                     betweenWps.push({
                         location: wp,
@@ -94,9 +93,7 @@ const CreateTrip: FC = () => {
                     setDirectionsLoaded(true);
                     setDirResponse(response);
                 }
-            }).then(() => {
-                console.log('direction calculated');
-            })
+            }).then();
 
         }
 
@@ -115,7 +112,7 @@ const CreateTrip: FC = () => {
 
         const newTrip: Trip = {
             name: name,
-            imageUrl: '',
+            imageUrl: imageUrl!,
             waypoints: waypoints,
             polyline: polyline,
         }
@@ -152,6 +149,15 @@ const CreateTrip: FC = () => {
         setUploadProgress(0);
     }, [imageUrl]);
 
+    useEffect(() => {
+        if(dirRef) {
+            const directions = dirRef.getDirections();
+
+            if(directions) {
+                setPolyline(directions.routes[0].overview_polyline)
+            }
+        }
+    }, [dirRef, waypoints]);
 
     const renderMap = () => {
         return (
@@ -162,7 +168,6 @@ const CreateTrip: FC = () => {
                 <Row className="mt-3">
                     <Col md={8}>
                         <GoogleMap
-                            id="gmap-planner"
                             mapContainerStyle={containerStyle}
                             center={center}
                             onLoad={map => setMapRef(map)}
@@ -173,7 +178,7 @@ const CreateTrip: FC = () => {
                             }}
                         >
                             {dirResponse &&
-                                <DirectionsRenderer directions={dirResponse} />}
+                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse} />}
                         </GoogleMap>
 
 

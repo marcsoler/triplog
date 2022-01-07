@@ -46,6 +46,7 @@ export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAc
     return async dispatch => {
         await addDoc(tripsRef, {
             name: trip.name,
+            imageUrl: trip.imageUrl,
             waypoints: trip.waypoints.map(wp => new GeoPoint(wp.lat(), wp.lng())),
             polyline: trip.polyline,
             created_at: Timestamp.now(),
