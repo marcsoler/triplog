@@ -14,7 +14,7 @@ const Header: FC = () => {
     const auth = useAuthSelector();
 
     return (
-        <Navbar bg="light" expand="lg">
+        <Navbar expand="lg" fixed="top">
             <Container>
                 <Link className="navbar-brand" to="/">Triplog</Link>
                 <Navbar.Toggle aria-controls="navbar-nav" />

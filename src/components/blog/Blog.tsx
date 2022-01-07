@@ -24,8 +24,6 @@ const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
     useEffect(() => {
         if (postId) {
             dispatch(getPostById(postId));
-        } else {
-            dispatch(getLatestPost());
         }
         dispatch(getPosts());
     }, [dispatch, postId]);

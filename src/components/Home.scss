@@ -1,0 +1,24 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.home {
+
+    .teaser {
+        display: flex;
+        min-height: 100vh;
+        background-image: url('../../public/img/home_background.jpg');
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+
+    .last-post {
+        .trip-cover-image {
+            @include media-breakpoint-up(md) {
+                transform: rotate(5deg);
+            }
+
+        }
+    }
+}
