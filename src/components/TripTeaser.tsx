@@ -14,11 +14,8 @@ const TripTeaser: FC<any> = (trip) => {
         <Col>
             <Link to={`/trip/${trip.id}`}>
                 <figure className="trip-cover-image tilted">
-
-                    <Image src={`https://via.placeholder.com/${tmp}`} />
-                    <figcaption className="trip-cover-name display-6">
-                        {trip.name}
-                    </figcaption>
+                    <Image src={trip.imageUrl} />
+                    <figcaption className="trip-cover-name display-6">{trip.name}</figcaption>
                 </figure>
             </Link>
         </Col>

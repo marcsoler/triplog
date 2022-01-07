@@ -20,9 +20,13 @@ const Header: FC = () => {
 
 
     useEffect(() => {
-        window.onscroll = () => {
-            setOffset(window.scrollY);
-        }
+        const onScroll = () => setOffset(window.scrollY);
+        onScroll();
+        window.removeEventListener('scroll', onScroll);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', onScroll)
+        };
     }, []);
 
 

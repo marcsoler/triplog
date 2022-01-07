@@ -30,6 +30,8 @@ const Home = () => {
     const {post} = usePostSelector();
     const {trips} = useTripsSelector();
 
+    console.log(trips);
+
     const postTrip = trips!.find((t) => {
         return t.id === post?.trip
     });
