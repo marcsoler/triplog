@@ -1,22 +1,14 @@
 //@import url('//fonts.googleapis.com/css2?family=Bree+Serif&family=Roboto&display=swap');
 
-// Place variable overrides first, then import just the styles you need. Note that some stylesheets are required no matter what.
-
-// Toggle global options
-// $enable-gradients: false;
-// $enable-shadows: false;
-
-//$offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
-
-// Customize some defaults
-// $body-color: #333;
-// $body-bg: #fff;
-// $border-radius: .4rem;
-// $success: #7952b3;
+@import url('//fonts.googleapis.com/css2?family=Kalam&display=swap');
 
 // Required
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
+
+$navbar-brand-font-size: 26px;
+$navbar-dark-color: $white;
+
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/utilities";
 @import "~bootstrap/scss/root";
@@ -63,7 +55,70 @@
 // Custom styles
 //
 
+$text-shadow: 1px 2px 3px #000;
+
+.handwrite {
+    font-family: 'Kalam', cursive;
+}
+
 .App {
     min-height: 100vh;
 }
 
+.navbar {
+    transition: background-color .25s;
+    &.navbar-bg {
+        background-color: rgba($black, 0.7);
+    }
+}
+
+.content {
+    padding-top: 8rem;
+    padding-bottom: 5rem;
+}
+
+.home {
+
+    .teaser {
+        display: flex;
+        min-height: 100vh;
+        background-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent), url(./assets/img/home_background.jpg);
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+        color: $white;
+        h1 {
+            text-shadow: $text-shadow;
+        }
+    }
+}
+
+.trip-cover-image {
+    position: relative;
+    overflow: hidden;
+    img {
+        transition: transform .5s ease-in-out;
+        max-width: 100%;
+    }
+    &:hover {
+        img {
+            transform: scale(1.05) rotate(2deg);
+        }
+    }
+    .trip-cover-name {
+        position: absolute;
+        bottom: 75px;
+        left: 50px;
+        font-weight: $font-weight-bolder;
+        text-transform: uppercase;
+        color: $white;
+        text-shadow: $text-shadow;
+    }
+
+}
+
+.tiled {
+    @include media-breakpoint-up(md) {
+        transform: rotate(5deg);
+    }
+}

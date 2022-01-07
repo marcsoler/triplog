@@ -1,11 +1,12 @@
-import {useEffect} from 'react';
-
-import './Home.scss';
+import {useEffect, useRef} from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 import TripTeaser from './TripTeaser';
 
@@ -33,20 +34,45 @@ const Home = () => {
         return t.id === post?.trip
     });
 
+    const articlesRef = useRef(null);
+
+    // @ts-ignore
+    const executeScroll = () => articlesRef.current.scrollIntoView();
+
     return <>
         <div className="home">
-            <div className="teaser">
+            <section className="teaser">
                 <Container>
-                    <Row>
+                    <Row style={{height: '100%'}} className="align-items-center">
                         <Col>
-                            <h1>Welcome to my blog</h1>
+                            <Row>
+                                <Col>
+                                    <h1 className="display-1 handwrite text-center">Welcome to my blog</h1>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <blockquote className="blockquote">
+                                        <p className="lead mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing
+                                            elit. Integer posuere erat a ante.</p>
+                                        <footer className="blockquote-footer">Someone famous in <cite
+                                            title="Source Title">Source
+                                            Title</cite></footer>
+                                    </blockquote>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col className="text-center mt-md-5">
+                                    <FontAwesomeIcon icon={faChevronDown} size="2x" onClick={executeScroll} style={{cursor: 'pointer'}} />
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </Container>
-            </div>
+            </section>
 
             {post && (
-                <div className="last-post">
+                <section className="content last-post" ref={articlesRef}>
 
                     <Container>
                         <Row>
@@ -64,9 +90,9 @@ const Home = () => {
                         </Row>
 
                     </Container>
-                </div>)}
+                </section>)}
 
-            <div className="latest-trips">
+            <section className="content latest-trips">
 
                 <Container>
                     <Row>
@@ -78,11 +104,13 @@ const Home = () => {
 
                         <Row xs={1} md={3} lg={7}>
 
-                            {trips && trips.filter((t) => { return t.id !== post!.trip}).map((t) => {
+                            {trips && trips.filter((t) => {
+                                return t.id !== post!.trip
+                            }).map((t) => {
                                 return (
                                     <TripTeaser key={t.id} {...t} />
                                 )
-                            }) }
+                            })}
 
                         </Row>
 
@@ -90,7 +118,7 @@ const Home = () => {
                 </Container>
 
 
-            </div>
+            </section>
 
 
         </div>

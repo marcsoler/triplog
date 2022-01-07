@@ -1,5 +1,8 @@
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+
 import {NavLink} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {signout} from '../../../store/actions/authActions';
@@ -13,17 +16,28 @@ const SingedInLinks = () => {
         dispatch(signout());
     }
 
-    const auth = useAuthSelector();
+    const {user} = useAuthSelector();
+
+    if(user && user.admin) {
+        return (
+
+            <NavDropdown title={user!.firstname}>
+                <NavDropdown.Item as={NavLink} to="/dashboard/post/create">New Post</NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/dashboard/trip/create">New Trip</NavDropdown.Item>
+                <NavDropdown.Item as={NavLink} to="/dashboard">Dashboard</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
+            </NavDropdown>
+        )
+    }
 
     return (
-        <NavDropdown title={auth.user?.firstname}>
-            <NavDropdown.Item as={NavLink} to="/dashboard/post/create">New Post</NavDropdown.Item>
-            <NavDropdown.Item as={NavLink} to="/dashboard/trip/create">New Trip</NavDropdown.Item>
-            <NavDropdown.Item as={NavLink} to="/dashboard">Dashboard</NavDropdown.Item>
-            <NavDropdown.Divider />
+        <NavDropdown title={user!.firstname}>
             <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
         </NavDropdown>
     )
+
+
 }
 
 export default SingedInLinks;

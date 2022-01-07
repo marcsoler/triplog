@@ -28,6 +28,13 @@ const routes: Route[] = [
     {
         routeType: 'public',
         params: {
+            path: '/trip/:id',
+            component: Blog,
+        }
+    },
+    {
+        routeType: 'public',
+        params: {
             path: '/post/:id',
             component: Blog,
         }
