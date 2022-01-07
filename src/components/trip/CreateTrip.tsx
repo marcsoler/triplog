@@ -1,4 +1,4 @@
-import {FC, useCallback, useEffect, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
@@ -22,113 +22,90 @@ import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/st
 const CreateTrip: FC = () => {
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
+    const [center] = useState<google.maps.LatLngLiteral>({lat: 47.2238663, lng: 8.8156291});
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
-    const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
-    const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
+    const [mode, setMode] = useState<string>();
     const [name, setName] = useState<string>('');
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [imageUrl, setImageUrl] = useState<string>();
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
     const [polyline, setPolyline] = useState<string>('');
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
-    const [response, setResponse] = useState();
+    const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
-    const [distance, setDistance] = useState<number>();
-    const [duration, setDuration] = useState<string>()
     const history = useHistory();
-
-
-    const updateTravelMode = (mode: string) => {
-        switch (mode) {
-            case 'DRIVING':
-                setTravelMode(google.maps.TravelMode.DRIVING);
-                break;
-            case 'WALKING':
-                setTravelMode(google.maps.TravelMode.WALKING);
-                break;
-            case 'BICYCLING':
-            default:
-                setTravelMode(google.maps.TravelMode.BICYCLING);
-                break;
-        }
-    }
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
         libraries: libraries,
     });
 
-    const onMapClick = (e: google.maps.MapMouseEvent): void => {
-        const wp = e.latLng;
-        if (wp && waypoints.length < 2) {
-            waypoints.push(wp);
-            if (waypoints.length === 1) {
-                setStartMarker(new google.maps.Marker({
-                    position: wp,
-                    map: mapRef,
-                    title: 'Starting point',
-                }));
-                return;
+
+    const getTravelMode = (): google.maps.TravelMode => {
+        switch (mode) {
+            case 'DRIVING':
+                return google.maps.TravelMode.DRIVING;
+            case 'WALKING':
+                return google.maps.TravelMode.WALKING;
+            default:
+                return google.maps.TravelMode.BICYCLING;
+        }
+    }
+
+    const setPath = (e: google.maps.MapMouseEvent): void => {
+        const position = e.latLng;
+        if (position) {
+            setWaypoints(waypoints => [...waypoints, position]);
+        }
+    }
+
+    useEffect(() => {
+
+        console.log('mode', mode);
+        if (waypoints.length === 1) {
+            setStartMarker(new google.maps.Marker({
+                position: waypoints[0],
+                map: mapRef,
+                title: 'Starting point',
+            }));
+        }
+
+        if (waypoints.length > 1) {
+            const directionService = new google.maps.DirectionsService();
+            const betweenWps: google.maps.DirectionsWaypoint[] = [];
+            setStartMarker(undefined);
+            if(waypoints.length > 2) {
+                waypoints.slice(1, -1).forEach((wp) => {
+                    betweenWps.push({
+                        location: wp,
+                        stopover: true,
+                    });
+                })
             }
-            displayRoute();
-        }
-    }
 
-    const displayRoute = () => {
-        const directionService = new google.maps.DirectionsService();
-        directionService.route({
-            origin: waypoints[0],
-            destination: waypoints[waypoints.length - 1],
-            travelMode: travelMode ? travelMode : google.maps.TravelMode.BICYCLING,
-        }, directionCallback);
-        if (startMarker) {
-            startMarker.setMap(null);
-        }
-
-    }
-
-
-    const directionCallback = (res: any) => {
-        if (res.status === 'OK') {
-            setDirectionsLoaded(true);
-            setResponse(res);
-        }
-    }
-
-    const onDirectionsChange = () => {
-        const dir: any = dirRef!.getDirections();
-        const route = dir?.routes[0];
-
-        setDistance(route?.legs[0].distance.text);
-        setDuration(route?.legs[0].duration.text);
-        setPolyline(route.overview_polyline);
-
-        //Update waypoints
-        const wps: google.maps.LatLng[] = [];
-
-        //origin:
-        wps.push(route.legs[0].start_location);
-
-        //
-        if (route.legs[0].via_waypoints.length > 0) {
-            route.legs[0].via_waypoints.forEach((wp: google.maps.LatLng) => {
-                wps.push(wp);
+            directionService.route({
+                origin: waypoints[0],
+                waypoints: betweenWps,
+                optimizeWaypoints: true,
+                destination: waypoints[waypoints.length - 1],
+                travelMode: getTravelMode(),
+            }, (response, status) => {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    setDirectionsLoaded(true);
+                    setDirResponse(response);
+                }
+            }).then(() => {
+                console.log('direction calculated');
             })
-        }
-        //destination:
-        wps.push(route.legs[0].end_location);
-        setWaypoints(wps);
 
-    }
+        }
+
+    }, [waypoints, mode])
+
 
     const containerStyle = {
         width: '100%',
         height: '400px',
-    }
-
-    const center = {
-        lat: 47.2238663,
-        lng: 8.8156291,
     }
 
     const [showModal, setShowModal] = useState(false);
@@ -172,7 +149,6 @@ const CreateTrip: FC = () => {
     }
 
     useEffect(() => {
-        console.log('imageUrl', imageUrl);
         setUploadProgress(0);
     }, [imageUrl]);
 
@@ -190,16 +166,14 @@ const CreateTrip: FC = () => {
                             mapContainerStyle={containerStyle}
                             center={center}
                             onLoad={map => setMapRef(map)}
-                            onClick={(e => onMapClick(e))}
+                            onClick={(e => setPath(e))}
                             zoom={4}
                             options={{
                                 draggableCursor: 'crosshair'
                             }}
                         >
-                            {directionsLoaded &&
-                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={response} options={{
-                                    draggable: true
-                                }} onDirectionsChanged={onDirectionsChange}/>}
+                            {dirResponse &&
+                                <DirectionsRenderer directions={dirResponse} />}
                         </GoogleMap>
 
 
@@ -209,7 +183,7 @@ const CreateTrip: FC = () => {
 
                             <Form.Label>Traveling method</Form.Label>
                             <Form.Select aria-label="Select the transportation mode" onChange={(e) => {
-                                updateTravelMode(e.target.value)
+                                setMode(e.target.value)
                             }}>
                                 <option value="BICYCLE">Bicycle</option>
                                 <option value="DRIVING">Driving</option>
@@ -224,9 +198,6 @@ const CreateTrip: FC = () => {
                         </Form>
 
                         <hr/>
-
-                        {distance && <p><strong>Distance:</strong> {distance}</p>}
-                        {duration && <p><strong>Duration:</strong> {duration}</p>}
                         {directionsLoaded && <Button variant="success" onClick={e => setShowModal(true)}>Save</Button>}
 
                     </Col>
@@ -239,7 +210,6 @@ const CreateTrip: FC = () => {
                             <Form.Group className="mb-3" controlId="name">
                                 <Form.Label>Trip name</Form.Label>
                                 <Form.Control type="text" onChange={e => setName(e.currentTarget.value)}/>
-                                {uploadProgress && <Form.Text>Uploading... {uploadProgress}%</Form.Text>}
                             </Form.Group>
 
                         </Form>
