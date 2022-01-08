@@ -94,7 +94,8 @@ export interface Post {
     subtitle: string;
     content: string;
     trip: string;
-    progress: string | number,
+    //progress: string | number,
+    position: any; //google.maps.LatLng;
     published: boolean;
     created_at?: {
         seconds: number,

@@ -9,7 +9,7 @@ import {
     GeoPoint,
     query,
     getDocs,
-    orderBy,
+    orderBy, getDoc, doc,
 } from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
@@ -69,7 +69,7 @@ export const getTripByPost = (post: Post): ThunkAction<void, RootState, null, Tr
 
             const trip = tripsData.find((trip: Trip) => {
                 return trip.id === post.trip;
-            })
+            });
             if(trip) {
                 dispatch({
                     type: SET_TRIP,
@@ -82,5 +82,31 @@ export const getTripByPost = (post: Post): ThunkAction<void, RootState, null, Tr
         } catch (e) {
             console.error('tripActions:getTripByPostId()', e);
         }
+    }
+}
+
+// get trip by ID
+
+export const getTripById = (id: string): ThunkAction<void, RootState, null, TripAction> => {
+    return async dispatch => {
+
+        try {
+            const tripRef = doc(db, 'trips', id);
+            const docSnap = await getDoc(tripRef);
+
+            if(docSnap.exists()) {
+                const tripData = { id: id, ...docSnap.data() } as Trip;
+
+                dispatch({
+                    type: SET_TRIP,
+                    payload: tripData
+                });
+            } else {
+                console.error('Trip #' + id + ' not found... setError?');
+            }
+        } catch (e) {
+            console.log('Error on getTripById()', e);
+        }
+
     }
 }

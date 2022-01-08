@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from 'react';
+import {FC, FormEvent, useEffect, useState} from 'react';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -12,10 +12,13 @@ import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {Post} from '../../store/types';
+import {Post, Trip} from '../../store/types';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import {getTripById, getTrips} from '../../store/actions/tripActions';
+import FormMap from '../trip/FormMap';
+import useTripSelector from '../../hooks/useTripSelector';
 
 interface IPostFormInput {
     title: string;
@@ -23,7 +26,8 @@ interface IPostFormInput {
     subtitle: string;
     content: string;
     trip: string;
-    progress: string;
+    //progress: string | number;
+    position: google.maps.LatLng;
     published: boolean;
 }
 
@@ -33,23 +37,39 @@ interface PostFormProps {
 
 const PostForm: FC<PostFormProps> = ({postId}) => {
 
-    const [unsaved, setUnsaved] = useState(true);
-
     const dispatch = useDispatch();
+
+    const [mapPosition, setMapPosition] = useState<google.maps.LatLng>();
 
     useEffect(() => {
         if (postId) {
-            console.log('editing... dispatch to get last one...');
             dispatch(getPostById(postId));
         }
     }, [dispatch, postId]);
 
 
-    const {register, control, formState: {errors, isDirty}, handleSubmit, setValue} = useForm<IPostFormInput>({
-        defaultValues: {
-            title: 'yolo',
-            subtitle: 'yolo',
-        }
+    const {post} = usePostSelector();
+    const {trips} = useTripsSelector();
+
+
+    const {
+        register,
+        control,
+        formState: {errors, isDirty},
+        handleSubmit,
+        setValue,
+        getValues
+    } = useForm<IPostFormInput>({
+        defaultValues: postId ? {
+            title: post?.title,
+            slug: post?.id,
+            subtitle: post?.subtitle,
+            content: post?.content,
+            trip: post?.trip,
+            //progress: post?.progress,
+            position: post?.position,
+            published: post?.published,
+        } : {}
     });
 
     useEffect(() => {
@@ -60,19 +80,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         }
     }, [isDirty]);
 
-    const {post} = usePostSelector();
-    const {trips} = useTripsSelector();
-
-    useEffect(() => {
-        if (postId && post) {
-            setValue('title', post!.title);
-            setValue('slug', post!.id!);
-            setValue('subtitle', post!.subtitle);
-            setValue('content', post!.content);
-            setValue('trip', post!.trip);
-            setValue('published', post!.published);
-        }
-    }, [setValue, post, postId]);
 
     const onSubmit: SubmitHandler<IPostFormInput> = data => {
         const post: Post = {
@@ -81,7 +88,8 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             subtitle: data.subtitle,
             content: data.content,
             trip: data.trip,
-            progress: data.progress,
+            position: data.position,
+            //progress: data.progress,
             published: data.published,
         }
         dispatch(createPost(post, () => console.error('An error happened!')));
@@ -93,6 +101,20 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             strict: true,
         }), {shouldValidate: true});
     }
+
+    const loadTrip = (e: FormEvent<HTMLSelectElement>) => {
+
+        const tripId = e.currentTarget.value;
+
+        dispatch(getTripById(tripId));
+
+    }
+
+    const {trip} = useTripSelector();
+
+    useEffect(() => {
+        console.log('current trip', trip);
+    }, [trip]);
 
 
     return (
@@ -146,27 +168,19 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
                     </Form.Group>
 
-                    <Row>
-                        <Col xs={12} md={6}>
-                            <Form.Group className="mb-3" controlId="trip">
-                                <Form.Label>Trip</Form.Label>
-                                <Form.Select
-                                    aria-label="Select the route" {...register('trip', {required: true})}>
-                                    <option disabled>Trip list</option>
-                                    {trips?.map((t) => {
-                                        return <option value={t.id} key={t.id}>{t.name}</option>
-                                    })}
-                                </Form.Select>
-                            </Form.Group>
-                        </Col>
-                        <Col xs={12} md={6}>
-                            <Form.Group className="mb-3" controlId="progress">
-                                <Form.Label>Progress</Form.Label>
-                                <Form.Range className="mt-1" min={0}
-                                            max={100} {...register('progress', {required: true})} />
-                            </Form.Group>
-                        </Col>
-                    </Row>
+                    <Form.Group className="mb-3" controlId="trip">
+                        <Form.Label>Trip</Form.Label>
+                        <Form.Select
+                            aria-label="Select the route" {...register('trip', {required: true})}
+                            onChange={(e) => loadTrip(e)}>
+                            <option disabled>Trip list</option>
+                            {trips?.map((t) => {
+                                return <option value={t.id} key={t.id}>{t.name}</option>
+                            })}
+                        </Form.Select>
+                    </Form.Group>
+
+                    {trip && <FormMap position={(p: google.maps.LatLng) => setValue('position', p)} />}
 
                     <hr className="mb-3 mt-5"/>
 

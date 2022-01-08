@@ -13,6 +13,7 @@ import {
     orderBy,
     limit,
     Timestamp,
+    GeoPoint,
     deleteDoc,
     updateDoc
 } from 'firebase/firestore';
@@ -97,9 +98,9 @@ export const createPost = (post: Post, onError: () => void): ThunkAction<void, R
             subtitle: post.subtitle,
             content: post.content,
             trip: post.trip,
-            progress: post.progress,
+            //progress: post.progress,
+            position: new GeoPoint(post.position.lat(), post.position.lng()),
             published: post.published,
-
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
