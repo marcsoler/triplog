@@ -5,8 +5,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faChevronDown, faMapMarkedAlt} from '@fortawesome/free-solid-svg-icons'
 
 import TripTeaser from './TripTeaser';
 
@@ -34,10 +34,14 @@ const Home = () => {
         return t.id === post?.trip
     });
 
-    const articlesRef = useRef(null);
+    const articlesRef = useRef<HTMLElement | null>(null);
 
-    // @ts-ignore
-    const executeScroll = () => articlesRef.current.scrollIntoView();
+    const executeScroll = () => {
+        if (articlesRef) {
+            articlesRef.current?.scrollIntoView();
+        }
+
+    };
 
     return <>
         <div className="home">
@@ -47,7 +51,7 @@ const Home = () => {
                         <Col>
                             <Row>
                                 <Col className="text-center mb-3">
-                                    <FontAwesomeIcon icon={faMapMarkedAlt} size="8x" />
+                                    <FontAwesomeIcon icon={faMapMarkedAlt} size="8x"/>
                                     <br/>
                                     <h1 className="display-1 handwrite mt-3">Welcome to my blog</h1>
                                 </Col>
@@ -65,7 +69,8 @@ const Home = () => {
                             </Row>
                             <Row>
                                 <Col className="text-center mt-md-5">
-                                    <FontAwesomeIcon icon={faChevronDown} size="2x" onClick={executeScroll} style={{cursor: 'pointer'}} />
+                                    <FontAwesomeIcon icon={faChevronDown} size="2x" onClick={executeScroll}
+                                                     style={{cursor: 'pointer'}}/>
                                 </Col>
                             </Row>
                         </Col>
@@ -73,14 +78,14 @@ const Home = () => {
                 </Container>
             </section>
 
-            {post && (
+            {post && postTrip && (
                 <section className="content last-post" ref={articlesRef}>
 
                     <Container>
                         <Row>
 
                             <Col lg={8} md={6} sm={12}>
-                                <h2>Our latest article from Iceland</h2>
+                                <h2>Our latest article from {postTrip.name}</h2>
                                 <h3>{post.title}</h3>
                                 <p className="lead">{post.subtitle}</p>
                                 <p><Button href={`/post/${post.id}`} variant="primary">Read</Button></p>
@@ -92,20 +97,19 @@ const Home = () => {
                         </Row>
 
                     </Container>
-                </section>)}
+                </section>
+            )}
 
             <section className="content latest-trips">
 
                 <Container>
                     <Row>
                         <Col>
-                            <h2>More trips</h2>
+                            <h2>Past trips</h2>
                         </Col>
                     </Row>
                     <Row>
-
                         <Row xs={1} md={3} lg={7}>
-
                             {trips && trips.filter((t) => {
                                 return t.id !== post!.trip
                             }).map((t) => {
@@ -113,16 +117,10 @@ const Home = () => {
                                     <TripTeaser key={t.id} {...t} />
                                 )
                             })}
-
                         </Row>
-
                     </Row>
                 </Container>
-
-
             </section>
-
-
         </div>
     </>
 }

@@ -1,5 +1,5 @@
 import {FC, useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -15,11 +15,14 @@ import useAuthSelector from '../../hooks/useAuthSelector';
 const Header: FC = () => {
 
     const auth = useAuthSelector();
+    const location = useLocation();
 
     const [offset, setOffset] = useState(0);
+    const [currentLocation, setCurrentLocation] = useState<string>('');
 
 
     useEffect(() => {
+        setCurrentLocation(location.pathname);
         const onScroll = () => setOffset(window.scrollY);
         onScroll();
         window.removeEventListener('scroll', onScroll);
@@ -27,12 +30,12 @@ const Header: FC = () => {
         return () => {
             window.removeEventListener('scroll', onScroll)
         };
-    }, []);
+    }, [location]);
 
 
 
     return (
-        <Navbar expand="lg" variant="dark" fixed="top" className={offset > 0 ? 'navbar-bg' : ''}>
+        <Navbar expand="lg" variant="dark" fixed="top" className={(offset > 0 || currentLocation !== '/') ? 'navbar-bg' : ''}>
             <Container>
                 <Link className="navbar-brand" to="/">
                     <FontAwesomeIcon icon={faRoute} size="2x" /> Triplog</Link>

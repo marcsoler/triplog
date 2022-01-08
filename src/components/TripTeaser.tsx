@@ -1,15 +1,9 @@
-import {FC, useState} from 'react';
+import {FC} from 'react';
 import Image from 'react-bootstrap/Image';
 import Col from 'react-bootstrap/Col';
 import { Link } from 'react-router-dom';
 
 const TripTeaser: FC<any> = (trip) => {
-
-    const [count, setCount] = useState(0);
-
-    const tmp = '500x500';
-
-
     return (
         <Col>
             <Link to={`/trip/${trip.id}`}>

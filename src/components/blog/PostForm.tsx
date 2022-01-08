@@ -73,10 +73,14 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     });
 
     useEffect(() => {
+        const confirmDiscard = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = ''; //required by chrome
+        }
         if (isDirty) {
-            window.onbeforeunload = () => {
-                return 'Do you really want to close?';
-            }
+            window.addEventListener('beforeunload', confirmDiscard);
+        } else {
+            window.removeEventListener('beforeunload', confirmDiscard);
         }
     }, [isDirty]);
 
