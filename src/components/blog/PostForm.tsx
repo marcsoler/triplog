@@ -1,4 +1,4 @@
-import {FC, FormEvent, useEffect, useState} from 'react';
+import {FC, FormEvent, useEffect} from 'react';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -27,7 +27,6 @@ interface IPostFormInput {
     subtitle: string;
     content: string;
     trip: string;
-    //progress: string | number;
     position: google.maps.LatLng;
     published: boolean;
 }

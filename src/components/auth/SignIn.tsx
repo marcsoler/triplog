@@ -1,6 +1,6 @@
 import {FC, FormEvent, useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -19,7 +19,7 @@ const SignIn: FC = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const {error, success} = useAuthSelector();
+    const {error} = useAuthSelector();
 
     useEffect(() => {
         return () => {

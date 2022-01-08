@@ -15,7 +15,7 @@ const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
     const {trip} = useTripSelector();
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
-    const [zoom, setZoom] = useState<number>(4);
+    const [zoom] = useState<number>(4);
     const [markerRef, setMarkerRef] = useState<google.maps.Marker>();
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
     const [markerPosition, setMarkerPosition] = useState<google.maps.LatLng>();
@@ -69,7 +69,7 @@ const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
 
     useEffect(() => {
         position(markerPosition);
-    }, [markerPosition])
+    }, [markerPosition, position])
 
 
     const renderMap = () => {

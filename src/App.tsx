@@ -6,9 +6,6 @@ import './App.scss';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
-import SignIn from './components/auth/SignIn';
-
-import Modal from 'react-bootstrap/Modal';
 
 import routes from './routes';
 import PrivateRoute from './components/auth/PrivateRoute';

@@ -72,7 +72,10 @@ const CreateTrip: FC = () => {
         if (waypoints.length > 1) {
             const directionService = new google.maps.DirectionsService();
             const betweenWps: google.maps.DirectionsWaypoint[] = [];
-            setStartMarker(undefined);
+            if(startMarker) {
+                setStartMarker(undefined);
+            }
+
             if (waypoints.length > 2) {
                 waypoints.slice(1, -1).forEach((wp) => {
                     betweenWps.push({
@@ -97,7 +100,7 @@ const CreateTrip: FC = () => {
 
         }
 
-    }, [waypoints, mode])
+    }, [waypoints, mode, getTravelMode])
 
 
     const containerStyle = {
