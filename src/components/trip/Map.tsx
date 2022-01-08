@@ -9,6 +9,8 @@ import usePostSelector from '../../hooks/usePostSelector';
 import {getTripByPost} from '../../store/actions/tripActions';
 import {Post} from '../../store/types';
 
+import mapStyle from './mapStyle.json';
+
 const Map: FC = () => {
 
     const dispatch = useDispatch();
@@ -38,6 +40,8 @@ const Map: FC = () => {
     const onMapLoad = useCallback(
         (map) => {
             setMapRef(map);
+            map.mapTypes.set('styled_map', new google.maps.StyledMapType(mapStyle));
+            map.setMapTypeId('styled_map');
         },
         [],
     );
@@ -55,12 +59,7 @@ const Map: FC = () => {
     }
 
     const getPostPosition = (p: Post): google.maps.LatLng => {
-
-        const postPosition = new google.maps.LatLng(post?.position._lat, post?.position._long);
-
-        return postPosition;
-
-
+        return new google.maps.LatLng(post?.position._lat, post?.position._long);
     }
 
 

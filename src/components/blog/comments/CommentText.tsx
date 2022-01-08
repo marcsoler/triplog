@@ -30,7 +30,7 @@ const CommentText: FC<Comment> = (comment) => {
     if (user && user.admin) {
         return (
             <>
-                <div className="mb-3">
+                <div className="comment-text mb-3">
                     {comment.text}
                 </div>
                 <ButtonGroup size="sm">

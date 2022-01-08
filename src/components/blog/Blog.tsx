@@ -5,11 +5,11 @@ import Col from 'react-bootstrap/Col';
 import {FC, useEffect} from 'react';
 
 import BlogArticle from './BlogArticle';
-import PostList from './PostList';
+import RelatedPost from './RelatedPost';
 
 import {useDispatch} from 'react-redux';
 import {RouteComponentProps} from 'react-router-dom';
-import {getPostById, getLatestPost, getPosts} from '../../store/actions/postActions';
+import {getPostById, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
 
@@ -33,18 +33,22 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
     })
 
     return (
-            <Container className="blog content">
-                <Row>
-                    <Col as="article" md={8}>
-                        {post && <BlogArticle {...post} />}
+        <Container className="blog content">
+            <Row>
+                <Col as="article" className="article" xs={12} md={relatedPosts ? 8 : 12}>
+                    {post && <BlogArticle {...post} />}
+                </Col>
+                {relatedPosts && (
+                    <Col as="aside" className="blog-aside" md={4}>
+                        <div className="related-posts sticky-md-top">
+                            {relatedPosts.map((post: any) => {
+                                return (<RelatedPost key={post.id} post={post}/>)
+                            })}
+                        </div>
                     </Col>
-                    {relatedPosts && (
-                        <Col as="aside" md={4}>
-                            {relatedPosts && <PostList posts={relatedPosts}/>}
-                        </Col>
-                    )}
-                </Row>
-            </Container>
+                )}
+            </Row>
+        </Container>
     )
 }
 

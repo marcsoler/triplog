@@ -26,8 +26,8 @@ const Comment: FC<CommentProps> = ({comment}) => {
                 </Col>
                 <Col xs={10} md={11}>
                     <div style={metaStyle}>
-                        <h5>{comment.user ? comment.user.firstname : 'Anonymous'}</h5>
-                        <p><small>{moment.unix(comment.created_at!.seconds).format('MMMM Do YYYY')}</small></p>
+                        <h6 className="comment-name">{comment.user ? comment.user.firstname : 'Anonymous'}</h6>
+                        <p className="comment-date"><small>{moment.unix(comment.created_at!.seconds).format('MMMM Do YYYY')}</small></p>
                     </div>
 
 

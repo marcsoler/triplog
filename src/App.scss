@@ -64,6 +64,7 @@ $navbar-dark-color: $white;
 //
 
 $text-shadow: 1px 2px 3px #000;
+$content-top-padding: 8rem;
 
 .handwrite {
     font-family: 'Kalam', cursive;
@@ -87,7 +88,7 @@ $text-shadow: 1px 2px 3px #000;
 }
 
 .content {
-    padding-top: 8rem;
+    padding-top: $content-top-padding;
     padding-bottom: 5rem;
 }
 
@@ -151,7 +152,51 @@ $text-shadow: 1px 2px 3px #000;
             text-decoration: none;
         }
         &:hover {
-            color: $darkcyan;
+            color: $bordeaux; //$darkcyan;
+        }
+    }
+}
+
+.blog-article {
+    .article-date {
+        color: $gray-600;
+    }
+}
+
+.blog-aside {
+    @include media-breakpoint-up(md) {
+        border-left: 1px solid $gray-200;
+    }
+}
+
+.related-posts {
+    &.sticky-md-top {
+        top: $content-top-padding;
+    }
+    .active {
+        h5 {
+            color: $white;
+        }
+    }
+    .list-group-item:not(.active) {
+        .comment-count {
+            color: $gray-600;
+        }
+        &:hover {background-color: $gray-200; }
+    }
+
+}
+
+.comments {
+    .comment {
+        .comment-name, .comment-text, .comment-date {
+            color: $gray-600;
+        }
+        .comment-name, .comment-date {
+            margin:0;
+        }
+        .comment-text {
+            font-size: .8em;
         }
     }
 }
@@ -174,6 +219,17 @@ $text-shadow: 1px 2px 3px #000;
     animation-fill-mode: both;
     animation-name: fadeIn;
 
+}
+
+.color-bordeaux {
+    color: $bordeaux;
+}
+.color-darkcyan {
+    color: $darkcyan;
+}
+
+.color-gray-500 {
+    color: $gray-500;
 }
 
 @keyframes fadeIn {

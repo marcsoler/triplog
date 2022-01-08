@@ -81,7 +81,7 @@ const Home = () => {
 
                         <Row>
                             <Col>
-                                <h2>Our latest article</h2>
+                                <h2 className="color-darkcyan">Our latest article</h2>
                                 <hr/>
                             </Col>
                         </Row>
@@ -109,7 +109,7 @@ const Home = () => {
                 <Container>
                     <Row>
                         <Col className="text-right">
-                            <h2>Past trips</h2>
+                            <h2 className="color-darkcyan">Past trips</h2>
                             <hr/>
                         </Col>
                     </Row>
