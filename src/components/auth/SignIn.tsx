@@ -66,9 +66,6 @@ const SignIn: FC = () => {
                 </Row>
 
                 {error && <Alert variant="danger">{error}</Alert>}
-                {success && <Alert variant="success">Success!</Alert>}
-
-
 
             </Form>
         </>

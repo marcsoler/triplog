@@ -1,6 +1,14 @@
 //@import url('//fonts.googleapis.com/css2?family=Bree+Serif&family=Roboto&display=swap');
 
 @import url('//fonts.googleapis.com/css2?family=Kalam&display=swap');
+@import url('//fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
+$bordeaux: #600;
+$darkcyan: #066;
+
+$primary: $darkcyan;
+$color-contrast-dark: #333;
+$headings-color: $bordeaux;
 
 // Required
 @import "~bootstrap/scss/functions";
@@ -93,6 +101,9 @@ $text-shadow: 1px 2px 3px #000;
         background-size: cover;
         background-attachment: fixed;
         color: $white;
+        h1, h2, .blockquote-footer {
+            color: $white;
+        }
         h1 {
             text-shadow: $text-shadow;
         }
@@ -113,11 +124,13 @@ $text-shadow: 1px 2px 3px #000;
     }
     .trip-cover-name {
         position: absolute;
-        bottom: 75px;
-        left: 50px;
-        font-weight: $font-weight-bolder;
+        bottom: 40px;
+        left: 40px;
+        font-weight: 700;
         text-transform: uppercase;
         color: $white;
+        font-size: 2.5em;
+        font-family: 'Roboto Condensed', sans-serif;
         text-shadow: $text-shadow;
     }
 
@@ -126,5 +139,51 @@ $text-shadow: 1px 2px 3px #000;
 .tiled {
     @include media-breakpoint-up(md) {
         transform: rotate(5deg);
+    }
+}
+
+.article-teaser {
+    .article-title {
+        color: $gray-800;
+        transition: $transition-base;
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        &:hover {
+            color: $darkcyan;
+        }
+    }
+}
+
+.footer {
+    color: $gray-500;
+    .footer-notes {
+        margin: 0;
+    }
+    a {
+        color: $gray-500;
+        text-decoration: none;
+    }
+}
+
+.fade-in {
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    animation-delay: .25s;
+    animation-fill-mode: both;
+    animation-name: fadeIn;
+
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

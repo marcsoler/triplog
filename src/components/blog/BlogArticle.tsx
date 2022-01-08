@@ -30,8 +30,9 @@ const BlogArticle: FC<Post> = (post) => {
                 <Row>
                     <Col>
                         <h1>{post.title}</h1>
-                        {post.subtitle && <h2 className="lead">{post.subtitle}</h2>}
                         <p><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
+                        {post.subtitle && <h2 className="lead">{post.subtitle}</h2>}
+
                     </Col>
                     {user && user.admin && (
                         <Col xs={2}>

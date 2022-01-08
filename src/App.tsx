@@ -66,6 +66,7 @@ function App() {
                     })}
                     <Route component={NotFound} />
                 </Switch>
+                <Footer />
             </div>
             <AuthModal />
         </BrowserRouter>
