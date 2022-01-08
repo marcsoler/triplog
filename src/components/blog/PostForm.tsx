@@ -1,4 +1,4 @@
-import {FC, useEffect} from 'react';
+import {FC, useEffect, useState} from 'react';
 
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -32,6 +32,9 @@ interface PostFormProps {
 }
 
 const PostForm: FC<PostFormProps> = ({postId}) => {
+
+    const [unsaved, setUnsaved] = useState(true);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -42,7 +45,20 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     }, [dispatch, postId]);
 
 
-    const {register, control, formState: {errors}, handleSubmit, setValue} = useForm<IPostFormInput>();
+    const {register, control, formState: {errors, isDirty}, handleSubmit, setValue} = useForm<IPostFormInput>({
+        defaultValues: {
+            title: 'yolo',
+            subtitle: 'yolo',
+        }
+    });
+
+    useEffect(() => {
+        if (isDirty) {
+            window.onbeforeunload = () => {
+                return 'Do you really want to close?';
+            }
+        }
+    }, [isDirty]);
 
     const {post} = usePostSelector();
     const {trips} = useTripsSelector();

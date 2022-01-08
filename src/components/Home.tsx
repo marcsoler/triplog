@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faMapMarkedAlt } from '@fortawesome/free-solid-svg-icons'
 
 import TripTeaser from './TripTeaser';
 
@@ -30,8 +30,6 @@ const Home = () => {
     const {post} = usePostSelector();
     const {trips} = useTripsSelector();
 
-    console.log(trips);
-
     const postTrip = trips!.find((t) => {
         return t.id === post?.trip
     });
@@ -48,8 +46,10 @@ const Home = () => {
                     <Row style={{height: '100%'}} className="align-items-center">
                         <Col>
                             <Row>
-                                <Col>
-                                    <h1 className="display-1 handwrite text-center">Welcome to my blog</h1>
+                                <Col className="text-center mb-3">
+                                    <FontAwesomeIcon icon={faMapMarkedAlt} size="8x" />
+                                    <br/>
+                                    <h1 className="display-1 handwrite mt-3">Welcome to my blog</h1>
                                 </Col>
                             </Row>
                             <Row>
