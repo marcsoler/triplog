@@ -12,11 +12,11 @@ import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {Post, Trip} from '../../store/types';
+import {Post} from '../../store/types';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {getTripById, getTrips} from '../../store/actions/tripActions';
+import {getTripById} from '../../store/actions/tripActions';
 import FormMap from '../trip/FormMap';
 import useTripSelector from '../../hooks/useTripSelector';
 import Container from 'react-bootstrap/Container';
@@ -40,7 +40,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
     const dispatch = useDispatch();
 
-    const [mapPosition, setMapPosition] = useState<google.maps.LatLng>();
 
     useEffect(() => {
         if (postId) {
@@ -59,7 +58,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         formState: {errors, isDirty},
         handleSubmit,
         setValue,
-        getValues
     } = useForm<IPostFormInput>({
         defaultValues: postId ? {
             title: post?.title,
@@ -67,7 +65,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             subtitle: post?.subtitle,
             content: post?.content,
             trip: post?.trip,
-            //progress: post?.progress,
             position: post?.position,
             published: post?.published,
         } : {}
@@ -94,7 +91,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             content: data.content,
             trip: data.trip,
             position: data.position,
-            //progress: data.progress,
             published: data.published,
         }
         dispatch(createPost(post, () => console.error('An error happened!')));

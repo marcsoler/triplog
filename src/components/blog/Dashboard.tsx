@@ -1,9 +1,6 @@
 import {FC, useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Link} from 'react-router-dom';
-
-//import {setSuccess} from '../../store/actions/authActions';
 import {deletePost, getPosts} from '../../store/actions/postActions';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';

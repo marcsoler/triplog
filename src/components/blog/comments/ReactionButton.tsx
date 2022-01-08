@@ -1,13 +1,11 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronUp} from '@fortawesome/free-solid-svg-icons/faChevronUp';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import React, {FC, useState} from 'react';
 import {addReaction} from '../../../store/actions/commentActions';
 import useAuthSelector from '../../../hooks/useAuthSelector';
 import {useDispatch} from 'react-redux';
 import {Reaction, Comment} from '../../../store/types';
-import SignIn from '../../auth/SignIn';
 import {setAuthModal} from '../../../store/actions/authActions';
 
 const ReactionButton: FC<Comment> = (comment) => {

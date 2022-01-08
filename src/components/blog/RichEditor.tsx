@@ -7,7 +7,6 @@ const RichEditor: FC = () => {
 
     const {control} = useForm();
 
-    //     return <ReactQuill theme="snow" value={content} onChange={setContent} />
 
     return <Controller name="RichEditor" control={control} render={({field}) => <ReactQuill {...field} />}/>
 }
