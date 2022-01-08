@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faComment } from '@fortawesome/free-solid-svg-icons'
+
 import {FC, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import useCommentsSelector from '../../../hooks/useCommentsSelector';
@@ -23,12 +26,12 @@ const Comments: FC = () => {
 
 
     return (
-        <>
-            <h5>Reactions</h5>
+        <div className="comments">
+            <h3 className="color-darkcyan mb-3">Reactions <span className="color-gray-500"><FontAwesomeIcon icon={faComment} size="lg" /></span></h3>
             { comments && comments.map((c) => {
                 return <Comment key={c.id!} comment={c} />
             })}
-        </>
+        </div>
     )
 }
 

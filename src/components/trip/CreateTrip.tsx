@@ -1,10 +1,11 @@
-import {FC, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 
 
@@ -15,119 +16,96 @@ import {useDispatch} from 'react-redux';
 import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {useHistory} from 'react-router-dom';
+import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
 
 
 const CreateTrip: FC = () => {
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
+    const [center] = useState<google.maps.LatLngLiteral>({lat: 47.2238663, lng: 8.8156291});
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
-    const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
-    const [travelMode, setTravelMode] = useState<google.maps.TravelMode>()
+    const [mode, setMode] = useState<string>();
     const [name, setName] = useState<string>('');
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [imageUrl, setImageUrl] = useState<string>();
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
+    const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [polyline, setPolyline] = useState<string>('');
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
-    const [response, setResponse] = useState();
+    const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
-    const [distance, setDistance] = useState<number>();
-    const [duration, setDuration] = useState<string>()
     const history = useHistory();
-
-
-    const updateTravelMode = (mode: string) => {
-        switch (mode) {
-            case 'DRIVING':
-                setTravelMode(google.maps.TravelMode.DRIVING);
-                break;
-            case 'WALKING':
-                setTravelMode(google.maps.TravelMode.WALKING);
-                break;
-            case 'BICYCLING':
-            default:
-                setTravelMode(google.maps.TravelMode.BICYCLING);
-                break;
-        }
-    }
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
         libraries: libraries,
     });
 
-    const onMapClick = (e: google.maps.MapMouseEvent): void => {
-        const wp = e.latLng;
-        if (wp && waypoints.length < 2) {
-            waypoints.push(wp);
-            if (waypoints.length === 1) {
-                setStartMarker(new google.maps.Marker({
-                    position: wp,
-                    map: mapRef,
-                    title: 'Starting point',
-                }));
-                return;
+
+    const getTravelMode = (): google.maps.TravelMode => {
+        switch (mode) {
+            case 'DRIVING':
+                return google.maps.TravelMode.DRIVING;
+            case 'WALKING':
+                return google.maps.TravelMode.WALKING;
+            default:
+                return google.maps.TravelMode.BICYCLING;
+        }
+    }
+
+    const setPath = (e: google.maps.MapMouseEvent): void => {
+        const position = e.latLng;
+        if (position) {
+            setWaypoints(waypoints => [...waypoints, position]);
+        }
+    }
+
+    useEffect(() => {
+        if (waypoints.length === 1) {
+            setStartMarker(new google.maps.Marker({
+                position: waypoints[0],
+                map: mapRef,
+                title: 'Starting point',
+            }));
+        }
+
+        if (waypoints.length > 1) {
+            const directionService = new google.maps.DirectionsService();
+            const betweenWps: google.maps.DirectionsWaypoint[] = [];
+            if(startMarker) {
+                setStartMarker(undefined);
             }
-            displayRoute();
+
+            if (waypoints.length > 2) {
+                waypoints.slice(1, -1).forEach((wp) => {
+                    betweenWps.push({
+                        location: wp,
+                        stopover: true,
+                    });
+                })
+            }
+
+            directionService.route({
+                origin: waypoints[0],
+                waypoints: betweenWps,
+                optimizeWaypoints: true,
+                destination: waypoints[waypoints.length - 1],
+                travelMode: getTravelMode(),
+            }, (response, status) => {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    setDirectionsLoaded(true);
+                    setDirResponse(response);
+                }
+            }).then();
+
         }
-    }
 
-    const displayRoute = () => {
-        const directionService = new google.maps.DirectionsService();
-        directionService.route({
-            origin: waypoints[0],
-            destination: waypoints[waypoints.length - 1],
-            travelMode: travelMode ? travelMode : google.maps.TravelMode.BICYCLING,
-        }, directionCallback);
-        if (startMarker) {
-            startMarker.setMap(null);
-        }
+    }, [waypoints, mode, getTravelMode])
 
-    }
-
-
-    const directionCallback = (res: any) => {
-        if (res.status === 'OK') {
-            setDirectionsLoaded(true);
-            setResponse(res);
-        }
-    }
-
-    const onDirectionsChange = () => {
-        const dir: any = dirRef!.getDirections();
-        // Get and print metadata
-        const route = dir?.routes[0];
-
-        console.log(route);
-
-        setDistance(route?.legs[0].distance.text);
-        setDuration(route?.legs[0].duration.text);
-        setPolyline(route.overview_polyline);
-
-        //Update waypoints
-        const wps: google.maps.LatLng[] = [];
-
-        //origin:
-        wps.push(route.legs[0].start_location);
-
-        //
-        if(route.legs[0].via_waypoints.length > 0) {
-            route.legs[0].via_waypoints.forEach((wp: google.maps.LatLng) => {
-                wps.push(wp);
-            })
-        }
-        //destination:
-        wps.push(route.legs[0].end_location);
-        setWaypoints(wps);
-
-    }
 
     const containerStyle = {
         width: '100%',
         height: '400px',
-    }
-
-    const center = {
-        lat: 47.2238663,
-        lng: 8.8156291,
     }
 
     const [showModal, setShowModal] = useState(false);
@@ -137,14 +115,10 @@ const CreateTrip: FC = () => {
 
         const newTrip: Trip = {
             name: name,
+            imageUrl: imageUrl!,
             waypoints: waypoints,
             polyline: polyline,
         }
-
-        console.log('todo', name, waypoints);
-
-
-        //dispatch(createPost(data, () => console.error('An error happened!')));
 
         dispatch(storeTrip(newTrip));
 
@@ -154,49 +128,84 @@ const CreateTrip: FC = () => {
 
     }
 
+    const uploadCoverImage = (e: any) => {
+
+        const file = e.target.files[0];
+
+        const storage = getStorage();
+        const storageRef = ref(storage, `/trips/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed', (snapshot) => {
+            setUploadProgress(Math.ceil((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
+        }, (error) => {
+            console.error('An error happened during the upload', error.code);
+            console.error('https://firebase.google.com/docs/storage/web/handle-errors');
+        }, () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setImageUrl(downloadURL);
+            })
+        });
+    }
+
+    useEffect(() => {
+        setUploadProgress(0);
+    }, [imageUrl]);
+
+    useEffect(() => {
+        if(dirRef) {
+            const directions = dirRef.getDirections();
+
+            if(directions) {
+                setPolyline(directions.routes[0].overview_polyline)
+            }
+        }
+    }, [dirRef, waypoints]);
 
     const renderMap = () => {
         return (
-            <Container>
+            <Container className="trip-planner content">
 
                 <h1>Route planner</h1>
 
                 <Row className="mt-3">
                     <Col md={8}>
                         <GoogleMap
-                            id="gmap-planner"
                             mapContainerStyle={containerStyle}
                             center={center}
                             onLoad={map => setMapRef(map)}
-                            onClick={(e => onMapClick(e))}
+                            onClick={(e => setPath(e))}
                             zoom={4}
                             options={{
                                 draggableCursor: 'crosshair'
                             }}
                         >
-                            {directionsLoaded &&
-                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={response} options={{
-                                    draggable: true
-                                }} onDirectionsChanged={onDirectionsChange}/>}
+                            {dirResponse &&
+                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse} />}
                         </GoogleMap>
 
 
                     </Col>
                     <Col as="aside" md={4}>
                         <Form>
+
+                            <Form.Label>Traveling method</Form.Label>
                             <Form.Select aria-label="Select the transportation mode" onChange={(e) => {
-                                updateTravelMode(e.target.value)
+                                setMode(e.target.value)
                             }}>
                                 <option value="BICYCLE">Bicycle</option>
                                 <option value="DRIVING">Driving</option>
                                 <option value="WALKING">Walking</option>
                             </Form.Select>
+
+                            <Form.Label>Cover Image</Form.Label>
+                            <Form.Control type="file" accept="image/*" onChange={(e) => uploadCoverImage(e)}/>
+                            {uploadProgress > 0 && <Form.Text>{`Uploading... ${uploadProgress}%`}</Form.Text>}
+                            {imageUrl &&
+                                <Image src={imageUrl} thumbnail={true} style={{maxWidth: '100px', height: 'auto'}}/>}
                         </Form>
 
                         <hr/>
-
-                        {distance && <p><strong>Distance:</strong> {distance}</p>}
-                        {duration && <p><strong>Duration:</strong> {duration}</p>}
                         {directionsLoaded && <Button variant="success" onClick={e => setShowModal(true)}>Save</Button>}
 
                     </Col>
@@ -208,8 +217,9 @@ const CreateTrip: FC = () => {
                         <Form>
                             <Form.Group className="mb-3" controlId="name">
                                 <Form.Label>Trip name</Form.Label>
-                                <Form.Control type="text" onChange={e => setName(e.currentTarget.value)} />
+                                <Form.Control type="text" onChange={e => setName(e.currentTarget.value)}/>
                             </Form.Group>
+
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>

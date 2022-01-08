@@ -10,7 +10,7 @@ import {faEdit} from '@fortawesome/free-solid-svg-icons';
 
 import Comments from './comments/Comments';
 import CommentForm from './comments/CommentForm';
-import Map from './Map';
+import Map from '../trip/Map';
 
 import {Post} from '../../store/types';
 import useAuthSelector from '../../hooks/useAuthSelector';
@@ -26,14 +26,23 @@ const BlogArticle: FC<Post> = (post) => {
 
     return (
         <>
-            <article>
+            <article className="blog-article">
+
+
+
                 <Row>
                     <Col>
                         <h1>{post.title}</h1>
+                        <Map />
+                        <p className="article-date"><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
+
+
                         {post.subtitle && <h2 className="lead">{post.subtitle}</h2>}
-                        <p><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
+
+
+
                     </Col>
-                    {user && user.admin && (
+                    {user && user.admin && false && (
                         <Col xs={2}>
                             <div className="d-grip gap-0">
                             <Link to={`/dashboard/post/edit/${post.id}`}>
@@ -46,13 +55,11 @@ const BlogArticle: FC<Post> = (post) => {
                     )}
                 </Row>
 
-
-
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
 
             </article>
 
-            <Map />
+
 
             <Comments/>
 

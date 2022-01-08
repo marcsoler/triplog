@@ -17,6 +17,7 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
 import NotFound from './components/misc/NotFound';
 import useAuthSelector from './hooks/useAuthSelector';
+import AuthModal from './components/auth/AuthModal';
 
 const auth = getAuth(firebaseApp);
 
@@ -48,26 +49,23 @@ function App() {
         <BrowserRouter>
             <div className="App">
                 { !loading && <Header /> }
-                <main>
-
-                    <Switch>
-
-                        {routes.map((route, key) => {
-                            switch (route.routeType) {
-                                case 'public':
-                                    return <PublicRoute {...route.params} exact key={key} />
-                                case 'publicOnly':
-                                    return <PublicOnlyRoute {...route.params} exact key={key} />
-                                case 'private':
-                                    return <PrivateRoute {...route.params} exact key={key} />
-                            }
-                            return <></>;
-                        })}
-                        <Route component={NotFound} />
-                    </Switch>
-                </main>
-                <Footer/>
+                <Switch>
+                    {routes.map((route, key) => {
+                        switch (route.routeType) {
+                            case 'public':
+                                return <PublicRoute {...route.params} exact key={key} />
+                            case 'publicOnly':
+                                return <PublicOnlyRoute {...route.params} exact key={key} />
+                            case 'private':
+                                return <PrivateRoute {...route.params} exact key={key} />
+                        }
+                        return <></>;
+                    })}
+                    <Route component={NotFound} />
+                </Switch>
+                <Footer />
             </div>
+            <AuthModal />
         </BrowserRouter>
     );
 }

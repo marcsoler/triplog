@@ -62,7 +62,7 @@ const SignUp: FC = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formEmail">
-                        <Form.Label>E-Mail</Form.Label>
+                        <Form.Label>E-mail</Form.Label>
                         <Form.Control type="email" onChange={(e) => setEmail(e.currentTarget.value)}/>
                     </Form.Group>
 

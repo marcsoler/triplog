@@ -1,4 +1,5 @@
 import Blog from './components/blog/Blog';
+import Home from './components/Home';
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import ForgotPassword from './components/auth/ForgotPassword';
@@ -21,6 +22,13 @@ const routes: Route[] = [
         routeType: 'public',
         params: {
             path: '/',
+            component: Home,
+        }
+    },
+    {
+        routeType: 'public',
+        params: {
+            path: '/trip/:id',
             component: Blog,
         }
     },

@@ -5,48 +5,50 @@ import Col from 'react-bootstrap/Col';
 import {FC, useEffect} from 'react';
 
 import BlogArticle from './BlogArticle';
-import PostList from './PostList';
+import RelatedPost from './RelatedPost';
 
 import {useDispatch} from 'react-redux';
 import {RouteComponentProps} from 'react-router-dom';
-import {getPostById, getLatestPost, getPosts} from '../../store/actions/postActions';
+import {getPostById, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
 
 
-
-const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
+const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
 
     const postId = props.match.params.id;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (postId) {
-            dispatch(getPostById(postId));
-        } else {
-            dispatch(getLatestPost());
-        }
+        dispatch(getPostById(postId));
         dispatch(getPosts());
     }, [dispatch, postId]);
 
     const {post} = usePostSelector();
     const {posts} = usePostsSelector();
 
-    return (
-        <>
-            <Container>
-                <Row>
-                    <Col as="article" md={8}>
-                        { post && <BlogArticle {...post} /> }
-                    </Col>
-                    <Col as="aside" md={4}>
-                        { posts && <PostList posts={posts} /> }
-                    </Col>
-                </Row>
-            </Container>
+    const relatedPosts = posts?.filter((p) => {
+        return p.trip === post?.trip;
+    })
 
-        </>
+    return (
+        <Container className="blog content">
+            <Row>
+                <Col as="article" className="article" xs={12} md={relatedPosts ? 8 : 12}>
+                    {post && <BlogArticle {...post} />}
+                </Col>
+                {relatedPosts && (
+                    <Col as="aside" className="blog-aside" md={4}>
+                        <div className="related-posts sticky-md-top">
+                            {relatedPosts.map((post: any) => {
+                                return (<RelatedPost key={post.id} post={post}/>)
+                            })}
+                        </div>
+                    </Col>
+                )}
+            </Row>
+        </Container>
     )
 }
 

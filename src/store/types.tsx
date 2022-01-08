@@ -4,6 +4,7 @@ export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR';
 export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
+export const SET_MODAL = 'SET_MODAL';
 
 /***
  * User/Auth:
@@ -28,6 +29,7 @@ export interface AuthState {
     error: string;
     needVerification: boolean;
     success: string;
+    showModal: boolean;
 }
 
 export interface SignUpData {
@@ -72,13 +74,21 @@ interface SetSuccessAction {
     payload: string;
 }
 
+interface SetModalAction {
+    type: typeof SET_MODAL;
+    payload: boolean;
+}
+
+
+
 export type AuthAction =
     SetUserAction
     | SetLoadingAction
     | SignOutAction
     | SetErrorAction
     | NeedVerificationAction
-    | SetSuccessAction;
+    | SetSuccessAction
+    | SetModalAction;
 
 
 /***
@@ -94,7 +104,8 @@ export interface Post {
     subtitle: string;
     content: string;
     trip: string;
-    progress: string | number,
+    //progress: string | number,
+    position: any; //google.maps.LatLng;
     published: boolean;
     created_at?: {
         seconds: number,
@@ -137,6 +148,7 @@ export const SET_TRIPS = 'SET_TRIPS';
 export interface Trip {
     id?: string;
     name: string;
+    imageUrl: string;
     waypoints: Array<google.maps.LatLng>
     polyline: string,
     created_at?: {
@@ -230,3 +242,7 @@ interface SetCommentsAction {
 }
 
 export type CommentsAction = SetCommentsAction;
+
+//Todo:
+// type Trip & type TripData (submissions)
+// see example User, SignUpData...
