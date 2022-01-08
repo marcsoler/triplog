@@ -4,6 +4,7 @@ import {
     NEED_VERIFICATION,
     SET_ERROR,
     SET_LOADING,
+    SET_MODAL,
     SET_SUCCESS,
     SET_USER,
     SIGN_OUT
@@ -15,7 +16,8 @@ const initialState: AuthState = {
     loading: true,
     error: '',
     needVerification: false,
-    success: ''
+    success: '',
+    showModal: false,
 }
 
 const authReducer = (state = initialState, action: AuthAction) => {
@@ -52,6 +54,11 @@ const authReducer = (state = initialState, action: AuthAction) => {
             return {
                 ...state,
                 success: action.payload
+            }
+        case SET_MODAL:
+            return {
+                ...state,
+                showModal: action.payload
             }
         default:
             return state;

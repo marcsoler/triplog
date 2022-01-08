@@ -1,16 +1,17 @@
 import {FC} from 'react';
-import Image from 'react-bootstrap/Image';
 import Col from 'react-bootstrap/Col';
+import Figure from 'react-bootstrap/Figure';
 import { Link } from 'react-router-dom';
+import {Trip} from '../store/types';
 
-const TripTeaser: FC<any> = (trip) => {
+const TripTeaser: FC<Trip> = (trip: Trip) => {
     return (
         <Col>
             <Link to={`/trip/${trip.id}`}>
-                <figure className="trip-cover-image tilted">
-                    <Image src={trip.imageUrl} />
-                    <figcaption className="trip-cover-name display-6">{trip.name}</figcaption>
-                </figure>
+                <Figure className="trip-cover-image tilted">
+                    <Figure.Image src={trip.imageUrl} />
+                    <Figure.Caption className="trip-cover-name display-6">{trip.name}</Figure.Caption>
+                </Figure>
             </Link>
         </Col>
     )

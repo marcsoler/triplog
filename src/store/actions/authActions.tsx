@@ -10,7 +10,8 @@ import {
     SignInData,
     SET_ERROR,
     NEED_VERIFICATION,
-    SET_SUCCESS
+    SET_SUCCESS,
+    SET_MODAL
 } from '../types';
 
 import {RootState} from '../index';
@@ -66,7 +67,21 @@ export const signin = (data: SignInData, onError: () => void): ThunkAction<void,
     return async dispatch => {
         await signInWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
             onError();
-            dispatch(setError(`${error.code}: ${error.message}`));
+
+            let msg;
+            switch (error.code) {
+                case 'auth/wrong-password':
+                case 'auth/user-not-found':
+                    msg = 'The e-mail address or password you have entered is invalid.'
+                    break;
+                case 'auth/too-many-requests':
+                    msg = 'Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.';
+                    break;
+                default:
+                    msg = `${error.code}: ${error.message}`
+                    break;
+            }
+            dispatch(setError(msg));
         });
     }
 }
@@ -121,6 +136,17 @@ export const sendResetEmail = (email: string, successMsg: string): ThunkAction<v
             dispatch(setSuccess(successMsg));
         }).catch((error) => {
             dispatch(setError(`${error.code}: ${error.message}`));
+        });
+    }
+}
+
+export const setAuthModal = (show: boolean): ThunkAction<void, RootState, null, AuthAction> => {
+    return dispatch => {
+        console.log(show ? 'Show modal...' : 'Close modal...');
+
+        dispatch({
+            type: SET_MODAL,
+            payload: show,
         });
     }
 }

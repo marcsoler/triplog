@@ -6,6 +6,9 @@ import './App.scss';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import SignIn from './components/auth/SignIn';
+
+import Modal from 'react-bootstrap/Modal';
 
 import routes from './routes';
 import PrivateRoute from './components/auth/PrivateRoute';
@@ -17,6 +20,7 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth';
 import {getUserById, setLoading, setNeedVerification} from './store/actions/authActions';
 import NotFound from './components/misc/NotFound';
 import useAuthSelector from './hooks/useAuthSelector';
+import AuthModal from './components/auth/AuthModal';
 
 const auth = getAuth(firebaseApp);
 
@@ -63,6 +67,7 @@ function App() {
                     <Route component={NotFound} />
                 </Switch>
             </div>
+            <AuthModal />
         </BrowserRouter>
     );
 }

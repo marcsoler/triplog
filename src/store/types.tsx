@@ -4,6 +4,7 @@ export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR';
 export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
+export const SET_MODAL = 'SET_MODAL';
 
 /***
  * User/Auth:
@@ -28,6 +29,7 @@ export interface AuthState {
     error: string;
     needVerification: boolean;
     success: string;
+    showModal: boolean;
 }
 
 export interface SignUpData {
@@ -72,13 +74,21 @@ interface SetSuccessAction {
     payload: string;
 }
 
+interface SetModalAction {
+    type: typeof SET_MODAL;
+    payload: boolean;
+}
+
+
+
 export type AuthAction =
     SetUserAction
     | SetLoadingAction
     | SignOutAction
     | SetErrorAction
     | NeedVerificationAction
-    | SetSuccessAction;
+    | SetSuccessAction
+    | SetModalAction;
 
 
 /***

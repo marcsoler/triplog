@@ -14,37 +14,37 @@ import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
 
 
-
-const Blog: FC<RouteComponentProps<{ id?: string }>> = (props) => {
+const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
 
     const postId = props.match.params.id;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (postId) {
-            dispatch(getPostById(postId));
-        }
+        dispatch(getPostById(postId));
         dispatch(getPosts());
     }, [dispatch, postId]);
 
     const {post} = usePostSelector();
     const {posts} = usePostsSelector();
 
+    const relatedPosts = posts?.filter((p) => {
+        return p.trip === post?.trip;
+    })
+
     return (
-        <>
-            <Container>
+            <Container className="blog content">
                 <Row>
                     <Col as="article" md={8}>
-                        { post && <BlogArticle {...post} /> }
+                        {post && <BlogArticle {...post} />}
                     </Col>
-                    <Col as="aside" md={4}>
-                        { posts && <PostList posts={posts} /> }
-                    </Col>
+                    {relatedPosts && (
+                        <Col as="aside" md={4}>
+                            {relatedPosts && <PostList posts={relatedPosts}/>}
+                        </Col>
+                    )}
                 </Row>
             </Container>
-
-        </>
     )
 }
 

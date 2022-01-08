@@ -8,12 +8,12 @@ import useAuthSelector from '../../../hooks/useAuthSelector';
 import {useDispatch} from 'react-redux';
 import {Reaction, Comment} from '../../../store/types';
 import SignIn from '../../auth/SignIn';
+import {setAuthModal} from '../../../store/actions/authActions';
 
 const ReactionButton: FC<Comment> = (comment) => {
 
     const {authenticated, user} = useAuthSelector();
     const [reactions] = useState<Reaction[]>(comment.reactions);
-    const [showLogin, setShowLogin] = useState(false);
 
     const alreadyVoted = (): boolean => {
         if (authenticated) {
@@ -27,7 +27,7 @@ const ReactionButton: FC<Comment> = (comment) => {
     const [voted, setVoted] = useState(alreadyVoted);
     const handleReaction = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!authenticated) {
-            setShowLogin(true);
+            dispatch(setAuthModal(true));
             return;
         }
         dispatch(addReaction(comment, user!, () => {
@@ -48,24 +48,13 @@ const ReactionButton: FC<Comment> = (comment) => {
 
 
     return (
-        <>
-            <Button type="button" variant="outline-dark" onClick={(e) => handleReaction(e)}
-                // @ts-ignore
-                style={divStyle}
-            >
-                <FontAwesomeIcon icon={faChevronUp} style={{color: voted ? 'red' : 'inherit'}}/>
-                <span>{votes}</span>
-            </Button>
-
-            <Modal show={showLogin} onHide={() => setShowLogin(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Sign in</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <SignIn/>
-                </Modal.Body>
-            </Modal>
-        </>
+        <Button type="button" variant="outline-dark" onClick={(e) => handleReaction(e)}
+            // @ts-ignore
+            style={divStyle}
+        >
+            <FontAwesomeIcon icon={faChevronUp} style={{color: voted ? 'red' : 'inherit'}}/>
+            <span>{votes}</span>
+        </Button>
     )
 }
 

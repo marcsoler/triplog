@@ -161,7 +161,7 @@ const CreateTrip: FC = () => {
 
     const renderMap = () => {
         return (
-            <Container>
+            <Container className="trip-planner content">
 
                 <h1>Route planner</h1>
 

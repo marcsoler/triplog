@@ -55,7 +55,7 @@ const Dashboard: FC = () => {
 
 
     return (
-        <Container>
+        <Container className="dashboard content">
             <h1>Dashboard</h1>
 
             <h3>Posts</h3>

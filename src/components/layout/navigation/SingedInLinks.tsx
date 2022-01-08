@@ -1,8 +1,5 @@
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-
 import {NavLink} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {signout} from '../../../store/actions/authActions';

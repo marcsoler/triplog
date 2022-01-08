@@ -45,9 +45,6 @@ const BlogArticle: FC<Post> = (post) => {
                         </Col>
                     )}
                 </Row>
-
-
-
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
 
             </article>

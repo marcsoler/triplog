@@ -43,7 +43,7 @@ const Home = () => {
 
     };
 
-    return <>
+    return (
         <div className="home">
             <section className="teaser">
                 <Container>
@@ -101,28 +101,25 @@ const Home = () => {
             )}
 
             <section className="content latest-trips">
-
                 <Container>
                     <Row>
                         <Col>
                             <h2>Past trips</h2>
                         </Col>
                     </Row>
-                    <Row>
-                        <Row xs={1} md={3} lg={7}>
-                            {trips && trips.filter((t) => {
-                                return t.id !== post!.trip
-                            }).map((t) => {
-                                return (
-                                    <TripTeaser key={t.id} {...t} />
-                                )
-                            })}
-                        </Row>
+                    <Row xs={1} md={3} lg={7}>
+                        {trips && trips.filter((t) => {
+                            return t.id !== post!.trip
+                        }).map((t) => {
+                            return (
+                                <TripTeaser key={t.id} {...t} />
+                            )
+                        })}
                     </Row>
                 </Container>
             </section>
         </div>
-    </>
+    )
 }
 
 export default Home;
