@@ -106,7 +106,7 @@ export interface Post {
     trip: string;
     //progress: string | number,
     position: any; //google.maps.LatLng;
-    published: boolean;
+    draft: boolean;
     created_at?: {
         seconds: number,
         nanoseconds: number,

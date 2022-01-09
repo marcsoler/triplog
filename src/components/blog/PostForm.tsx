@@ -10,7 +10,6 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faSignature} from '@fortawesome/free-solid-svg-icons/faSignature';
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
 
@@ -36,7 +35,7 @@ interface IPostFormInput {
     content: string;
     trip: string;
     position: google.maps.LatLng;
-    published: boolean;
+    draft: boolean;
 }
 
 interface PostFormProps {
@@ -73,7 +72,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             content: post?.content,
             trip: post?.trip,
             position: post?.position,
-            published: post?.published,
+            draft: post?.draft,
         } : {}
     });
 
@@ -98,7 +97,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             content: data.content,
             trip: data.trip,
             position: data.position,
-            published: data.published,
+            draft: data.draft,
         }
         dispatch(createPost(post, () => console.error('An error happened!')));
     };
@@ -187,7 +186,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                 <Form.Select
                                     aria-label="Select the route" {...register('trip', {required: true})}
                                     onChange={(e) => loadTrip(e)}>
-                                    <option selected>Select the trip</option>
+                                    <option>Select the trip</option>
                                     {trips?.map((t) => {
                                         return <option value={t.id} key={t.id}>{t.name}</option>
                                     })}
@@ -195,21 +194,17 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                             </FloatingLabel>
                         </Form.Group>
 
-                        {trip && <FormMap position={(p: google.maps.LatLng) => setValue('position', p)}/>}
+                        {trip && <FormMap position={(p: google.maps.LatLng) => setValue('position', p)}
+                                          preDefinedPosition={post && post.position} />}
 
-                        <hr className="mb-3 mt-5"/>
-
-                        <Form.Group className="mb-3" controlId="published">
-                            <Form.Label>Published</Form.Label>
-                            <Form.Check type="switch" label="Publish" {...register('published')} />
-                        </Form.Group>
+                        <hr className="mb-5 mt-5"/>
 
                         <ButtonGroup className="w-100" size="lg">
-                            <Button variant="outline-secondary">
-                                <FontAwesomeIcon icon={faSignature} /> Save as Draft
+                            <Button variant="outline-secondary" type="submit" onClick={() => setValue('draft', true)}>
+                                <FontAwesomeIcon icon={faSignature}/> Save as Draft
                             </Button>
-                            <Button  variant="outline-primary" type="submit">
-                                <FontAwesomeIcon icon={faCheck} /> Submit
+                            <Button variant="outline-primary" type="submit" onClick={() => setValue('draft', false)}>
+                                <FontAwesomeIcon icon={faCheck}/> Submit
                             </Button>
                         </ButtonGroup>
 

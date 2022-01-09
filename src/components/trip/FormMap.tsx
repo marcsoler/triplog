@@ -7,9 +7,10 @@ import useTripSelector from '../../hooks/useTripSelector';
 
 interface FormMapProps {
     position: any;
+    preDefinedPosition: any;
 }
 
-const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
+const FormMap: FC<FormMapProps> = ({position, preDefinedPosition}: FormMapProps) => {
 
 
     const {trip} = useTripSelector();
@@ -19,10 +20,6 @@ const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
     const [markerRef, setMarkerRef] = useState<google.maps.Marker>();
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
     const [markerPosition, setMarkerPosition] = useState<google.maps.LatLng>();
-
-    useEffect(() => {
-        console.log('trip changed, load new "route"', trip);
-    }, [trip]);
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
@@ -44,15 +41,13 @@ const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
     const onMapClick = (e: google.maps.MapMouseEvent) => {
         if (mapRef && e.latLng) {
             setMarkerPosition(e.latLng);
-            mapRef.setCenter(e.latLng);
         }
     }
 
-    const updatePosiiton = () => {
+    const updatePosition = () => {
         const newPosition = markerRef!.getPosition();
         if(mapRef && newPosition) {
             setMarkerPosition(newPosition);
-            mapRef.setCenter(newPosition);
         }
     }
 
@@ -66,6 +61,13 @@ const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
         mapRef!.fitBounds(bounds);
         return decodedPath;
     }
+
+    useEffect(() => {
+        if(isLoaded && preDefinedPosition) {
+            setMarkerPosition(new google.maps.LatLng(preDefinedPosition.latitude, preDefinedPosition.longitude));
+        }
+    }, [isLoaded, preDefinedPosition]);
+
 
     useEffect(() => {
         position(markerPosition);
@@ -83,7 +85,7 @@ const FormMap: FC<FormMapProps> = ({position}: FormMapProps) => {
                 draggableCursor: 'crosshair'
             }}>
             {trip && mapRef && <Polyline path={drawPolyline()}/>}
-            {markerPosition && <Marker onLoad={(m) => setMarkerRef(m)} position={markerPosition} draggable={true} onDragEnd={updatePosiiton}/>}
+            {markerPosition && <Marker onLoad={(m) => setMarkerRef(m)} position={markerPosition} draggable={true} onDragEnd={updatePosition}/>}
         </GoogleMap>
     }
 

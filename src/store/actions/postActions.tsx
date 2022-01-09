@@ -93,14 +93,14 @@ export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
 export const createPost = (post: Post, onError: () => void): ThunkAction<void, RootState, null, PostAction> => {
 
     return async dispatch => {
+        console.log('creating post...', post);
         await setDoc(doc(db, 'posts', post.id!), {
             title: post.title,
             subtitle: post.subtitle,
             content: post.content,
             trip: post.trip,
-            //progress: post.progress,
             position: new GeoPoint(post.position.lat(), post.position.lng()),
-            published: post.published,
+            draft: post.draft,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
