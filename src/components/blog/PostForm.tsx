@@ -1,12 +1,20 @@
 import {FC, FormEvent, useEffect} from 'react';
 
 import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-import {SubmitHandler, useForm, Controller} from 'react-hook-form';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
+import {faSignature} from '@fortawesome/free-solid-svg-icons/faSignature';
+import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
+
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {createPost, getPostById} from '../../store/actions/postActions';
 import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
@@ -19,7 +27,7 @@ import 'react-quill/dist/quill.snow.css';
 import {getTripById} from '../../store/actions/tripActions';
 import FormMap from '../trip/FormMap';
 import useTripSelector from '../../hooks/useTripSelector';
-import Container from 'react-bootstrap/Container';
+
 
 interface IPostFormInput {
     title: string;
@@ -112,73 +120,79 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
     const {trip} = useTripSelector();
 
-    useEffect(() => {
-        console.log('current trip', trip);
-    }, [trip]);
-
 
     return (
         <Container className="post-form content">
             <Row>
                 <Col xs={12}>
+
+                    <h1 className="mb-3">{postId ? 'Edit post' : 'New post'}</h1>
+
                     <Form onSubmit={handleSubmit(onSubmit)}>
 
                         <Form.Group className="mb-3" controlId="title">
-                            <Form.Label>Title</Form.Label>
-                            <Form.Control className={(errors.title && 'is-invalid')}
-                                          type="text" {...register('title', {
-                                required: true,
-                                onChange: (e) => !postId ? slugifyTitle(e.currentTarget.value) : void (0)
-                            })} />
+                            <FloatingLabel controlId="title" label="Title">
+                                <Form.Control className={(errors.title && 'is-invalid')}
+                                              type="text" placeholder="Title" {...register('title', {
+                                    required: true,
+                                    onChange: (e) => !postId ? slugifyTitle(e.currentTarget.value) : void (0)
+                                })} />
+                            </FloatingLabel>
                             {errors.title &&
                                 <div className="invalid-feedback">The title is a required field!</div>}
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label>Slug</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text>{`${window.location.origin}/post/`}</InputGroup.Text>
                                 <Form.Control type="text"
                                               readOnly {...register('slug')} />
+                                <InputGroup.Text>todo (check of duplicates)</InputGroup.Text>
                             </InputGroup>
                         </Form.Group>
 
+
                         <Form.Group className="mb-3" controlId="subtitle">
-                            <Form.Label>Subtitle</Form.Label>
-                            <Form.Control type="subtitle" {...register('subtitle', {required: true})} />
+                            <FloatingLabel controlId="subtitle" label="Subtitle">
+                                <Form.Control type="subtitle"
+                                              placeholder="Subtitle" {...register('subtitle', {required: true})} />
+                            </FloatingLabel>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="content">
-                            <Form.Label>Content</Form.Label>
 
-                            <Controller control={control} name="content" render={({field: {onChange, value}}) => (
-                                <ReactQuill onChange={onChange} value={value} modules={{
-                                    toolbar: {
-                                        container: [
-                                            [{'header': [3, 4, 5, 6, false]}],
-                                            ['bold', 'italic', 'underline'],
-                                            [{'list': 'ordered'}, {'list': 'bullet'}],
-                                            [{'align': []}],
-                                            ['link', 'image'],
-                                            ['clean'],
-                                            [{'color': []}]
-                                        ]
-                                    }
-                                }}/>
-                            )}/>
+                        <Form.Group className="mb-3" controlId="content">
+                            <Controller control={control} name="content"
+                                        render={({field: {onChange, value}}) => (
+                                            <ReactQuill placeholder="Write here your story&hellip;" onChange={onChange}
+                                                        value={value}
+                                                        modules={{
+                                                            toolbar: {
+                                                                container: [
+                                                                    [{'header': [3, 4, 5, 6, false]}],
+                                                                    ['bold', 'italic', 'underline'],
+                                                                    [{'list': 'ordered'}, {'list': 'bullet'}],
+                                                                    [{'align': []}],
+                                                                    ['link', 'image'],
+                                                                    ['clean'],
+                                                                    [{'color': []}]
+                                                                ]
+                                                            }
+                                                        }}/>
+                                        )}/>
 
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="trip">
-                            <Form.Label>Trip</Form.Label>
-                            <Form.Select
-                                aria-label="Select the route" {...register('trip', {required: true})}
-                                onChange={(e) => loadTrip(e)}>
-                                <option disabled>Trip list</option>
-                                {trips?.map((t) => {
-                                    return <option value={t.id} key={t.id}>{t.name}</option>
-                                })}
-                            </Form.Select>
+                            <FloatingLabel controlId="trip" label="Trip">
+                                <Form.Select
+                                    aria-label="Select the route" {...register('trip', {required: true})}
+                                    onChange={(e) => loadTrip(e)}>
+                                    <option selected>Select the trip</option>
+                                    {trips?.map((t) => {
+                                        return <option value={t.id} key={t.id}>{t.name}</option>
+                                    })}
+                                </Form.Select>
+                            </FloatingLabel>
                         </Form.Group>
 
                         {trip && <FormMap position={(p: google.maps.LatLng) => setValue('position', p)}/>}
@@ -190,9 +204,16 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                             <Form.Check type="switch" label="Publish" {...register('published')} />
                         </Form.Group>
 
-                        <Button variant="primary" type="submit">
-                            Submit
-                        </Button>
+                        <ButtonGroup className="w-100" size="lg">
+                            <Button variant="outline-secondary">
+                                <FontAwesomeIcon icon={faSignature} /> Save as Draft
+                            </Button>
+                            <Button  variant="outline-primary" type="submit">
+                                <FontAwesomeIcon icon={faCheck} /> Submit
+                            </Button>
+                        </ButtonGroup>
+
+
                     </Form>
                 </Col>
             </Row>
