@@ -35,7 +35,7 @@ const Header: FC = () => {
 
 
     return (
-        <Navbar expand="lg" variant="dark" fixed="top" className={(offset > 0 || currentLocation !== '/') ? 'navbar-bg' : ''}>
+        <Navbar variant="dark" fixed="top" className={(offset > 0 || currentLocation !== '/') ? 'navbar-bg' : ''}>
             <Container>
                 <Link className="navbar-brand" to="/">
                     <FontAwesomeIcon icon={faRoute} size="2x" /> Triplog</Link>

@@ -23,8 +23,16 @@ const db = getFirestore(firebaseApp);
 
 const commentsRef = collection(db, 'comments');
 
+const getComments = async (postId: string): Promise<Comment[]> => {
+    const q = query(commentsRef, where('post_id', '==', postId), orderBy('created_at', 'asc'));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((c) => {
+        return {id: c.id, ...c.data()} as Comment;
+    });
+}
 
-export const storeComment = (comment: Comment): ThunkAction<void, RootState, null, CommentAction> => {
+
+export const storeComment = (comment: Comment): ThunkAction<void, RootState, null, CommentsAction> => {
     return async dispatch => {
         await addDoc(commentsRef, {
             text: comment.text,
@@ -37,6 +45,15 @@ export const storeComment = (comment: Comment): ThunkAction<void, RootState, nul
         } as Comment).catch((error) => {
             console.error('commentsActions:storeComment()', error);
         });
+
+        const commentsData = await getComments(comment.post_id);
+
+        dispatch({
+            type: SET_COMMENTS,
+            payload: commentsData,
+        });
+
+
     }
 }
 
@@ -95,19 +112,14 @@ export const addReaction = (comment: Comment, user: User, onVote: () => void, on
 }
 
 
-export const approveComment = (comment: Comment):ThunkAction<void, RootState, null, CommentsAction> => {
+export const approveComment = (comment: Comment): ThunkAction<void, RootState, null, CommentsAction> => {
     return async dispatch => {
         const commentDocRef = doc(db, 'comments', comment.id!);
         await setDoc(commentDocRef, {
             approved_at: Timestamp.now()
         }, {merge: true}).then(async () => {
 
-            const q = query(commentsRef, where('post_id', '==', comment.post_id), orderBy('created_at', 'asc'));
-            const querySnapshot = await getDocs(q);
-
-            const commentsData: any = querySnapshot.docs.map((c) => {
-                return {id: c.id, ...c.data()} as Comment;
-            });
+            const commentsData = await getComments(comment.post_id);
             dispatch({
                 type: SET_COMMENTS,
                 payload: commentsData,
@@ -117,17 +129,14 @@ export const approveComment = (comment: Comment):ThunkAction<void, RootState, nu
     }
 }
 
-export const deleteComment = (comment: Comment):ThunkAction<void, RootState, null, CommentsAction> => {
+export const deleteComment = (comment: Comment): ThunkAction<void, RootState, null, CommentsAction> => {
     return async dispatch => {
         const commentDocRef = doc(db, 'comments', comment.id!);
 
         await deleteDoc(commentDocRef).then(async () => {
-            const q = query(commentsRef, where('post_id', '==', comment.post_id), orderBy('created_at', 'asc'));
-            const querySnapshot = await getDocs(q);
 
-            const commentsData: any = querySnapshot.docs.map((c) => {
-                return {id: c.id, ...c.data()} as Comment;
-            });
+            const commentsData = await getComments(comment.post_id);
+
             dispatch({
                 type: SET_COMMENTS,
                 payload: commentsData,
@@ -135,4 +144,3 @@ export const deleteComment = (comment: Comment):ThunkAction<void, RootState, nul
         })
     }
 }
-//TODO: refactor duplicate code!!!

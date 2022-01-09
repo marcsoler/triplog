@@ -74,7 +74,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         formState: {errors, isDirty},
         handleSubmit,
         setValue,
-        getValues
     } = useForm<IPostFormInput>({
         defaultValues: postId ? {
             title: post?.title,

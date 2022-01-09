@@ -1,20 +1,22 @@
-import {FC, FormEvent, useState, useEffect} from 'react';
+import {FC, useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 
-import {sendResetEmail, setError, setSuccess} from '../../store/actions/authActions';
+import {sendResetEmail, setError, setSuccess, signin} from '../../store/actions/authActions';
 
 import useAuthSelector from '../../hooks/useAuthSelector';
+import {SubmitHandler, useForm} from 'react-hook-form';
 
+interface IRecoveryForm {
+    recoveryEmail: string;
+}
 
 const ForgotPassword: FC = () => {
 
-    const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const {error, success} = useAuthSelector();
@@ -31,32 +33,38 @@ const ForgotPassword: FC = () => {
     }, [error, success, dispatch])
 
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
+    const onSubmit: SubmitHandler<IRecoveryForm> = data => {
         setIsLoading(true);
-        dispatch(sendResetEmail(email, 'E-mail sent!'));
+        dispatch(sendResetEmail(data.recoveryEmail,'Success! Follow the instruction on your E-mail'));
+        setIsLoading(false);
+    };
+
+    const {
+        register,
+        formState: {errors},
+        handleSubmit,
+    } = useForm<IRecoveryForm>();
+
+    if(success) {
+        return <Alert variant="success">{success}</Alert>
     }
 
     return (
-        <Row className="justify-content-center">
-            <Col sm={12} md={6} lg={4}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form.Group className="mb-3" controlId="email">
+                <FloatingLabel label="E-mail" controlId="recoveryEmail">
+                    <Form.Control type="recoveryEmail" placeholder="E-email"
+                                  {...register('recoveryEmail', {required: true})}/>
+                </FloatingLabel>
+                {errors.recoveryEmail && <p className="form-validation-failed">E-mail is required</p>}
+            </Form.Group>
 
-                {error && <Alert variant="danger">{error}</Alert>}
-                {success && <Alert variant="success">{success}</Alert>}
-
-                <h3>Password recovery</h3>
-                <Form onSubmit={handleSubmit}>
-
-                    <Form.Group className="mb-3" controlId="formEmail">
-                        <Form.Label>E-mail</Form.Label>
-                        <Form.Control type="email" onChange={(e) => setEmail(e.currentTarget.value)}/>
-                    </Form.Group>
-
-                    <hr className="my-4"/>
-                    <Button variant="primary" type="submit">{isLoading ? 'Loading...' : 'Reset password'}</Button>
-                </Form>
-            </Col>
-        </Row>
+            <div className="d-grid">
+                <Button variant="primary" type="submit" size="lg"
+                        disabled={isLoading}>{isLoading ? 'Loading...' : 'Reset Password'}</Button>
+            </div>
+        </Form>
     );
 }
 
