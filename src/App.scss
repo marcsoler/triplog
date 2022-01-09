@@ -40,7 +40,7 @@ $secondary: $gray-200;
 // @import "~bootstrap/scss/breadcrumb";
 // @import "~bootstrap/scss/accordion";
 // @import "~bootstrap/scss/pagination";
-// @import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/badge";
 @import "~bootstrap/scss/alert";
 // @import "~bootstrap/scss/progress";
 @import "~bootstrap/scss/list-group";
@@ -199,6 +199,36 @@ $content-top-padding: 8rem;
         }
         .comment-text {
             font-size: .8em;
+        }
+    }
+}
+
+.dashboard {
+    .dashboard-trip{
+        position: relative;
+        .dashboard-trip-overlay {
+            opacity: 0;
+            transition: opacity .25s;
+            position: absolute;
+            height:100%;
+            width:100%;
+            top: 0;
+            left: 0;
+            background-color: rgba($black, .5);
+            cursor: pointer;
+            &:hover {
+                opacity: 1;
+            }
+            .dashboard-trip-overlay-inner {
+                display: flex;
+                height: 100%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+            .dashboard-trip-name {
+                color: $white;
+            }
         }
     }
 }
