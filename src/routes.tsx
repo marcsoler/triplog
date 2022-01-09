@@ -14,6 +14,7 @@ interface Route {
         path: string;
         component: any;
     }
+    adminOnly?: boolean;
 }
 
 
@@ -65,28 +66,32 @@ const routes: Route[] = [
         params: {
             path: '/dashboard',
             component: Dashboard,
-        }
+        },
+        adminOnly: true,
     },
     {
         routeType: 'private',
         params: {
             path: '/dashboard/post/edit/:id',
             component: EditPost,
-        }
+        },
+        adminOnly: true,
     },
     {
         routeType: 'private',
         params: {
             path: '/dashboard/post/create',
             component: CreatePost,
-        }
+        },
+        adminOnly: true,
     },
     {
         routeType: 'private',
         params: {
             path: '/dashboard/trip/create',
             component: CreateTrip
-        }
+        },
+        adminOnly: true,
     }
 ]
 export default routes;
