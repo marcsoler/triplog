@@ -234,12 +234,34 @@ $content-top-padding: 8rem;
     color: $gray-500;
 }
 
-.ql-container .ql-editor {
-    min-height: 200px;
-    &.ql-blank::before {
-        font-style: normal;
-    }
+.form-validation-failed {
+    color: $danger;
+    font-size: .8em;
+    text-align: right;
+}
 
+.quill {
+    .ql-toolbar {
+        border-top-left-radius: $input-border-radius;
+        border-top-right-radius: $input-border-radius;
+    }
+    .ql-container {
+        .ql-editor {
+            min-height: 200px;
+
+            &.ql-blank::before {
+                font-style: normal;
+            }
+        }
+        border-bottom-left-radius: $input-border-radius;
+        border-bottom-right-radius: $input-border-radius;
+
+    }
+    &.is-invalid {
+        .ql-toolbar, .ql-container {
+            border-color: $form-feedback-invalid-color;
+        }
+    }
 }
 
 @keyframes fadeIn {

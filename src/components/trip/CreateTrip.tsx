@@ -17,6 +17,7 @@ import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {useHistory} from 'react-router-dom';
 import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
+import mapsOptions from './mapsOptions';
 
 
 const CreateTrip: FC = () => {
@@ -72,7 +73,7 @@ const CreateTrip: FC = () => {
         if (waypoints.length > 1) {
             const directionService = new google.maps.DirectionsService();
             const betweenWps: google.maps.DirectionsWaypoint[] = [];
-            if(startMarker) {
+            if (startMarker) {
                 setStartMarker(undefined);
             }
 
@@ -153,10 +154,10 @@ const CreateTrip: FC = () => {
     }, [imageUrl]);
 
     useEffect(() => {
-        if(dirRef) {
+        if (dirRef) {
             const directions = dirRef.getDirections();
 
-            if(directions) {
+            if (directions) {
                 setPolyline(directions.routes[0].overview_polyline)
             }
         }
@@ -176,12 +177,9 @@ const CreateTrip: FC = () => {
                             onLoad={map => setMapRef(map)}
                             onClick={(e => setPath(e))}
                             zoom={4}
-                            options={{
-                                draggableCursor: 'crosshair'
-                            }}
-                        >
+                            options={{...mapsOptions, draggableCursor: 'crosshair'}}>
                             {dirResponse &&
-                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse} />}
+                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse}/>}
                         </GoogleMap>
 
 

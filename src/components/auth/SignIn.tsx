@@ -1,10 +1,11 @@
-import {FC, FormEvent, useState, useEffect} from 'react';
+import {FC, FormEvent, useState, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
@@ -36,39 +37,37 @@ const SignIn: FC = () => {
         dispatch(signin({email, password}, () => setIsLoading(false)));
     }
 
+
     return (
-        <>
+        <Form onSubmit={handleSubmit}>
 
+            <Form.Group className="mb-3" controlId="email">
+                <FloatingLabel label="E-mail" controlId="email">
+                    <Form.Control type="email" placeholder="E-email"
+                                  onChange={(e) => setEmail(e.currentTarget.value)}/>
+                </FloatingLabel>
+            </Form.Group>
 
+            <Form.Group className="mb-3" controlId="formPassword">
+                <FloatingLabel label="Password" controlId="password">
+                    <Form.Control type="password" placeholder="Password"
+                                  onChange={(e) => setPassword(e.currentTarget.value)}/>
+                </FloatingLabel>
+            </Form.Group>
 
-            <Form onSubmit={handleSubmit}>
+            <Row>
+                <Col>
+                    <p><Link to="/recover">Forgot something?</Link></p>
+                </Col>
+                <Col>
+                    <Button variant="primary" type="submit"
+                            disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</Button>
+                </Col>
+            </Row>
 
-                <Form.Group className="mb-3" controlId="formEmail">
-                    <Form.Label>E-mail</Form.Label>
-                    <Form.Control type="email" onChange={(e) => setEmail(e.currentTarget.value)}/>
-                </Form.Group>
+            {error && <Alert variant="danger">{error}</Alert>}
 
-                <Form.Group className="mb-3" controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" onChange={(e) => setPassword(e.currentTarget.value)}/>
-                </Form.Group>
-
-
-
-                <Row>
-                    <Col>
-                        <p><Link to="/recover">Forgot something?</Link></p>
-                    </Col>
-                    <Col>
-                        <Button variant="primary" type="submit"
-                                disabled={isLoading}>{isLoading ? 'Loading...' : 'Login'}</Button>
-                    </Col>
-                </Row>
-
-                {error && <Alert variant="danger">{error}</Alert>}
-
-            </Form>
-        </>
+        </Form>
 
     );
 }

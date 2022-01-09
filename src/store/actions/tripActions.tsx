@@ -57,7 +57,7 @@ export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAc
     }
 }
 
-// get post by ID
+// get by post
 export const getTripByPost = (post: Post): ThunkAction<void, RootState, null, TripAction> => {
     return async dispatch => {
         try {

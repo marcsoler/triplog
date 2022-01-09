@@ -3,17 +3,16 @@ import {FC, useCallback, useEffect, useState} from 'react';
 import {GoogleMap, Marker, Polyline, useJsApiLoader} from '@react-google-maps/api';
 import Alert from 'react-bootstrap/Alert';
 import Loading from '../misc/Loading';
-import useTripSelector from '../../hooks/useTripSelector';
+import {Trip} from '../../store/types';
+import mapsOptions from './mapsOptions';
 
 interface FormMapProps {
+    trip: Trip,
     position: any;
     preDefinedPosition: any;
 }
 
-const FormMap: FC<FormMapProps> = ({position, preDefinedPosition}: FormMapProps) => {
-
-
-    const {trip} = useTripSelector();
+const FormMap: FC<FormMapProps> = ({trip, position, preDefinedPosition}: FormMapProps) => {
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [zoom] = useState<number>(4);
@@ -46,7 +45,7 @@ const FormMap: FC<FormMapProps> = ({position, preDefinedPosition}: FormMapProps)
 
     const updatePosition = () => {
         const newPosition = markerRef!.getPosition();
-        if(mapRef && newPosition) {
+        if (mapRef && newPosition) {
             setMarkerPosition(newPosition);
         }
     }
@@ -63,7 +62,7 @@ const FormMap: FC<FormMapProps> = ({position, preDefinedPosition}: FormMapProps)
     }
 
     useEffect(() => {
-        if(isLoaded && preDefinedPosition) {
+        if (isLoaded && preDefinedPosition) {
             setMarkerPosition(new google.maps.LatLng(preDefinedPosition.latitude, preDefinedPosition.longitude));
         }
     }, [isLoaded, preDefinedPosition]);
@@ -81,16 +80,17 @@ const FormMap: FC<FormMapProps> = ({position, preDefinedPosition}: FormMapProps)
             zoom={zoom}
             onLoad={onMapLoad}
             onClick={(e => onMapClick(e))}
-            options={{
-                draggableCursor: 'crosshair'
-            }}>
+            options={
+                {...mapsOptions, draggableCursor: 'crosshair'}}>
             {trip && mapRef && <Polyline path={drawPolyline()}/>}
-            {markerPosition && <Marker onLoad={(m) => setMarkerRef(m)} position={markerPosition} draggable={true} onDragEnd={updatePosition}/>}
+            {markerPosition && <Marker onLoad={(m) => setMarkerRef(m)} position={markerPosition} draggable={true}
+                                       onDragEnd={updatePosition}/>}
         </GoogleMap>
     }
 
 
-    if (loadError) {
+    if (loadError
+    ) {
         return <Alert variant="danger">Map cannot be loaded right now, sorry.</Alert>
     }
 

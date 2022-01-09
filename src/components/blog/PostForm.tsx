@@ -1,4 +1,4 @@
-import {FC, FormEvent, useEffect} from 'react';
+import {FC, FormEvent, useEffect, useState} from 'react';
 
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -19,13 +19,11 @@ import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {Post} from '../../store/types';
+import {Post, Trip} from '../../store/types';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {getTripById} from '../../store/actions/tripActions';
 import FormMap from '../trip/FormMap';
-import useTripSelector from '../../hooks/useTripSelector';
 
 
 interface IPostFormInput {
@@ -46,6 +44,10 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
     const dispatch = useDispatch();
 
+    const [selectedTrip, setSelectedTrip] = useState<Trip>();
+
+    const {trips} = useTripsSelector();
+
 
     useEffect(() => {
         if (postId) {
@@ -55,7 +57,15 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
 
     const {post} = usePostSelector();
-    const {trips} = useTripsSelector();
+
+    useEffect(() => {
+        if (trips && post && postId) {
+            const trip = trips?.find((t) => {
+                return t.id === post.trip;
+            });
+            setSelectedTrip(trip);
+        }
+    }, [post, trips, postId]);
 
 
     const {
@@ -64,6 +74,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         formState: {errors, isDirty},
         handleSubmit,
         setValue,
+        getValues
     } = useForm<IPostFormInput>({
         defaultValues: postId ? {
             title: post?.title,
@@ -109,15 +120,19 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         }), {shouldValidate: true});
     }
 
-    const loadTrip = (e: FormEvent<HTMLSelectElement>) => {
+    const loadTrip = (e: FormEvent<HTMLSelectElement>): void => {
 
         const tripId = e.currentTarget.value;
 
-        dispatch(getTripById(tripId));
-
+        const trip = trips?.find((t) => {
+            return t.id === tripId;
+        });
+        setSelectedTrip(trip);
     }
 
-    const {trip} = useTripSelector();
+    useEffect(() => {
+        register('position', {required: true});
+    }, [register]);
 
 
     return (
@@ -137,33 +152,41 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                     onChange: (e) => !postId ? slugifyTitle(e.currentTarget.value) : void (0)
                                 })} />
                             </FloatingLabel>
-                            {errors.title &&
-                                <div className="invalid-feedback">The title is a required field!</div>}
+                            {errors.title && <p className="form-validation-failed">The title is a required field!</p>}
                         </Form.Group>
 
                         <Form.Group className="mb-3">
                             <InputGroup>
                                 <InputGroup.Text>{`${window.location.origin}/post/`}</InputGroup.Text>
-                                <Form.Control type="text"
-                                              readOnly {...register('slug')} />
+                                <Form.Control className={(errors.slug && 'is-invalid')}
+                                              type="text"
+                                              readOnly {...register('slug', {
+                                    required: true,
+                                })} />
                                 <InputGroup.Text>todo (check of duplicates)</InputGroup.Text>
                             </InputGroup>
+                            {errors.slug &&
+                                <p className="form-validation-failed">The slug is a required field and must be an unique
+                                    identifier!</p>}
                         </Form.Group>
-
 
                         <Form.Group className="mb-3" controlId="subtitle">
                             <FloatingLabel controlId="subtitle" label="Subtitle">
-                                <Form.Control type="subtitle"
+                                <Form.Control className={(errors.subtitle && 'is-invalid')}
+                                              type="subtitle"
                                               placeholder="Subtitle" {...register('subtitle', {required: true})} />
                             </FloatingLabel>
+                            {errors.subtitle &&
+                                <p className="form-validation-failed">The subtitle is a required field!</p>}
                         </Form.Group>
-
 
                         <Form.Group className="mb-3" controlId="content">
                             <Controller control={control} name="content"
+                                        rules={{required: true}}
                                         render={({field: {onChange, value}}) => (
                                             <ReactQuill placeholder="Write here your story&hellip;" onChange={onChange}
                                                         value={value}
+                                                        className={(errors.content && 'is-invalid')}
                                                         modules={{
                                                             toolbar: {
                                                                 container: [
@@ -179,23 +202,30 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                                         }}/>
                                         )}/>
 
+                            {errors.content &&
+                                <p className="form-validation-failed">Please add some content</p>}
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="trip">
                             <FloatingLabel controlId="trip" label="Trip">
                                 <Form.Select
-                                    aria-label="Select the route" {...register('trip', {required: true})}
+                                    aria-label="Select the trip" {...register('trip', {required: true})}
                                     onChange={(e) => loadTrip(e)}>
-                                    <option>Select the trip</option>
+                                    <option value="">Select the trip&hellip;</option>
                                     {trips?.map((t) => {
                                         return <option value={t.id} key={t.id}>{t.name}</option>
                                     })}
                                 </Form.Select>
                             </FloatingLabel>
+                            {errors.trip &&
+                                <p className="form-validation-failed">Please select a trip</p>}
                         </Form.Group>
 
-                        {trip && <FormMap position={(p: google.maps.LatLng) => setValue('position', p)}
-                                          preDefinedPosition={post && post.position} />}
+                        {selectedTrip &&
+                            <FormMap trip={selectedTrip} position={(p: google.maps.LatLng) => setValue('position', p)}
+                                     preDefinedPosition={postId && post && post.position}/>}
+                        {!errors.trip && errors.position &&
+                            <p className="form-validation-failed">Add a position by clicking on the map</p>}
 
                         <hr className="mb-5 mt-5"/>
 
@@ -204,7 +234,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                 <FontAwesomeIcon icon={faSignature}/> Save as Draft
                             </Button>
                             <Button variant="outline-primary" type="submit" onClick={() => setValue('draft', false)}>
-                                <FontAwesomeIcon icon={faCheck}/> Submit
+                                <FontAwesomeIcon icon={faCheck}/> {postId ? 'Update post' : 'Submit post'}
                             </Button>
                         </ButtonGroup>
 

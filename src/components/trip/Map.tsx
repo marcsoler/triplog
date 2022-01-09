@@ -9,6 +9,7 @@ import usePostSelector from '../../hooks/usePostSelector';
 import {getTripByPost} from '../../store/actions/tripActions';
 import {Post} from '../../store/types';
 
+import mapsOptions from './mapsOptions';
 import mapStyle from './mapStyle.json';
 
 const Map: FC = () => {
@@ -67,9 +68,10 @@ const Map: FC = () => {
         return (<GoogleMap
             mapContainerStyle={containerStyle}
             zoom={4}
-            onLoad={onMapLoad}>
+            onLoad={onMapLoad}
+            options={mapsOptions}>
             <Polyline path={drawPolyline()}/>
-            {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE}/> }
+            {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE}/>}
         </GoogleMap>)
     }
 
