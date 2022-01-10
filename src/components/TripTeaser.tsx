@@ -9,7 +9,7 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
         <Col>
             <Link to={`/trip/${trip.id}`}>
                 <Figure className="trip-cover-image tilted">
-                    <Figure.Image src={trip.imageUrl} />
+                    <Figure.Image src={trip.imageUrl} alt={`Cover image of ${trip.name}`} />
                     <Figure.Caption className="trip-cover-name display-6">{trip.name}</Figure.Caption>
                 </Figure>
             </Link>

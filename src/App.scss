@@ -243,6 +243,10 @@ $content-top-padding: 8rem;
         color: $gray-500;
         text-decoration: none;
     }
+    @media (prefers-contrast: more) {
+        color: $gray-800;
+        a{ color: $gray-800; }
+    }
 }
 
 .fade-in {

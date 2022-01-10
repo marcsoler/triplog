@@ -16,11 +16,9 @@ const SignedOutLinks = () => {
     }
 
     return (
-        <Nav.Item as="li">
-            <Button variant="link" onClick={openLoginModal}>
-                <FontAwesomeIcon icon={faUser} />
-            </Button>
-        </Nav.Item>
+        <Button as="li" variant="link" onClick={openLoginModal} aria-label="Authentication modal trigger">
+            <FontAwesomeIcon icon={faUser} />
+        </Button>
     )
 }
 
