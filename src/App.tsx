@@ -47,7 +47,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="App">
+            <div className="App d-flex flex-column min-vh-100">
                 { !loading && <Header /> }
                 <Switch>
                     {routes.map((route, key) => {
