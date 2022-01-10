@@ -1,4 +1,5 @@
 import {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
+import {Redirect, useHistory} from 'react-router-dom';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
@@ -19,10 +20,7 @@ import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
 import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
-import {useHistory} from 'react-router-dom';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
-
-
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
@@ -51,6 +49,7 @@ const CreateTrip: FC = () => {
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
+    const history = useHistory();
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
@@ -125,9 +124,11 @@ const CreateTrip: FC = () => {
             imageUrl: imageUrl!,
             waypoints: waypoints,
             polyline: data.tripPolyline,
-
         }
-        dispatch(storeTrip(newTrip));
+        dispatch(storeTrip(newTrip, 'Trip sucessfully saved!'));
+
+        history.push('/dashboard');
+
     }
 
     const {
@@ -196,9 +197,7 @@ const CreateTrip: FC = () => {
     }
 
     const handleFormReset = () => {
-        console.log('resetting...');
-
-        if (window.confirm('Yo sure?!')) {
+        if (window.confirm('Are you sure?')) {
             reset({
                 tripMode: '',
                 tripName: '',
@@ -210,8 +209,6 @@ const CreateTrip: FC = () => {
             }
             setDirResponse(null);
             setWaypoints([]);
-
-
         }
     }
 
@@ -265,9 +262,9 @@ const CreateTrip: FC = () => {
                     </Col>
                 </Row>
                 {uploadProgress > 0 && uploadProgress < 100 &&
-                    <Form.Text>{`Uploading... ${uploadProgress}%`}</Form.Text>}
+                    <Form.Text className="mt-3">{`Uploading... ${uploadProgress}%`}</Form.Text>}
                 {imageUrl &&
-                    <Image src={imageUrl} thumbnail={true} style={{maxWidth: '100px', height: 'auto'}}/>}
+                    <Image src={imageUrl} thumbnail={true} className="mt-3" style={{maxWidth: '350px', height: 'auto'}}/>}
             </Form>
         </Container>
     )

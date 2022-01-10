@@ -1,7 +1,8 @@
-import {TripAction, TripState, SET_TRIP} from '../types';
+import {TripAction, TripState, SET_TRIP, SET_TRIP_SUCCESS} from '../types';
 
 const initialState: TripState = {
-    trip: undefined
+    trip: undefined,
+    showSuccess: false,
 }
 
 const tripReducer = (state = initialState, action: TripAction) => {
@@ -10,6 +11,11 @@ const tripReducer = (state = initialState, action: TripAction) => {
             return {
                 ...state,
                 trip: action.payload,
+            }
+        case SET_TRIP_SUCCESS:
+            return {
+                ...state,
+                showSuccess: action.payload,
             }
         default:
             return state;

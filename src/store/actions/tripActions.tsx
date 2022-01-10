@@ -1,5 +1,15 @@
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, SET_TRIP, SET_TRIPS, Trip, TripAction, TripsAction} from '../types';
+import {
+    AuthAction,
+    Post,
+    SET_SUCCESS,
+    SET_TRIP,
+    SET_TRIP_SUCCESS,
+    SET_TRIPS,
+    Trip,
+    TripAction,
+    TripsAction
+} from '../types';
 
 import {
     getFirestore,
@@ -42,7 +52,7 @@ export const getTrips = (): ThunkAction<void, RootState, null, TripsAction> => {
 }
 
 
-export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAction> => {
+export const storeTrip = (trip: Trip, successMsg: string): ThunkAction<void, RootState, null, TripAction> => {
     return async dispatch => {
         await addDoc(tripsRef, {
             name: trip.name,
@@ -54,6 +64,22 @@ export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAc
             updated_at: Timestamp.now(),
         }).catch((error) => {
             console.error('Some error happened here', 'tripActions:storeTrip()');
+        });
+
+        dispatch({
+            type: SET_TRIP_SUCCESS,
+            payload: true,
+        });
+    }
+}
+
+
+// Close alert
+export const closeTripSuccessAlert = (): ThunkAction<void, RootState, null, TripAction> => {
+    return dispatch => {
+        dispatch({
+            type: SET_TRIP_SUCCESS,
+            payload: false
         });
     }
 }

@@ -23,10 +23,13 @@ import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclama
 import moment from 'moment';
 import usePostsSelector from '../../hooks/usePostsSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {getTrips} from '../../store/actions/tripActions';
+import {closeTripSuccessAlert, getTrips} from '../../store/actions/tripActions';
 import {Post, Trip} from '../../store/types';
 import Image from 'react-bootstrap/Image';
 import {Link} from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
+import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
+import useTripSelector from '../../hooks/useTripSelector';
 
 const Dashboard: FC = () => {
 
@@ -36,6 +39,7 @@ const Dashboard: FC = () => {
 
     const {posts} = usePostsSelector();
     const {trips} = useTripsSelector();
+    const {showSuccess} = useTripSelector();
 
     const dispatch = useDispatch();
 
@@ -50,7 +54,7 @@ const Dashboard: FC = () => {
     }
 
     const handlePostDeletion = () => {
-        if(postToDelete) {
+        if (postToDelete) {
             dispatch(deletePost(postToDelete));
         }
         setShowModal(false);
@@ -88,10 +92,26 @@ const Dashboard: FC = () => {
         }
     }, [tripFilter, posts]);
 
+    const closeTripSuccess = () => {
+        dispatch(closeTripSuccessAlert());
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            dispatch(closeTripSuccessAlert());
+        }, 3000);
+    }, [dispatch]);
+
+
 
     return (
         <Container className="dashboard content">
             <h1>Dashboard</h1>
+
+            {showSuccess &&
+                <Alert variant="success" onClose={closeTripSuccess} dismissible><FontAwesomeIcon
+                    icon={faCheck}/> Trip successfully saved!</Alert>}
+
 
             <h2 className="color-darkcyan mt-5">Posts</h2>
 
@@ -137,7 +157,8 @@ const Dashboard: FC = () => {
                                         <Link className="btn btn-outline-primary" role="button"
                                               to={`/post/${p.id}`}><FontAwesomeIcon
                                             icon={faSearch}/>View</Link>
-                                        <Link className="btn btn-outline-secondary" role="button" to={`/dashboard/post/edit/${p.id}`}><FontAwesomeIcon
+                                        <Link className="btn btn-outline-secondary" role="button"
+                                              to={`/dashboard/post/edit/${p.id}`}><FontAwesomeIcon
                                             icon={faEdit}/> Edit</Link>
                                         <Button variant="outline-danger"
                                                 onClick={(e) => promptPostDeletion(p.id!)}><FontAwesomeIcon
@@ -172,7 +193,7 @@ const Dashboard: FC = () => {
                         <Col key={trip.id}>
 
                             <div className="dashboard-trip mb-3" onClick={(e) => filterTable(trip)}>
-                                <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}} loading="lazy" />
+                                <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}} loading="lazy"/>
                                 <div className="dashboard-trip-overlay">
                                     <div className="dashboard-trip-overlay-inner">
                                         <h3 className="dashboard-trip-name">{trip.name}</h3>
@@ -191,8 +212,10 @@ const Dashboard: FC = () => {
                     Are you sure you want to delete this post?
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={e => setShowModal(false)}><FontAwesomeIcon icon={faTimes} /> Cancel</Button>
-                    <Button variant="danger" onClick={handlePostDeletion}><FontAwesomeIcon icon={faExclamationTriangle} /> Yes</Button>
+                    <Button variant="secondary" onClick={e => setShowModal(false)}><FontAwesomeIcon
+                        icon={faTimes}/> Cancel</Button>
+                    <Button variant="danger" onClick={handlePostDeletion}><FontAwesomeIcon
+                        icon={faExclamationTriangle}/> Yes</Button>
                 </Modal.Footer>
             </Modal>
 

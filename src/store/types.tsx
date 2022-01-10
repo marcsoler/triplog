@@ -144,6 +144,7 @@ export type PostsAction = SetPostsAction;
  */
 
 export const SET_TRIPS = 'SET_TRIPS';
+export const SET_TRIP_SUCCESS = 'SET_TRIP_SUCCESS';
 
 export interface Trip {
     id?: string;
@@ -164,6 +165,7 @@ export interface Trip {
 
 export interface TripState {
     trip?: Trip;
+    showSuccess: boolean;
 }
 
 export interface TripsState {
@@ -177,7 +179,12 @@ interface SetTripAction {
     payload: Trip;
 }
 
-export type TripAction = SetTripAction;
+interface SetTripSuccessAction {
+    type: typeof SET_TRIP_SUCCESS;
+    payload: boolean;
+}
+
+export type TripAction = SetTripAction | SetTripSuccessAction;
 
 
 interface SetTripsAction {
