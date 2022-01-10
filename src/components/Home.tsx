@@ -63,12 +63,13 @@ const Home = () => {
                                     </blockquote>
                                 </Col>
                             </Row>
-                            <Row>
+                            {postTrip && (<Row>
                                 <Col className="text-center mt-md-5">
                                     <FontAwesomeIcon icon={faChevronDown} size="2x" onClick={executeScroll}
                                                      style={{cursor: 'pointer'}}/>
                                 </Col>
-                            </Row>
+                            </Row>)
+                            }
                         </Col>
                     </Row>
                 </Container>
@@ -105,25 +106,42 @@ const Home = () => {
                 </section>
             )}
 
-            <section className="content latest-trips">
-                <Container>
-                    <Row>
-                        <Col className="text-right">
-                            <h2 className="color-darkcyan">Past trips</h2>
-                            <hr/>
-                        </Col>
-                    </Row>
-                    <Row xs={1} md={3} lg={7}>
-                        {trips && trips.filter((t) => {
-                            return t.id !== post!.trip
-                        }).map((t) => {
-                            return (
-                                <TripTeaser key={t.id} {...t} />
-                            )
-                        })}
-                    </Row>
-                </Container>
-            </section>
+            {postTrip && (
+                <section className="content latest-trips">
+                    <Container>
+                        <Row>
+                            <Col className="text-right">
+                                <h2 className="color-darkcyan">Past trips</h2>
+                                <hr/>
+                            </Col>
+                        </Row>
+                        <Row xs={1} md={3} lg={7}>
+                            {trips && trips.filter((t) => {
+                                return t.id !== post!.trip
+                            }).map((t) => {
+                                return (
+                                    <TripTeaser key={t.id} {...t} />
+                                )
+                            })}
+                        </Row>
+                    </Container>
+                </section>
+            )}
+
+            {!postTrip && (
+
+                <section className="content">
+                    <Container>
+                        <Row>
+                            <Col className="text-center">
+                                <p className="lead">No posts found! Try later again&hellip;</p>
+                            </Col>
+                        </Row>
+                    </Container>
+                </section>
+
+            )}
+
         </div>
     )
 }
