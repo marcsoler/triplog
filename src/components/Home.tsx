@@ -10,7 +10,7 @@ import {faChevronDown, faMapMarkedAlt} from '@fortawesome/free-solid-svg-icons'
 
 import {Link} from 'react-router-dom';
 
-import TripTeaser from './TripTeaser';
+import TripTeaser from './trip/TripTeaser';
 
 import {getLatestPost, getPosts} from '../store/actions/postActions';
 import {useDispatch} from 'react-redux';

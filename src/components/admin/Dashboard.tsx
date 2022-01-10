@@ -138,7 +138,7 @@ const Dashboard: FC = () => {
                                               to={`/post/${p.id}`}><FontAwesomeIcon
                                             icon={faSearch}/>View</Link>
                                         <Link className="btn btn-outline-secondary" role="button" to={`/dashboard/post/edit/${p.id}`}><FontAwesomeIcon
-                                            icon={faSearch}/> Edit</Link>
+                                            icon={faEdit}/> Edit</Link>
                                         <Button variant="outline-danger"
                                                 onClick={(e) => promptPostDeletion(p.id!)}><FontAwesomeIcon
                                             icon={faTrash}/> Delete</Button>
@@ -172,7 +172,7 @@ const Dashboard: FC = () => {
                         <Col key={trip.id}>
 
                             <div className="dashboard-trip mb-3" onClick={(e) => filterTable(trip)}>
-                                <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}}/>
+                                <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}} loading="lazy" />
                                 <div className="dashboard-trip-overlay">
                                     <div className="dashboard-trip-overlay-inner">
                                         <h3 className="dashboard-trip-name">{trip.name}</h3>
