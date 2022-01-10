@@ -27,20 +27,12 @@ const BlogArticle: FC<Post> = (post) => {
     return (
         <>
             <article className="blog-article">
-
-
-
                 <Row>
                     <Col>
-                        <h1>{post.title}</h1>
+                        <h1 className="mb-5">{post.title}</h1>
                         <Map />
                         <p className="article-date"><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
-
-
                         {post.subtitle && <h2 className="lead">{post.subtitle}</h2>}
-
-
-
                     </Col>
                     {user && user.admin && false && (
                         <Col xs={2}>
@@ -54,17 +46,12 @@ const BlogArticle: FC<Post> = (post) => {
                         </Col>
                     )}
                 </Row>
-
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
-
             </article>
-
-
 
             <Comments/>
 
             <CommentForm/>
-
         </>
     )
 }

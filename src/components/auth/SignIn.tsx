@@ -64,6 +64,7 @@ const SignIn: FC = () => {
                 <FloatingLabel label="Password" controlId="loginPassword">
                     <Form.Control type="password" placeholder="Password"
                                   {...register('loginPassword', {required: true})}/>
+                    {errors.loginPassword && <p className="form-validation-failed">The password is required</p>}
                 </FloatingLabel>
             </Form.Group>
 

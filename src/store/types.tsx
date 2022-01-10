@@ -148,6 +148,7 @@ export const SET_TRIPS = 'SET_TRIPS';
 export interface Trip {
     id?: string;
     name: string;
+    mode: string;
     imageUrl: string;
     waypoints: Array<google.maps.LatLng>
     polyline: string,

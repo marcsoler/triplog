@@ -9,7 +9,7 @@ import usePostSelector from '../../hooks/usePostSelector';
 import {getTripByPost} from '../../store/actions/tripActions';
 import {Post} from '../../store/types';
 
-import mapsOptions from './mapsOptions';
+import {mapsOptions, mapContainerStyle} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 
 const Map: FC = () => {
@@ -32,11 +32,6 @@ const Map: FC = () => {
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
         libraries: libraries,
     });
-
-    const containerStyle = {
-        width: '100%',
-        height: '400px',
-    }
 
     const onMapLoad = useCallback(
         (map) => {
@@ -66,11 +61,11 @@ const Map: FC = () => {
 
     const renderMap = () => {
         return (<GoogleMap
-            mapContainerStyle={containerStyle}
+            mapContainerStyle={mapContainerStyle}
             zoom={4}
             onLoad={onMapLoad}
             options={mapsOptions}>
-            <Polyline path={drawPolyline()}/>
+            <Polyline path={drawPolyline()} options={{strokeColor: '#600'}} />
             {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE}/>}
         </GoogleMap>)
     }

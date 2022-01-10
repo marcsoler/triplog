@@ -18,19 +18,32 @@ import {RootState} from '../index';
 
 import firebaseApp from '../../firebase/firebaseApp';
 import {getAuth, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithEmailAndPassword} from 'firebase/auth';
-import {getFirestore, doc, getDoc} from 'firebase/firestore';
+import {getFirestore, doc, getDoc, addDoc, collection, Timestamp, setDoc} from 'firebase/firestore';
 
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
+const usersRef = collection(db, 'users');
+
 // Create user
-export const signup = (data: SignUpData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
+export const signup = (data: SignUpData, successMsg: string): ThunkAction<void, RootState, null, AuthAction> => {
     return async dispatch => {
-        await createUserWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
+        await createUserWithEmailAndPassword(auth, data.email, data.password).then((credential) => {
+            setDoc(doc(db, 'users', credential.user.uid), {
+                firstname: data.firstname,
+                lastname: data.lastname,
+                email: data.email,
+                admin: false,
+                created_at: Timestamp.now(),
+                updated_at: Timestamp.now(),
+            });
+            dispatch(setSuccess(successMsg));
+        }).catch((error) => {
             dispatch(setError(`${error.code}: ${error.message}`));
         });
     }
 }
+
 
 // Get user by ID
 export const getUserById = (id: string): ThunkAction<void, RootState, null, AuthAction> => {
@@ -65,9 +78,10 @@ export const setLoading = (value: boolean): ThunkAction<void, RootState, null, A
 // Login in
 export const signin = (data: SignInData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
     return async dispatch => {
-        await signInWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
+        await signInWithEmailAndPassword(auth, data.email, data.password).then(() => {
+            dispatch(setAuthModal(false));
+        }).catch((error) => {
             onError();
-
             let msg;
             switch (error.code) {
                 case 'auth/wrong-password':
@@ -142,8 +156,6 @@ export const sendResetEmail = (email: string, successMsg: string): ThunkAction<v
 
 export const setAuthModal = (show: boolean): ThunkAction<void, RootState, null, AuthAction> => {
     return dispatch => {
-        console.log(show ? 'Show modal...' : 'Close modal...');
-
         dispatch({
             type: SET_MODAL,
             payload: show,

@@ -137,7 +137,7 @@ const Dashboard: FC = () => {
                                         <Link className="btn btn-outline-primary" role="button"
                                               to={`/post/${p.id}`}><FontAwesomeIcon
                                             icon={faSearch}/>View</Link>
-                                        <Link className="btn btn-outline-secondary" role="button" to={`/post/edit/${p.id}`}><FontAwesomeIcon
+                                        <Link className="btn btn-outline-secondary" role="button" to={`/dashboard/post/edit/${p.id}`}><FontAwesomeIcon
                                             icon={faSearch}/> Edit</Link>
                                         <Button variant="outline-danger"
                                                 onClick={(e) => promptPostDeletion(p.id!)}><FontAwesomeIcon

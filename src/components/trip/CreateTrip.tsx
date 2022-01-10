@@ -1,23 +1,40 @@
-import {FC, useEffect, useState} from 'react';
+import {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 
 
 import Loading from '../misc/Loading';
+
 import {DirectionsRenderer, GoogleMap, useJsApiLoader} from '@react-google-maps/api';
-import Modal from 'react-bootstrap/Modal';
+import {mapContainerStyle, mapsOptions} from './mapsOptions';
+import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
 import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {useHistory} from 'react-router-dom';
-import {getStorage, ref, uploadBytesResumable, getDownloadURL} from 'firebase/storage';
-import mapsOptions from './mapsOptions';
+import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
+
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
+import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+
+import {SubmitHandler, useForm} from 'react-hook-form';
+
+interface ITripForm {
+    tripMode: string;
+    tripName: string;
+    tripImage: string;
+    tripPolyline: string;
+}
 
 
 const CreateTrip: FC = () => {
@@ -25,13 +42,12 @@ const CreateTrip: FC = () => {
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [center] = useState<google.maps.LatLngLiteral>({lat: 47.2238663, lng: 8.8156291});
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
-    const [mode, setMode] = useState<string>();
+    const [mode, setMode] = useState<google.maps.TravelMode>();
     const [name, setName] = useState<string>('');
     const [uploadProgress, setUploadProgress] = useState<number>(0);
     const [imageUrl, setImageUrl] = useState<string>();
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
-    const [polyline, setPolyline] = useState<string>('');
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
@@ -43,23 +59,23 @@ const CreateTrip: FC = () => {
     });
 
 
-    const getTravelMode = (): google.maps.TravelMode => {
-        switch (mode) {
+    const setTravelMode = (e: ChangeEvent<HTMLSelectElement>): void => {
+        switch (e.target.value) {
             case 'DRIVING':
-                return google.maps.TravelMode.DRIVING;
+                return setMode(google.maps.TravelMode.DRIVING);
             case 'WALKING':
-                return google.maps.TravelMode.WALKING;
+                return setMode(google.maps.TravelMode.WALKING);
             default:
-                return google.maps.TravelMode.BICYCLING;
+                return setMode(google.maps.TravelMode.BICYCLING);
         }
     }
 
-    const setPath = (e: google.maps.MapMouseEvent): void => {
-        const position = e.latLng;
-        if (position) {
-            setWaypoints(waypoints => [...waypoints, position]);
+    const drawPath = (e: google.maps.MapMouseEvent): void => {
+        if (e.latLng) {
+            setWaypoints(waypoints => [...waypoints, e.latLng!]);
         }
     }
+
 
     useEffect(() => {
         if (waypoints.length === 1) {
@@ -71,7 +87,6 @@ const CreateTrip: FC = () => {
         }
 
         if (waypoints.length > 1) {
-            const directionService = new google.maps.DirectionsService();
             const betweenWps: google.maps.DirectionsWaypoint[] = [];
             if (startMarker) {
                 setStartMarker(undefined);
@@ -81,58 +96,50 @@ const CreateTrip: FC = () => {
                 waypoints.slice(1, -1).forEach((wp) => {
                     betweenWps.push({
                         location: wp,
-                        stopover: true,
+                        stopover: false,
                     });
-                })
+                });
             }
 
+            const directionService = new google.maps.DirectionsService();
             directionService.route({
                 origin: waypoints[0],
                 waypoints: betweenWps,
                 optimizeWaypoints: true,
                 destination: waypoints[waypoints.length - 1],
-                travelMode: getTravelMode(),
+                travelMode: mode ? mode : google.maps.TravelMode.BICYCLING,
             }, (response, status) => {
                 if (status === google.maps.DirectionsStatus.OK) {
                     setDirectionsLoaded(true);
                     setDirResponse(response);
                 }
             }).then();
-
         }
-
-    }, [waypoints, mode, getTravelMode])
-
-
-    const containerStyle = {
-        width: '100%',
-        height: '400px',
-    }
-
-    const [showModal, setShowModal] = useState(false);
+    }, [waypoints, mode])
 
     const dispatch = useDispatch();
-    const handleTripSubmission = () => {
 
+    const onSubmit: SubmitHandler<ITripForm> = data => {
         const newTrip: Trip = {
-            name: name,
+            name: data.tripName,
+            mode: data.tripMode,
             imageUrl: imageUrl!,
             waypoints: waypoints,
-            polyline: polyline,
+            polyline: data.tripPolyline,
+
         }
-
         dispatch(storeTrip(newTrip));
-
-        setShowModal(false);
-
-        history.push('/dashboard');
-
     }
 
+    const {
+        register,
+        formState: {errors},
+        handleSubmit,
+        setValue
+    } = useForm<ITripForm>();
+
     const uploadCoverImage = (e: any) => {
-
         const file = e.target.files[0];
-
         const storage = getStorage();
         const storageRef = ref(storage, `/trips/${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -149,93 +156,101 @@ const CreateTrip: FC = () => {
         });
     }
 
-    useEffect(() => {
-        setUploadProgress(0);
-    }, [imageUrl]);
 
     useEffect(() => {
         if (dirRef) {
             const directions = dirRef.getDirections();
-
             if (directions) {
-                setPolyline(directions.routes[0].overview_polyline)
+                setValue('tripPolyline', directions.routes[0].overview_polyline);
             }
         }
     }, [dirRef, waypoints]);
 
+    const onMapLoad = useCallback(
+        (map) => {
+            setMapRef(map);
+            map.mapTypes.set('styled_map', new google.maps.StyledMapType(mapStyle));
+            map.setMapTypeId('styled_map');
+        },
+        [],
+    );
+
     const renderMap = () => {
-        return (
-            <Container className="trip-planner content">
+        return isLoaded ? (
+            <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                onLoad={onMapLoad}
+                onClick={(e => drawPath(e))}
+                zoom={4}
+                options={{...mapsOptions, draggableCursor: 'crosshair'}}>
 
-                <h1>Route planner</h1>
-
-                <Row className="mt-3">
-                    <Col md={8}>
-                        <GoogleMap
-                            mapContainerStyle={containerStyle}
-                            center={center}
-                            onLoad={map => setMapRef(map)}
-                            onClick={(e => setPath(e))}
-                            zoom={4}
-                            options={{...mapsOptions, draggableCursor: 'crosshair'}}>
-                            {dirResponse &&
-                                <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse}/>}
-                        </GoogleMap>
-
-
-                    </Col>
-                    <Col as="aside" md={4}>
-                        <Form>
-
-                            <Form.Label>Traveling method</Form.Label>
-                            <Form.Select aria-label="Select the transportation mode" onChange={(e) => {
-                                setMode(e.target.value)
-                            }}>
-                                <option value="BICYCLE">Bicycle</option>
-                                <option value="DRIVING">Driving</option>
-                                <option value="WALKING">Walking</option>
-                            </Form.Select>
-
-                            <Form.Label>Cover Image</Form.Label>
-                            <Form.Control type="file" accept="image/*" onChange={(e) => uploadCoverImage(e)}/>
-                            {uploadProgress > 0 && <Form.Text>{`Uploading... ${uploadProgress}%`}</Form.Text>}
-                            {imageUrl &&
-                                <Image src={imageUrl} thumbnail={true} style={{maxWidth: '100px', height: 'auto'}}/>}
-                        </Form>
-
-                        <hr/>
-                        {directionsLoaded && <Button variant="success" onClick={e => setShowModal(true)}>Save</Button>}
-
-                    </Col>
-                </Row>
-
-                <Modal show={showModal} onHide={() => setShowModal(false)}>
-                    <Modal.Header>New trip</Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            <Form.Group className="mb-3" controlId="name">
-                                <Form.Label>Trip name</Form.Label>
-                                <Form.Control type="text" onChange={e => setName(e.currentTarget.value)}/>
-                            </Form.Group>
-
-                        </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={e => setShowModal(false)}>Keep editing</Button>
-                        <Button variant="success" onClick={handleTripSubmission}>Save</Button>
-                    </Modal.Footer>
-                </Modal>
-
-            </Container>
-
-        )
+                {dirResponse &&
+                    <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse}/>}
+            </GoogleMap>
+        ) : <Loading/>
     }
 
     if (loadError) {
         return <Alert variant="danger">Map cannot be loaded right now, sorry.</Alert>
     }
 
-    return isLoaded ? renderMap() : <Loading/>
+    return (
+        <Container className="trip-planner content">
+            <h1>Create new Trip</h1>
+            <h2 className="mt-5 color-darkcyan">Route planner</h2>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+                <Row className="mt-3 mb-3">
+                    <Col xs={12}>
+                        {renderMap()}
+                        <input type="hidden" {...register('tripPolyline', {required: true})} />
+                        {errors.tripPolyline && <p className="form-validation-failed">A route must be defined</p>}
+                    </Col>
+                </Row>
+
+                <FloatingLabel label="Transport method" controlId="method" className="mb-3">
+                    <Form.Select
+                        aria-label="Select the transportation mode" {...register('tripMode', {required: true})}
+                        onChange={(e) => setTravelMode(e)}>
+                        <option value="">Select the transportation mode</option>
+                        <option value="BICYCLE">Bicycle</option>
+                        <option value="DRIVING">Driving</option>
+                        <option value="WALKING">Walking</option>
+                    </Form.Select>
+                    {errors.tripMode && <p className="form-validation-failed">The transport method is required</p>}
+                </FloatingLabel>
+                <Form.Group className="mb-3" controlId="name">
+                    <FloatingLabel label="Trip name" controlId="name">
+                        <Form.Control type="text" placeholder="name" {...register('tripName', {required: true})}
+                                      onChange={e => setName(e.currentTarget.value)}/>
+                    </FloatingLabel>
+                    {errors.tripName && <p className="form-validation-failed">The trip name is required</p>}
+                </Form.Group>
+                <Row>
+                    <Col xs={12} md={6}>
+                        <Form.Control type="file" placeholder="Cover image" size="lg" accept="image/*"
+                                      {...register('tripImage', {required: true})}
+                                      onChange={(e) => uploadCoverImage(e)}/>
+                        {errors.tripImage && <p className="form-validation-failed">A cover image is required</p>}
+                    </Col>
+                    <Col xs={12} md={6}>
+
+                        <ButtonGroup className="w-100" size="lg">
+                            <Button type="reset" variant="outline-secondary"><FontAwesomeIcon
+                                icon={faTimes}/> Reset</Button>
+                            <Button type="submit" variant="outline-primary"><FontAwesomeIcon
+                                icon={faCheck}/> Submit</Button>
+                        </ButtonGroup>
+
+                    </Col>
+                </Row>
+                {uploadProgress > 0 && uploadProgress < 100 &&
+                    <Form.Text>{`Uploading... ${uploadProgress}%`}</Form.Text>}
+                {imageUrl &&
+                    <Image src={imageUrl} thumbnail={true} style={{maxWidth: '100px', height: 'auto'}}/>}
+            </Form>
+        </Container>
+    )
 }
 
 export default CreateTrip;

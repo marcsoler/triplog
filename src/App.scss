@@ -1,6 +1,7 @@
 //@import url('//fonts.googleapis.com/css2?family=Bree+Serif&family=Roboto&display=swap');
 
-@import url('//fonts.googleapis.com/css2?family=Kalam&display=swap');
+//@import url('//fonts.googleapis.com/css2?family=Kalam&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 @import url('//fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
 $bordeaux: #600;
@@ -69,7 +70,7 @@ $text-shadow: 1px 2px 3px #000;
 $content-top-padding: 8rem;
 
 .handwrite {
-    font-family: 'Kalam', cursive;
+    font-family: 'Dancing Script', cursive;
 }
 
 .App {
