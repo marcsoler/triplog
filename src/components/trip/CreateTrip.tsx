@@ -51,7 +51,6 @@ const CreateTrip: FC = () => {
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
-    const history = useHistory();
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
@@ -89,7 +88,7 @@ const CreateTrip: FC = () => {
         if (waypoints.length > 1) {
             const betweenWps: google.maps.DirectionsWaypoint[] = [];
             if (startMarker) {
-                setStartMarker(undefined);
+                startMarker.setMap(null);
             }
 
             if (waypoints.length > 2) {
@@ -135,7 +134,8 @@ const CreateTrip: FC = () => {
         register,
         formState: {errors},
         handleSubmit,
-        setValue
+        setValue,
+        reset
     } = useForm<ITripForm>();
 
     const uploadCoverImage = (e: any) => {
@@ -195,15 +195,35 @@ const CreateTrip: FC = () => {
         return <Alert variant="danger">Map cannot be loaded right now, sorry.</Alert>
     }
 
+    const handleFormReset = () => {
+        console.log('resetting...');
+
+        if (window.confirm('Yo sure?!')) {
+            reset({
+                tripMode: '',
+                tripName: '',
+                tripImage: '',
+                tripPolyline: '',
+            });
+            if(startMarker) {
+                startMarker.setMap(null);
+            }
+            setDirResponse(null);
+            setWaypoints([]);
+
+
+        }
+    }
+
     return (
         <Container className="trip-planner content">
             <h1>Create new Trip</h1>
             <h2 className="mt-5 color-darkcyan">Route planner</h2>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} onReset={handleFormReset}>
                 <Row className="mt-3 mb-3">
                     <Col xs={12}>
                         {renderMap()}
-                        <input type="hidden" {...register('tripPolyline', {required: true})} />
+                        <input type="hidden" defaultValue={''} {...register('tripPolyline', {required: true})} />
                         {errors.tripPolyline && <p className="form-validation-failed">A route must be defined</p>}
                     </Col>
                 </Row>
