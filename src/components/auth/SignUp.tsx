@@ -24,7 +24,7 @@ const SignUp: FC = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const {error} = useAuthSelector();
+    const {error, success} = useAuthSelector();
 
     useEffect(() => {
         return () => {
@@ -42,9 +42,7 @@ const SignUp: FC = () => {
             lastname: data.registerLastname,
             email: data.registerEmail,
             password: data.registerPassword,
-        }, () => {
-            setIsLoading(false);
-        }));
+        }, 'Your account has been created!'));
     };
 
     const {
@@ -54,44 +52,52 @@ const SignUp: FC = () => {
     } = useForm<IRegisterForm>();
 
     return (
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <>
             {error && <Alert variant="danger">{error}</Alert>}
-            <Form.Group className="mb-3">
-                <FloatingLabel label="First name" controlId="registerFirstname">
-                    <Form.Control type="registerFirstname" placeholder="First name"
-                                  {...register('registerFirstname', {required: true})} />
-                </FloatingLabel>
-                {errors.registerFirstname && <p className="form-validation-failed">First name is required</p>}
-            </Form.Group>
+            {success && <Alert variant="success">{success}</Alert>}
+            {!success && (
+                <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form.Group className="mb-3">
+                        <FloatingLabel label="First name" controlId="registerFirstname">
+                            <Form.Control type="registerFirstname" placeholder="First name"
+                                          {...register('registerFirstname', {required: true})} />
+                        </FloatingLabel>
+                        {errors.registerFirstname && <p className="form-validation-failed">First name is required</p>}
+                    </Form.Group>
 
-            <Form.Group className="mb-3">
-                <FloatingLabel label="Last name" controlId="registerLastname">
-                    <Form.Control type="registerLastname" placeholder="Last name"
-                                  {...register('registerLastname', {required: true})}/>
-                </FloatingLabel>
-                {errors.registerLastname && <p className="form-validation-failed">Last name is required</p>}
-            </Form.Group>
+                    <Form.Group className="mb-3">
+                        <FloatingLabel label="Last name" controlId="registerLastname">
+                            <Form.Control type="registerLastname" placeholder="Last name"
+                                          {...register('registerLastname', {required: true})}/>
+                        </FloatingLabel>
+                        {errors.registerLastname && <p className="form-validation-failed">Last name is required</p>}
+                    </Form.Group>
 
-            <Form.Group className="mb-3" controlId="registerEmail">
-                <FloatingLabel label="E-mail" controlId="registerEmail">
-                    <Form.Control type="registerEmail" placeholder="E-email"
-                                  {...register('registerEmail', {required: true})}/>
-                </FloatingLabel>
-                {errors.registerEmail && <p className="form-validation-failed">E-mail is required</p>}
-            </Form.Group>
+                    <Form.Group className="mb-3" controlId="registerEmail">
+                        <FloatingLabel label="E-mail" controlId="registerEmail">
+                            <Form.Control type="registerEmail" placeholder="E-email"
+                                          {...register('registerEmail', {required: true})}/>
+                        </FloatingLabel>
+                        {errors.registerEmail && <p className="form-validation-failed">E-mail is required</p>}
+                    </Form.Group>
 
-            <Form.Group className="mb-3" controlId="registerPassword">
-                <FloatingLabel label="Password" controlId="registerPassword">
-                    <Form.Control type="password" placeholder="Password"
-                                  {...register('registerPassword', {required: true})}/>
-                </FloatingLabel>
-            </Form.Group>
+                    <Form.Group className="mb-3" controlId="registerPassword">
+                        <FloatingLabel label="Password" controlId="registerPassword">
+                            <Form.Control type="password" placeholder="Password"
+                                          {...register('registerPassword', {required: true})}/>
+                            {errors.registerPassword && <p className="form-validation-failed">Password is required</p>}
+                        </FloatingLabel>
+                    </Form.Group>
 
-            <div className="d-grid">
-                <Button variant="primary" type="submit" size="lg"
-                        disabled={isLoading}>{isLoading ? 'Loading...' : 'Sign up'}</Button>
-            </div>
-        </Form>
+                    <div className="d-grid">
+                        <Button variant="primary" type="submit" size="lg"
+                                disabled={isLoading}>{isLoading ? 'Loading...' : 'Sign up'}</Button>
+                    </div>
+                </Form>
+            )}
+        </>
+
+
     );
 }
 

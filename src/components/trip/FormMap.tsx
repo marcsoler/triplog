@@ -4,7 +4,8 @@ import {GoogleMap, Marker, Polyline, useJsApiLoader} from '@react-google-maps/ap
 import Alert from 'react-bootstrap/Alert';
 import Loading from '../misc/Loading';
 import {Trip} from '../../store/types';
-import mapsOptions from './mapsOptions';
+import {mapsOptions, mapContainerStyle} from './mapsOptions';
+import mapStyle from './mapStyle.json';
 
 interface FormMapProps {
     trip: Trip,
@@ -25,14 +26,11 @@ const FormMap: FC<FormMapProps> = ({trip, position, preDefinedPosition}: FormMap
         libraries: libraries,
     });
 
-    const containerStyle = {
-        width: '100%',
-        height: '400px',
-    }
-
     const onMapLoad = useCallback(
         (map) => {
             setMapRef(map);
+            map.mapTypes.set('styled_map', new google.maps.StyledMapType(mapStyle));
+            map.setMapTypeId('styled_map');
         },
         [],
     );
@@ -76,13 +74,13 @@ const FormMap: FC<FormMapProps> = ({trip, position, preDefinedPosition}: FormMap
     const renderMap = () => {
 
         return <GoogleMap
-            mapContainerStyle={containerStyle}
+            mapContainerStyle={mapContainerStyle}
             zoom={zoom}
             onLoad={onMapLoad}
             onClick={(e => onMapClick(e))}
             options={
                 {...mapsOptions, draggableCursor: 'crosshair'}}>
-            {trip && mapRef && <Polyline path={drawPolyline()}/>}
+            {trip && mapRef && <Polyline path={drawPolyline()} options={{strokeColor: '#600'}}/>}
             {markerPosition && <Marker onLoad={(m) => setMarkerRef(m)} position={markerPosition} draggable={true}
                                        onDragEnd={updatePosition}/>}
         </GoogleMap>

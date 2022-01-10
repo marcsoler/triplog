@@ -86,6 +86,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         } : {}
     });
 
+    /*
     useEffect(() => {
         const confirmDiscard = (e: BeforeUnloadEvent) => {
             e.preventDefault();
@@ -97,6 +98,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             window.removeEventListener('beforeunload', confirmDiscard);
         }
     }, [isDirty]);
+     */
 
 
     const onSubmit: SubmitHandler<IPostFormInput> = data => {

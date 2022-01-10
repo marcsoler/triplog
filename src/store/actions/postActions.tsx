@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, PostAction, SET_POST, PostsAction, SET_POSTS} from '../types';
+import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, Comment} from '../types';
 import {
     getFirestore,
     collection,
@@ -20,6 +20,18 @@ import {
 import {setError} from './authActions';
 
 const db = getFirestore(firebaseApp);
+
+
+
+const getAllPosts = async (): Promise<Post[]>=> {
+
+    const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((p) => {
+        return {id: p.id, ...p.data()} as Post;
+    });
+
+}
 
 
 // get latest post:
@@ -70,22 +82,13 @@ export const getPostById = (id: string): ThunkAction<void, RootState, null, Post
 // get posts
 export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
     return async dispatch => {
-        const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
-        try {
-            const querySnapshot = await getDocs(q);
-            const postsData: Array<Post> = querySnapshot.docs.map((p) => {
-                return {id: p.id, ...p.data()} as Post;
-            });
 
-            dispatch({
-                type: SET_POSTS,
-                payload: postsData,
-            });
+        const postsData = await getAllPosts();
 
-
-        } catch (err) {
-            console.error('Error on getPosts', err);
-        }
+        dispatch({
+            type: SET_POSTS,
+            payload: postsData,
+        });
     }
 }
 
@@ -93,7 +96,6 @@ export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
 export const createPost = (post: Post, onError: () => void): ThunkAction<void, RootState, null, PostAction> => {
 
     return async dispatch => {
-        console.log('creating post...', post);
         await setDoc(doc(db, 'posts', post.id!), {
             title: post.title,
             subtitle: post.subtitle,
@@ -120,22 +122,21 @@ export const updatePost = (post: any): ThunkAction<void, RootState, null, PostAc
     }
 }
 
-export const deletePost = (post: Post): ThunkAction<void, RootState, null, PostAction> => {
+export const deletePost = (post: Post): ThunkAction<void, RootState, null, PostsAction> => {
     return async dispatch => {
-        const docRef = doc(db, 'posts', post.id!);
-        await deleteDoc(docRef).catch((error) => {
-            console.error('Some error happened here', 'postActions:deletePost()');
-        });
-    }
-}
 
-// Create user
-/*
-export const signup = (data: SignUpData, onError: () => void): ThunkAction<void, RootState, null, AuthAction> => {
-    return async dispatch => {
-        await createUserWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
-            dispatch(setError(`${error.code}: ${error.message}`));
+        const docRef = doc(db, 'posts', post!.id!);
+
+        await deleteDoc(docRef).catch((error) => {
+            console.error('Some error happened here', 'postActions:deletePostById()');
         });
+
+        const postsData = await getAllPosts();
+
+        dispatch({
+            type: SET_POSTS,
+            payload: postsData,
+        })
+
     }
 }
-*/
