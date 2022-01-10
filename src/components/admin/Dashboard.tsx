@@ -112,7 +112,7 @@ const Dashboard: FC = () => {
 
                     {!filteredPosts.length && (
                         <tr>
-                            <td scope="col" colSpan={5}>No posts found!</td>
+                            <td colSpan={5}>No posts found!</td>
                         </tr>
                     )}
 
