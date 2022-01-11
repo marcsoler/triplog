@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, Comment} from '../types';
+import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, Comment, TripAction, SET_TRIP_MODAL} from '../types';
 import {
     getFirestore,
     collection,
@@ -93,7 +93,7 @@ export const getPosts = (): ThunkAction<void, RootState, null, PostsAction> => {
 }
 
 
-export const createPost = (post: Post, onError: () => void): ThunkAction<void, RootState, null, PostAction> => {
+export const createPost = (post: Post, onError: () => void): ThunkAction<void, RootState, null, TripAction> => {
 
     return async dispatch => {
         await setDoc(doc(db, 'posts', post.id!), {
@@ -106,7 +106,23 @@ export const createPost = (post: Post, onError: () => void): ThunkAction<void, R
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
-            console.error('Some error happened here', 'postActions:createPost()');
+            dispatch({
+                type: SET_TRIP_MODAL,
+                payload: {
+                    show: true,
+                    variant: 'danger',
+                    message: `An error happened: ${error.constructor} ${error.message}`
+                }
+            })
+        });
+        dispatch({
+            type: SET_TRIP_MODAL,
+            payload: {
+                show: true,
+                variant: 'success',
+                message: `Post successfully saved ${post.draft ? 'as draft' : 'and published'}.`,
+                redirect: '/dashboard',
+            },
         });
     }
 }
