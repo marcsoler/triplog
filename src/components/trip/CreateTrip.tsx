@@ -18,7 +18,7 @@ import {DirectionsRenderer, GoogleMap, useJsApiLoader} from '@react-google-maps/
 import {mapContainerStyle, mapsOptions} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
-import {storeTrip} from '../../store/actions/tripActions';
+import {setTripModal, storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -125,10 +125,8 @@ const CreateTrip: FC = () => {
             waypoints: waypoints,
             polyline: data.tripPolyline,
         }
-        dispatch(storeTrip(newTrip, 'Trip sucessfully saved!'));
-
-        history.push('/dashboard');
-
+        console.log('store trip...');
+        dispatch(storeTrip(newTrip));
     }
 
     const {

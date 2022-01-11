@@ -1,8 +1,12 @@
-import {TripAction, TripState, SET_TRIP, SET_TRIP_SUCCESS} from '../types';
+import {SET_TRIP, SET_TRIP_MODAL, TripAction, TripState} from '../types';
 
 const initialState: TripState = {
     trip: undefined,
-    showSuccess: false,
+    tripModal: {
+        show: false,
+        variant: 'success',
+        message: '',
+    },
 }
 
 const tripReducer = (state = initialState, action: TripAction) => {
@@ -12,11 +16,22 @@ const tripReducer = (state = initialState, action: TripAction) => {
                 ...state,
                 trip: action.payload,
             }
-        case SET_TRIP_SUCCESS:
+        case SET_TRIP_MODAL:
             return {
                 ...state,
-                showSuccess: action.payload,
+                tripModal: action.payload,
             }
+        //case SET_TRIP_SUCCESS:
+        //    return {
+        //        ...state,
+        //        successMsg: action.payload,
+        //    }
+        //case SET_TRIP_ALERT:
+        //    return {
+        //        ...state,
+        //        alertMsg: action.payload,
+        //    }
+
         default:
             return state;
 

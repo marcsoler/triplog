@@ -18,6 +18,7 @@ import {getUserById, setLoading, setNeedVerification} from './store/actions/auth
 import NotFound from './components/misc/NotFound';
 import useAuthSelector from './hooks/useAuthSelector';
 import AuthModal from './components/auth/AuthModal';
+import TripModal from './components/trip/TripModal';
 
 const auth = getAuth(firebaseApp);
 
@@ -66,6 +67,7 @@ function App() {
                 <Footer />
             </div>
             <AuthModal />
+            <TripModal />
         </BrowserRouter>
     );
 }

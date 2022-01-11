@@ -23,12 +23,10 @@ import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclama
 import moment from 'moment';
 import usePostsSelector from '../../hooks/usePostsSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {closeTripSuccessAlert, getTrips} from '../../store/actions/tripActions';
+import {getTrips, setTripModal} from '../../store/actions/tripActions';
 import {Post, Trip} from '../../store/types';
 import Image from 'react-bootstrap/Image';
 import {Link} from 'react-router-dom';
-import Alert from 'react-bootstrap/Alert';
-import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
 import useTripSelector from '../../hooks/useTripSelector';
 
 const Dashboard: FC = () => {
@@ -39,7 +37,6 @@ const Dashboard: FC = () => {
 
     const {posts} = usePostsSelector();
     const {trips} = useTripsSelector();
-    const {showSuccess} = useTripSelector();
 
     const dispatch = useDispatch();
 
@@ -92,29 +89,11 @@ const Dashboard: FC = () => {
         }
     }, [tripFilter, posts]);
 
-    const closeTripSuccess = () => {
-        dispatch(closeTripSuccessAlert());
-    }
-
-    useEffect(() => {
-        setTimeout(() => {
-            dispatch(closeTripSuccessAlert());
-        }, 3000);
-    }, [dispatch]);
-
-
-
     return (
         <Container className="dashboard content">
             <h1>Dashboard</h1>
 
-            {showSuccess &&
-                <Alert variant="success" onClose={closeTripSuccess} dismissible><FontAwesomeIcon
-                    icon={faCheck}/> Trip successfully saved!</Alert>}
-
-
             <h2 className="color-darkcyan mt-5">Posts</h2>
-
             {filteredPosts &&
                 <Table hover>
                     <caption className="sr-only">Posts</caption>
@@ -186,7 +165,6 @@ const Dashboard: FC = () => {
 
 
             <h2 className="color-darkcyan mt-5">Trips</h2>
-
             <Row xs={1} md={3} lg={7}>
                 {trips && trips.map((trip) => {
                     return (
