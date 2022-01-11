@@ -211,7 +211,7 @@ $content-top-padding: 8rem;
             width:100%;
             top: 0;
             left: 0;
-            background-color: rgba($black, .5);
+            background-color: rgba($black, .75);
             cursor: pointer;
             &:hover {
                 opacity: 1;
@@ -222,6 +222,7 @@ $content-top-padding: 8rem;
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
+
             }
             .dashboard-trip-name {
                 color: $white;
@@ -252,6 +253,10 @@ $content-top-padding: 8rem;
     animation-fill-mode: both;
     animation-name: fadeIn;
 
+}
+
+.color-black {
+    color: $black;
 }
 
 .color-bordeaux {

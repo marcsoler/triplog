@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
@@ -19,15 +20,15 @@ import {faTrash} from '@fortawesome/free-solid-svg-icons/faTrash';
 import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
 
 import moment from 'moment';
 import usePostsSelector from '../../hooks/usePostsSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {getTrips, setTripModal} from '../../store/actions/tripActions';
+import {getTrips} from '../../store/actions/tripActions';
 import {Post, Trip} from '../../store/types';
 import Image from 'react-bootstrap/Image';
 import {Link} from 'react-router-dom';
-import useTripSelector from '../../hooks/useTripSelector';
 
 const Dashboard: FC = () => {
 
@@ -170,12 +171,26 @@ const Dashboard: FC = () => {
                     return (
                         <Col key={trip.id}>
 
-                            <div className="dashboard-trip mb-3" onClick={(e) => filterTable(trip)}>
+                            <div className="dashboard-trip mb-3">
                                 <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}} loading="lazy"/>
                                 <div className="dashboard-trip-overlay">
                                     <div className="dashboard-trip-overlay-inner">
-                                        <h3 className="dashboard-trip-name">{trip.name}</h3>
-                                        <p className="text-white">Click to filter</p>
+                                        <h3 className="dashboard-trip-name color-black">{trip.name}</h3>
+                                        <Dropdown>
+                                            <Dropdown.Toggle variant="primary" size="sm" id={`${trip.id}-dropdown`}>
+                                                Dropdown Button
+                                            </Dropdown.Toggle>
+
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item onClick={(e) => filterTable(trip)}><FontAwesomeIcon
+                                                    icon={faFilter}/> Filter posts table</Dropdown.Item>
+                                                <Dropdown.Item href="#"><FontAwesomeIcon
+                                                    icon={faEdit}/> Edit</Dropdown.Item>
+                                                <Dropdown.Divider/>
+                                                <Dropdown.Item href="#"><FontAwesomeIcon
+                                                    icon={faTrash}/> Delete</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                     </div>
                                 </div>
                             </div>
