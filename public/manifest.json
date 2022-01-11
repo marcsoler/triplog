@@ -3,7 +3,7 @@
   "name": "Triplog",
   "icons": [
     {
-      "src": "/images/icons-vector.svg",
+      "src": "/images/icon-vector.svg",
       "type": "image/svg+xml",
       "sizes": "512x512"
     },
