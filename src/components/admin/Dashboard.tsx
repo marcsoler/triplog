@@ -25,7 +25,7 @@ import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
 import moment from 'moment';
 import usePostsSelector from '../../hooks/usePostsSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {getTrips} from '../../store/actions/tripActions';
+import {deleteTrip, getTrips} from '../../store/actions/tripActions';
 import {Post, Trip} from '../../store/types';
 import Image from 'react-bootstrap/Image';
 import {Link} from 'react-router-dom';
@@ -35,7 +35,9 @@ const Dashboard: FC = () => {
     const [tripFilter, setTripFilter] = useState<Trip | null>(null);
     const [filteredPosts, setFilteredPosts] = useState<Post[]>();
     const [postToDelete, setPostToDelete] = useState<Post>();
-
+    const [tripToDelete, setTripToDelete] = useState<Trip>();
+    const [showPostModal, setShowPostModal] = useState(false);
+    const [showTripModal, setShowTripModal] = useState(false);
     const {posts} = usePostsSelector();
     const {trips} = useTripsSelector();
 
@@ -47,7 +49,7 @@ const Dashboard: FC = () => {
             return p.id === postId;
         })
         setPostToDelete(post);
-        setShowModal(true);
+        setShowPostModal(true);
         return;
     }
 
@@ -55,7 +57,7 @@ const Dashboard: FC = () => {
         if (postToDelete) {
             dispatch(deletePost(postToDelete));
         }
-        setShowModal(false);
+        setShowPostModal(false);
     }
 
     const staticMapSrc = (trip: Trip): string => {
@@ -65,7 +67,7 @@ const Dashboard: FC = () => {
         return `https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x300&path=enc%3A${trip.polyline}&maptype=roadmap&key=${process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : ''}&format=png&visual_refresh=true&markers=size:mid%7C${start._lat},${start._long}&markers=size:mid%7C${end._lat},${end._long}`;
     }
 
-    const [showModal, setShowModal] = useState(false);
+
 
     useEffect(() => {
         dispatch(getPosts());
@@ -89,6 +91,22 @@ const Dashboard: FC = () => {
             setFilteredPosts(posts);
         }
     }, [tripFilter, posts]);
+
+    const promptTripDeletion = (tripId: string) => {
+        const trip = trips!.find((t) => {
+            return t.id === tripId;
+        })
+        setTripToDelete(trip);
+        setShowTripModal(true);
+        return;
+    }
+
+    const handleTripDeletion = () => {
+        if (tripToDelete) {
+            dispatch(deleteTrip(tripToDelete));
+        }
+        setShowTripModal(false);
+    }
 
     return (
         <Container className="dashboard content">
@@ -187,7 +205,7 @@ const Dashboard: FC = () => {
                                                 <Dropdown.Item href="#"><FontAwesomeIcon
                                                     icon={faEdit}/> Edit</Dropdown.Item>
                                                 <Dropdown.Divider/>
-                                                <Dropdown.Item href="#"><FontAwesomeIcon
+                                                <Dropdown.Item onClick={(e) => promptTripDeletion(trip.id!)}><FontAwesomeIcon
                                                     icon={faTrash}/> Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
@@ -199,15 +217,28 @@ const Dashboard: FC = () => {
                 })}
             </Row>
 
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal show={showPostModal} onHide={() => setShowPostModal(false)}>
                 <Modal.Header><strong>{postToDelete?.title}</strong></Modal.Header>
                 <Modal.Body>
                     Are you sure you want to delete this post?
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={e => setShowModal(false)}><FontAwesomeIcon
+                    <Button variant="secondary" onClick={e => setShowPostModal(false)}><FontAwesomeIcon
                         icon={faTimes}/> Cancel</Button>
                     <Button variant="danger" onClick={handlePostDeletion}><FontAwesomeIcon
+                        icon={faExclamationTriangle}/> Yes</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showTripModal} onHide={() => setShowTripModal(false)}>
+                <Modal.Header><strong>{tripToDelete?.name}</strong></Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this trip?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={e => setShowTripModal(false)}><FontAwesomeIcon
+                        icon={faTimes}/> Cancel</Button>
+                    <Button variant="danger" onClick={handleTripDeletion}><FontAwesomeIcon
                         icon={faExclamationTriangle}/> Yes</Button>
                 </Modal.Footer>
             </Modal>
