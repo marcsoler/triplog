@@ -89,7 +89,7 @@ const Home = () => {
 
                         <Row>
 
-                            <Col lg={8} md={6} sm={12}>
+                            <Col lg={7} md={6} sm={12}>
                                 <article className="article-teaser">
                                     <h3 className="h1 article-title"><Link to={`/post/${post.id}`}>{post.title}</Link></h3>
                                     <p><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
@@ -97,7 +97,7 @@ const Home = () => {
                                     <p><Button href={`/post/${post.id}`} variant="primary">Read more...</Button></p>
                                 </article>
                             </Col>
-                            <Col lg={4} md={6} sm={12}>
+                            <Col lg={5} md={6} sm={12}>
                                 <TripTeaser {...postTrip} />
                             </Col>
                         </Row>

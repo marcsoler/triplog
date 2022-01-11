@@ -202,11 +202,14 @@ const CreateTrip: FC = () => {
                 tripImage: '',
                 tripPolyline: '',
             });
-            if(startMarker) {
+            if (startMarker) {
                 startMarker.setMap(null);
             }
             setDirResponse(null);
             setWaypoints([]);
+            setImageUrl(undefined);
+
+
         }
     }
 
@@ -262,7 +265,8 @@ const CreateTrip: FC = () => {
                 {uploadProgress > 0 && uploadProgress < 100 &&
                     <Form.Text className="mt-3">{`Uploading... ${uploadProgress}%`}</Form.Text>}
                 {imageUrl &&
-                    <Image src={imageUrl} thumbnail={true} className="mt-3" style={{maxWidth: '350px', height: 'auto'}}/>}
+                    <Image src={imageUrl} thumbnail={true} className="mt-3"
+                           style={{maxWidth: '350px', height: 'auto'}}/>}
             </Form>
         </Container>
     )
