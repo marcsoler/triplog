@@ -17,7 +17,6 @@ const SingedInLinks = () => {
 
     if(user && user.admin) {
         return (
-
             <NavDropdown title={user!.firstname}>
                 <NavDropdown.Item as={NavLink} to="/dashboard/post/create">New Post</NavDropdown.Item>
                 <NavDropdown.Item as={NavLink} to="/dashboard/trip/create">New Trip</NavDropdown.Item>

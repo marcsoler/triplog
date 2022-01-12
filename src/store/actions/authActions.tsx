@@ -18,12 +18,11 @@ import {RootState} from '../index';
 
 import firebaseApp from '../../firebase/firebaseApp';
 import {getAuth, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithEmailAndPassword} from 'firebase/auth';
-import {getFirestore, doc, getDoc, addDoc, collection, Timestamp, setDoc} from 'firebase/firestore';
+import {getFirestore, doc, getDoc, Timestamp, setDoc} from 'firebase/firestore';
 
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
-const usersRef = collection(db, 'users');
 
 // Create user
 export const signup = (data: SignUpData, successMsg: string): ThunkAction<void, RootState, null, AuthAction> => {
@@ -61,7 +60,7 @@ export const getUserById = (id: string): ThunkAction<void, RootState, null, Auth
                 });
             }
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 }

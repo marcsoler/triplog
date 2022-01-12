@@ -73,10 +73,6 @@ $content-top-padding: 8rem;
     font-family: 'Dancing Script', cursive;
 }
 
-.App {
-    min-height: 100vh;
-}
-
 .navbar {
     transition: background-color .25s;
     &.navbar-bg {
@@ -133,9 +129,15 @@ $content-top-padding: 8rem;
         font-weight: 700;
         text-transform: uppercase;
         color: $white;
-        font-size: 2.5em;
+        font-size: 1.5em;
         font-family: 'Roboto Condensed', sans-serif;
         text-shadow: $text-shadow;
+        @include media-breakpoint-up(md) {
+            font-size: 1.75em;
+        }
+        @include media-breakpoint-up(lg) {
+            font-size: 2.5em;
+        }
     }
 
 }
@@ -163,6 +165,9 @@ $content-top-padding: 8rem;
 .blog-article {
     .article-date {
         color: $gray-600;
+    }
+    img {
+        max-width: 100%;
     }
 }
 
@@ -215,7 +220,7 @@ $content-top-padding: 8rem;
             width:100%;
             top: 0;
             left: 0;
-            background-color: rgba($black, .5);
+            background-color: rgba($black, .75);
             cursor: pointer;
             &:hover {
                 opacity: 1;
@@ -226,9 +231,11 @@ $content-top-padding: 8rem;
                 justify-content: center;
                 align-items: center;
                 flex-direction: column;
+
             }
             .dashboard-trip-name {
                 color: $white;
+                text-align: center;
             }
         }
     }
@@ -243,6 +250,10 @@ $content-top-padding: 8rem;
         color: $gray-500;
         text-decoration: none;
     }
+    @media (prefers-contrast: more) {
+        color: $gray-800;
+        a{ color: $gray-800; }
+    }
 }
 
 .fade-in {
@@ -252,6 +263,10 @@ $content-top-padding: 8rem;
     animation-fill-mode: both;
     animation-name: fadeIn;
 
+}
+
+.color-black {
+    color: $black;
 }
 
 .color-bordeaux {
@@ -279,6 +294,7 @@ $content-top-padding: 8rem;
     .ql-container {
         .ql-editor {
             min-height: 200px;
+            max-height: 600px;
 
             &.ql-blank::before {
                 font-style: normal;
@@ -300,7 +316,6 @@ $content-top-padding: 8rem;
         opacity: 0;
         transform: translateY(-100%);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);

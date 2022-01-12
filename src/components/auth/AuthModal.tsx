@@ -1,3 +1,5 @@
+import {FC} from 'react';
+
 import Modal from 'react-bootstrap/Modal';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -5,14 +7,13 @@ import Tabs from 'react-bootstrap/Tabs';
 
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import React from 'react';
 import {setAuthModal} from '../../store/actions/authActions';
 import {useDispatch} from 'react-redux';
 import useAuthSelector from '../../hooks/useAuthSelector';
 import ForgotPassword from './ForgotPassword';
 
 
-const AuthModal = () => {
+const AuthModal:FC = () => {
 
     const dispatch = useDispatch();
 

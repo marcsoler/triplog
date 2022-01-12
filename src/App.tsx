@@ -18,6 +18,7 @@ import {getUserById, setLoading, setNeedVerification} from './store/actions/auth
 import NotFound from './components/misc/NotFound';
 import useAuthSelector from './hooks/useAuthSelector';
 import AuthModal from './components/auth/AuthModal';
+import TripModal from './components/trip/TripModal';
 
 const auth = getAuth(firebaseApp);
 
@@ -47,7 +48,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="App">
+            <div className="App d-flex flex-column min-vh-100">
                 { !loading && <Header /> }
                 <Switch>
                     {routes.map((route, key) => {
@@ -66,6 +67,7 @@ function App() {
                 <Footer />
             </div>
             <AuthModal />
+            <TripModal />
         </BrowserRouter>
     );
 }

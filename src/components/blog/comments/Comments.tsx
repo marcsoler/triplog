@@ -8,7 +8,6 @@ import {getCommentsByPostId} from '../../../store/actions/commentActions';
 import usePostSelector from '../../../hooks/usePostSelector';
 import Comment from './Comment';
 
-
 const Comments: FC = () => {
 
     const dispatch = useDispatch();
@@ -20,7 +19,6 @@ const Comments: FC = () => {
             dispatch(getCommentsByPostId(post.id!));
         }
     }, [dispatch, post]);
-
 
     const {comments} = useCommentsSelector();
 

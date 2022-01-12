@@ -33,7 +33,6 @@ const Header: FC = () => {
     }, [location]);
 
 
-
     return (
         <Navbar variant="dark" fixed="top" className={(offset > 0 || currentLocation !== '/') ? 'navbar-bg' : ''}>
             <Container>
@@ -41,7 +40,7 @@ const Header: FC = () => {
                     <FontAwesomeIcon icon={faRoute} size="2x" /> Triplog</Link>
                 <Navbar.Toggle aria-controls="navbar-nav" />
                 <Navbar.Collapse className="justify-content-end" id="navbar-nav">
-                    <Nav>
+                    <Nav as="ul">
                         {auth.user ? <SingedInLinks/> : <SignedOutLinks/>}
                     </Nav>
                 </Navbar.Collapse>

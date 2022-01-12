@@ -24,6 +24,7 @@ const SignIn: FC = () => {
     const dispatch = useDispatch();
     const {error} = useAuthSelector();
 
+    //Todo: What have I've meant here?
     useEffect(() => {
         return () => {
             if (error) {

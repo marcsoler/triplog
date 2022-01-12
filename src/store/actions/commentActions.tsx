@@ -92,7 +92,6 @@ export const addReaction = (comment: Comment, user: User, onVote: () => void, on
                         user_id: user.id
                     } as Reaction)
                 }).then(() => {
-                    console.log('invoke onAlreadyVoted()');
                     onAlreadyVoted();
                 });
                 return;
@@ -103,7 +102,6 @@ export const addReaction = (comment: Comment, user: User, onVote: () => void, on
                 user_id: user.id
             } as Reaction)
         }).then(() => {
-            console.log('invoke onVote()');
             onVote();
         });
 

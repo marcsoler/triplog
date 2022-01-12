@@ -18,8 +18,6 @@ const RelatedPost = ({post}: any) => {
             </ListGroup.Item>
         </ListGroup>
 
-
-
     )
 }
 

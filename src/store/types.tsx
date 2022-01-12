@@ -1,3 +1,5 @@
+import {Variant as ReactBootstrapAlertVariant} from 'react-bootstrap/types';
+
 export const SET_USER = 'SET_USER';
 export const SIGN_OUT = 'SIGN_OUT';
 export const SET_LOADING = 'SET_LOADING';
@@ -80,7 +82,6 @@ interface SetModalAction {
 }
 
 
-
 export type AuthAction =
     SetUserAction
     | SetLoadingAction
@@ -144,6 +145,9 @@ export type PostsAction = SetPostsAction;
  */
 
 export const SET_TRIPS = 'SET_TRIPS';
+export const SET_TRIP_MODAL = 'SET_TRIP_MODAL';
+//export const SET_TRIP_SUCCESS = 'SET_TRIP_SUCCESS';
+//export const SET_TRIP_ALERT = 'SET_TRIP_ALERT';
 
 export interface Trip {
     id?: string;
@@ -162,8 +166,16 @@ export interface Trip {
     }
 }
 
+export interface TripModal {
+    show: boolean,
+    variant: ReactBootstrapAlertVariant,
+    message: string,
+    redirect?: string,
+}
+
 export interface TripState {
     trip?: Trip;
+    tripModal?: TripModal;
 }
 
 export interface TripsState {
@@ -177,7 +189,13 @@ interface SetTripAction {
     payload: Trip;
 }
 
-export type TripAction = SetTripAction;
+interface SetTripModalAction {
+    type: typeof SET_TRIP_MODAL;
+    payload: TripModal;
+}
+
+
+export type TripAction = SetTripAction | SetTripModalAction;
 
 
 interface SetTripsAction {

@@ -12,6 +12,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSignature} from '@fortawesome/free-solid-svg-icons/faSignature';
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
 
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {createPost, getPostById} from '../../store/actions/postActions';
@@ -24,6 +25,7 @@ import {Post, Trip} from '../../store/types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FormMap from '../trip/FormMap';
+import usePostsSelector from '../../hooks/usePostsSelector';
 
 
 interface IPostFormInput {
@@ -45,8 +47,11 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     const dispatch = useDispatch();
 
     const [selectedTrip, setSelectedTrip] = useState<Trip>();
+    const [selectedSlug, setSelectedSlug] = useState<string>();
+    const [postSlugTaken, setPostSlugTaken] = useState<boolean>(false);
 
     const {trips} = useTripsSelector();
+    const {posts} = usePostsSelector();
 
 
     useEffect(() => {
@@ -74,6 +79,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
         formState: {errors, isDirty},
         handleSubmit,
         setValue,
+        getValues
     } = useForm<IPostFormInput>({
         defaultValues: postId ? {
             title: post?.title,
@@ -115,11 +121,20 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
     };
 
     const slugifyTitle = (title: string): void => {
-        setValue('slug', slugify(title, {
+        const generatedSlug = slugify(title, {
             lower: true,
             strict: true,
-        }), {shouldValidate: true});
+        });
+        setValue('slug', generatedSlug);
+        setSelectedSlug(generatedSlug);
     }
+
+    useEffect(() => {
+        setPostSlugTaken(!!posts?.find((p) => {
+            return p.id === selectedSlug
+        }));
+    }, [selectedSlug, posts]);
+
 
     const loadTrip = (e: FormEvent<HTMLSelectElement>): void => {
 
@@ -164,7 +179,9 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                               readOnly {...register('slug', {
                                     required: true,
                                 })} />
-                                <InputGroup.Text>todo (check of duplicates)</InputGroup.Text>
+                                {getValues('title') && <InputGroup.Text><FontAwesomeIcon
+                                    icon={postSlugTaken ? faExclamationTriangle : faCheck}
+                                    style={{color: postSlugTaken ? 'red' : 'green'}}/></InputGroup.Text>}
                             </InputGroup>
                             {errors.slug &&
                                 <p className="form-validation-failed">The slug is a required field and must be an unique
@@ -188,6 +205,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                             <ReactQuill placeholder="Write here your story&hellip;" onChange={onChange}
                                                         value={value}
                                                         className={(errors.content && 'is-invalid')}
+                                                //scrollingContainer={'#scrolling-container'}
                                                         modules={{
                                                             toolbar: {
                                                                 container: [

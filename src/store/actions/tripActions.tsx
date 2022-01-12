@@ -1,5 +1,13 @@
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, SET_TRIP, SET_TRIPS, Trip, TripAction, TripsAction} from '../types';
+import {
+    Post,
+    SET_TRIP,
+    SET_TRIP_MODAL,
+    SET_TRIPS,
+    Trip,
+    TripAction, TripModal,
+    TripsAction
+} from '../types';
 
 import {
     getFirestore,
@@ -9,7 +17,7 @@ import {
     GeoPoint,
     query,
     getDocs,
-    orderBy, getDoc, doc,
+    orderBy, getDoc, doc, deleteDoc,
 } from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
@@ -18,6 +26,14 @@ import {RootState} from '../index';
 const db = getFirestore(firebaseApp);
 
 const tripsRef = collection(db, 'trips');
+
+const getAllTrips = async (): Promise<Trip[]>=> {
+    const q = query(collection(db, 'trips'), orderBy('created_at', 'desc'));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map((t) => {
+        return {id: t.id, ...t.data()} as Trip;
+    });
+}
 
 // get trips
 export const getTrips = (): ThunkAction<void, RootState, null, TripsAction> => {
@@ -44,6 +60,8 @@ export const getTrips = (): ThunkAction<void, RootState, null, TripsAction> => {
 
 export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAction> => {
     return async dispatch => {
+
+
         await addDoc(tripsRef, {
             name: trip.name,
             imageUrl: trip.imageUrl,
@@ -53,7 +71,43 @@ export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAc
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
-            console.error('Some error happened here', 'tripActions:storeTrip()');
+            dispatch({
+                type: SET_TRIP_MODAL,
+                payload: {
+                    show: true,
+                    variant: 'danger',
+                    message: `An error happened: ${error.constructor} ${error.message}`
+                }
+            });
+        });
+        dispatch({
+            type: SET_TRIP_MODAL,
+            payload: {
+                show: true,
+                variant: 'success',
+                message: 'Trip successfully created',
+                redirect: '/dashboard',
+            },
+        });
+
+    }
+}
+
+
+export const setTripModal = (tripModal: TripModal): ThunkAction<void, RootState, null, TripAction> => {
+    return dispatch => {
+        dispatch({
+            type: SET_TRIP_MODAL,
+            payload: tripModal,
+        });
+    }
+}
+
+export const clearTripModal = (): ThunkAction<void, RootState, null, TripAction> => {
+    return dispatch => {
+        dispatch({
+            type: SET_TRIP_MODAL,
+            payload: { show: false, variant: 'success', message: ''},
         });
     }
 }
@@ -106,8 +160,27 @@ export const getTripById = (id: string): ThunkAction<void, RootState, null, Trip
                 console.error('Trip #' + id + ' not found... setError?');
             }
         } catch (e) {
-            console.log('Error on getTripById()', e);
+            console.error('Error on getTripById()', e);
         }
 
+    }
+}
+
+
+export const deleteTrip = (trip: Trip): ThunkAction<void, RootState, null, TripsAction> => {
+    return async dispatch => {
+
+        const docRef = doc(db, 'trips', trip!.id!);
+
+        await deleteDoc(docRef).catch((error) => {
+            console.error('Some error happened here', 'tripActions:deleteTrip()');
+        });
+
+        const tripsData = await getAllTrips();
+
+        dispatch({
+            type: SET_TRIPS,
+            payload: tripsData,
+        })
     }
 }
