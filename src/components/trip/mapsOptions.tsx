@@ -5,6 +5,7 @@
 export const mapsOptions: google.maps.MapOptions = {
     streetViewControl: false,
     rotateControl: false,
+    mapTypeControl: false,
 }
 
 export const mapContainerStyle = {
