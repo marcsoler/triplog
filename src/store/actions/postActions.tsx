@@ -37,20 +37,12 @@ const getAllPosts = async (): Promise<Post[]>=> {
 // get latest post:
 export const getLatestPost = (): ThunkAction<void, RootState, null, PostAction> => {
     return async dispatch => {
-
-        const postsRef = collection(db, 'posts');
-
-        const post = await getDocs(query(postsRef, orderBy('created_at', 'desc'), limit(1))).then((querySnapshot) => {
-            return querySnapshot.docs[0];
-        }).catch((error) => {
-            dispatch(setError(`${error.code}: ${error.message}`));
-        });
-
-        if (post) {
-            const postData = {id: post.id, ...post.data()} as Post;
+        const postsData = await getAllPosts();
+        const latestPost = postsData[postsData.length-1];
+        if (latestPost) {
             dispatch({
                 type: SET_POST,
-                payload: postData,
+                payload: latestPost,
             })
         }
     }

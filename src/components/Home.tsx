@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -12,30 +12,41 @@ import {Link} from 'react-router-dom';
 
 import TripTeaser from './trip/TripTeaser';
 
-import {getLatestPost, getPosts} from '../store/actions/postActions';
+import {getPosts} from '../store/actions/postActions';
 import {useDispatch} from 'react-redux';
-import usePostSelector from '../hooks/usePostSelector';
 import {getTrips} from '../store/actions/tripActions';
 import useTripsSelector from '../hooks/useTripsSelector';
 import moment from 'moment/moment';
+import usePostsSelector from '../hooks/usePostsSelector';
+import {Post, Trip} from '../store/types';
 
 
 const Home = () => {
 
     const dispatch = useDispatch();
 
+    const [latestPost, setLatestPost] = useState<Post>();
+    const [latestPostTrip, setLatestPostTrip] = useState<Trip>();
+    const [otherTrips, setOtherTrips] = useState<Trip[]>();
+
     useEffect(() => {
-        dispatch(getLatestPost());
         dispatch(getTrips());
         dispatch(getPosts());
     }, [dispatch]);
 
-    const {post} = usePostSelector();
+    const {posts} = usePostsSelector();
     const {trips} = useTripsSelector();
 
-    const postTrip = trips!.find((t) => {
-        return t.id === post?.trip
-    });
+    useEffect(() => {
+        const post = posts![posts!.length-1];
+        setLatestPost(post);
+        setLatestPostTrip(trips!.find((t) => {
+            return t.id === post.trip;
+        }));
+        setOtherTrips(trips!.filter((t) => {
+            return t.id !== post.trip;
+        }))
+    }, [posts, trips]);
 
     const articlesRef = useRef<HTMLElement | null>(null);
 
@@ -43,7 +54,6 @@ const Home = () => {
         if (articlesRef) {
             articlesRef.current?.scrollIntoView();
         }
-
     };
 
     return (
@@ -63,7 +73,7 @@ const Home = () => {
                                     </blockquote>
                                 </Col>
                             </Row>
-                            {postTrip && (<Row>
+                            {latestPost && (<Row>
                                 <Col className="text-center mt-md-5">
                                     <FontAwesomeIcon icon={faChevronDown} size="2x" onClick={executeScroll}
                                                      style={{cursor: 'pointer'}}/>
@@ -75,7 +85,7 @@ const Home = () => {
                 </Container>
             </section>
 
-            {post && postTrip && (
+            {latestPost && latestPostTrip && (
                 <section className="content last-post" ref={articlesRef}>
 
                     <Container className="text-right">
@@ -89,16 +99,16 @@ const Home = () => {
 
                         <Row>
 
-                            <Col lg={7} md={6} sm={12}>
+                            <Col md={6} sm={12}>
                                 <article className="article-teaser">
-                                    <h3 className="h1 article-title"><Link to={`/post/${post.id}`}>{post.title}</Link></h3>
-                                    <p><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
-                                    <p className="lead">{post.subtitle}</p>
-                                    <p><Button href={`/post/${post.id}`} variant="primary">Read more...</Button></p>
+                                    <h3 className="h1 article-title"><Link to={`/post/${latestPost.id}`}>{latestPost.title}</Link></h3>
+                                    <p><small>Posted on {moment.unix(latestPost.created_at!.seconds).format('MMMM Do YYYY')}{ latestPost.updated_at && ', edited'}</small></p>
+                                    <p className="lead">{latestPost.subtitle}</p>
+                                    <p><Button href={`/post/${latestPost.id}`} variant="primary">Read more...</Button></p>
                                 </article>
                             </Col>
-                            <Col lg={5} md={6} sm={12}>
-                                <TripTeaser {...postTrip} />
+                            <Col>
+                                <TripTeaser {...latestPostTrip} />
                             </Col>
                         </Row>
 
@@ -106,7 +116,7 @@ const Home = () => {
                 </section>
             )}
 
-            {postTrip && (
+            {otherTrips && (
                 <section className="content latest-trips">
                     <Container>
                         <Row>
@@ -116,9 +126,7 @@ const Home = () => {
                             </Col>
                         </Row>
                         <Row xs={1} md={3} lg={7}>
-                            {trips && trips.filter((t) => {
-                                return t.id !== post!.trip
-                            }).map((t) => {
+                            {otherTrips.map((t) => {
                                 return (
                                     <TripTeaser key={t.id} {...t} />
                                 )
@@ -128,7 +136,7 @@ const Home = () => {
                 </section>
             )}
 
-            {!postTrip && (
+            {!latestPost && (
 
                 <section className="content">
                     <Container>
@@ -139,7 +147,6 @@ const Home = () => {
                         </Row>
                     </Container>
                 </section>
-
             )}
 
         </div>
