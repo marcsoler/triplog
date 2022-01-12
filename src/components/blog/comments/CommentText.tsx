@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {setCommentCount} from '../../../store/actions/postActions';
 
 
 const CommentText: FC<Comment> = (comment) => {

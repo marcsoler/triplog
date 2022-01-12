@@ -114,6 +114,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             subtitle: data.subtitle,
             content: data.content,
             trip: data.trip,
+            comments: 0,
             position: data.position,
             draft: data.draft,
         }

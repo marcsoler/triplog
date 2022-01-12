@@ -108,6 +108,7 @@ export interface Post {
     //progress: string | number,
     position: any; //google.maps.LatLng;
     draft: boolean;
+    comments: number;
     created_at?: {
         seconds: number,
         nanoseconds: number,

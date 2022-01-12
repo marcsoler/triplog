@@ -6,6 +6,7 @@ import usePostSelector from '../../../hooks/usePostSelector';
 import {useDispatch} from 'react-redux';
 import {storeComment} from '../../../store/actions/commentActions';
 import {Comment} from '../../../store/types';
+import {setCommentCount} from '../../../store/actions/postActions';
 
 type CommentFormInputs = {
     text: string,
@@ -38,6 +39,7 @@ const CommentForm: FC = () => {
             reactions: [],
         }
         dispatch(storeComment(comment));
+        dispatch(setCommentCount(post, post!.comments + 1));
     }
 
     const [showModal, setShowModal] = useState(false);

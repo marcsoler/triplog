@@ -146,3 +146,17 @@ export const deletePost = (post: Post): ThunkAction<void, RootState, null, Posts
 
     }
 }
+
+export const setCommentCount = (post: any, count: number): ThunkAction<void, RootState, null, PostAction> => {
+    return async dispatch => {
+        const docRef = doc(db, 'posts', post.id);
+        await updateDoc(docRef, {
+            comments: count,
+        }).catch((error) => {
+            console.error('Some error happened here', 'postActions:setCommentCount()');
+        });
+
+
+
+    }
+}

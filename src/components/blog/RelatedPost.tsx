@@ -14,7 +14,7 @@ const RelatedPost = ({post}: any) => {
                     <h5 className="mb-1">{post.title}</h5>
                     <small>{moment.unix(post.created_at.seconds).format('MMMM Do YYYY')}</small>
                 </div>
-                <small className="comment-count">(0) comments</small>
+                <small className="comment-count">{post.comments} comments</small>
             </ListGroup.Item>
         </ListGroup>
 
