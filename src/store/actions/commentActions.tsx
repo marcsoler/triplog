@@ -23,12 +23,29 @@ const db = getFirestore(firebaseApp);
 
 const commentsRef = collection(db, 'comments');
 
-const getComments = async (postId: string): Promise<Comment[]> => {
-    const q = query(commentsRef, where('post_id', '==', postId), orderBy('created_at', 'asc'));
+const getAllComments = async (postId?: string): Promise<Comment[]> => {
+
+    let q;
+
+    if(postId) {
+        q = query(commentsRef, where('post_id', '==', postId), orderBy('created_at', 'asc'));
+    } else {
+        q = query(commentsRef, orderBy('created_at', 'asc'));
+    }
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((c) => {
         return {id: c.id, ...c.data()} as Comment;
     });
+}
+
+export const getComments = (): ThunkAction<void, RootState, null, CommentsAction> => {
+    return async dispatch => {
+        const commentsData = await getAllComments();
+        dispatch({
+            type: SET_COMMENTS,
+            payload: commentsData,
+        });
+    }
 }
 
 
@@ -46,7 +63,7 @@ export const storeComment = (comment: Comment): ThunkAction<void, RootState, nul
             console.error('commentsActions:storeComment()', error);
         });
 
-        const commentsData = await getComments(comment.post_id);
+        const commentsData = await getAllComments(comment.post_id);
 
         dispatch({
             type: SET_COMMENTS,
@@ -117,7 +134,7 @@ export const approveComment = (comment: Comment): ThunkAction<void, RootState, n
             approved_at: Timestamp.now()
         }, {merge: true}).then(async () => {
 
-            const commentsData = await getComments(comment.post_id);
+            const commentsData = await getAllComments(comment.post_id);
             dispatch({
                 type: SET_COMMENTS,
                 payload: commentsData,
@@ -133,7 +150,7 @@ export const deleteComment = (comment: Comment): ThunkAction<void, RootState, nu
 
         await deleteDoc(commentDocRef).then(async () => {
 
-            const commentsData = await getComments(comment.post_id);
+            const commentsData = await getAllComments(comment.post_id);
 
             dispatch({
                 type: SET_COMMENTS,

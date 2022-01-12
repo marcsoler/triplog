@@ -21,6 +21,7 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        console.log('dispatch', postId);
         dispatch(getPostById(postId));
         dispatch(getPosts());
     }, [dispatch, postId]);
@@ -42,7 +43,7 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
                     <Col as="aside" className="blog-aside" md={4}>
                         <div className="related-posts sticky-md-top">
                             {relatedPosts.map((post: any) => {
-                                return (<RelatedPost key={post.id} post={post}/>)
+                                return (<RelatedPost key={post.id} {...post}/>)
                             })}
                         </div>
                     </Col>
