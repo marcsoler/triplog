@@ -33,7 +33,6 @@ const Header: FC = () => {
     }, [location]);
 
 
-
     return (
         <Navbar variant="dark" fixed="top" className={(offset > 0 || currentLocation !== '/') ? 'navbar-bg' : ''}>
             <Container>

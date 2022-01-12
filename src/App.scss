@@ -166,6 +166,9 @@ $content-top-padding: 8rem;
     .article-date {
         color: $gray-600;
     }
+    img {
+        max-width: 100%;
+    }
 }
 
 .blog-aside {
@@ -232,6 +235,7 @@ $content-top-padding: 8rem;
             }
             .dashboard-trip-name {
                 color: $white;
+                text-align: center;
             }
         }
     }

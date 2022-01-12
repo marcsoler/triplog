@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 
-import {sendResetEmail, setError, setSuccess, signin} from '../../store/actions/authActions';
+import {sendResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
 import useAuthSelector from '../../hooks/useAuthSelector';
 import {SubmitHandler, useForm} from 'react-hook-form';

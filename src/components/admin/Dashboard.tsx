@@ -193,7 +193,7 @@ const Dashboard: FC = () => {
                                 <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}} loading="lazy"/>
                                 <div className="dashboard-trip-overlay">
                                     <div className="dashboard-trip-overlay-inner">
-                                        <h3 className="dashboard-trip-name color-black">{trip.name}</h3>
+                                        <h4 className="dashboard-trip-name color-black">{trip.name}</h4>
                                         <Dropdown>
                                             <Dropdown.Toggle variant="primary" size="sm" id={`${trip.id}-dropdown`}>
                                                 Dropdown Button

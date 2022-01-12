@@ -11,8 +11,6 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
 
     const {posts} = usePostsSelector();
 
-    console.log(posts);
-
     useEffect(() => {
         const teaserPost = posts!.find((p) => {
             return p.trip === trip.id;

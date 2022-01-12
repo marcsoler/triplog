@@ -1,7 +1,7 @@
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
 import firebaseApp from '../../firebase/firebaseApp';
-import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, Comment, TripAction, SET_TRIP_MODAL} from '../types';
+import {Post, PostAction, SET_POST, PostsAction, SET_POSTS, TripAction, SET_TRIP_MODAL} from '../types';
 import {
     getFirestore,
     collection,
@@ -11,13 +11,11 @@ import {
     getDocs,
     query,
     orderBy,
-    limit,
     Timestamp,
     GeoPoint,
     deleteDoc,
     updateDoc
 } from 'firebase/firestore';
-import {setError} from './authActions';
 
 const db = getFirestore(firebaseApp);
 
@@ -25,7 +23,7 @@ const db = getFirestore(firebaseApp);
 
 const getAllPosts = async (): Promise<Post[]>=> {
 
-    const q = query(collection(db, 'posts'), orderBy('created_at', 'desc'));
+    const q = query(collection(db, 'posts'), orderBy('created_at', 'asc'));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((p) => {
         return {id: p.id, ...p.data()} as Post;

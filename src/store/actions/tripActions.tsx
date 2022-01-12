@@ -1,6 +1,6 @@
 import firebaseApp from '../../firebase/firebaseApp';
 import {
-    Post, PostsAction, SET_POSTS,
+    Post,
     SET_TRIP,
     SET_TRIP_MODAL,
     SET_TRIPS,
@@ -160,7 +160,7 @@ export const getTripById = (id: string): ThunkAction<void, RootState, null, Trip
                 console.error('Trip #' + id + ' not found... setError?');
             }
         } catch (e) {
-            console.log('Error on getTripById()', e);
+            console.error('Error on getTripById()', e);
         }
 
     }

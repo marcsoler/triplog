@@ -1,5 +1,3 @@
-import Nav from 'react-bootstrap/Nav'
-
 import Button from 'react-bootstrap/Button';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

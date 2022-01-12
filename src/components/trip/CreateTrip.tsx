@@ -1,5 +1,4 @@
 import {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
-import {Redirect, useHistory} from 'react-router-dom';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button'
@@ -18,7 +17,7 @@ import {DirectionsRenderer, GoogleMap, useJsApiLoader} from '@react-google-maps/
 import {mapContainerStyle, mapsOptions} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
-import {setTripModal, storeTrip} from '../../store/actions/tripActions';
+import {storeTrip} from '../../store/actions/tripActions';
 import {Trip} from '../../store/types';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -49,7 +48,6 @@ const CreateTrip: FC = () => {
     const [directionsLoaded, setDirectionsLoaded] = useState(false);
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
-    const history = useHistory();
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
@@ -125,7 +123,6 @@ const CreateTrip: FC = () => {
             waypoints: waypoints,
             polyline: data.tripPolyline,
         }
-        console.log('store trip...');
         dispatch(storeTrip(newTrip));
     }
 

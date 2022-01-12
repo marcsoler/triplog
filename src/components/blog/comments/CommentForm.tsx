@@ -37,10 +37,7 @@ const CommentForm: FC = () => {
             post_id: post!.id!,
             reactions: [],
         }
-
         dispatch(storeComment(comment));
-
-
     }
 
     const [showModal, setShowModal] = useState(false);
