@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react';
+import {FC, useEffect, useRef, useState} from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -13,7 +13,7 @@ import {Link} from 'react-router-dom';
 import TripTeaser from './trip/TripTeaser';
 
 import {getPosts} from '../store/actions/postActions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getTrips} from '../store/actions/tripActions';
 import useTripsSelector from '../hooks/useTripsSelector';
 import moment from 'moment/moment';
@@ -21,7 +21,7 @@ import usePostsSelector from '../hooks/usePostsSelector';
 import {Post, Trip} from '../store/types';
 
 
-const Home = () => {
+const Home: FC = () => {
 
     const dispatch = useDispatch();
 

@@ -175,7 +175,7 @@ export interface TripModal {
 
 export interface TripState {
     trip?: Trip;
-    tripModal?: TripModal;
+    tripModal: TripModal;
 }
 
 export interface TripsState {
