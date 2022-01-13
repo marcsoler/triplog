@@ -6,7 +6,22 @@ export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR';
 export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
-export const SET_MODAL = 'SET_MODAL';
+export const SET_MODAL = 'SET_MODAL'
+
+
+//// Optional props
+//export interface IDefaultProps {
+//    updated_at: {
+//        seconds: number,
+//        nanoseconds: number,
+//    }
+//}
+//
+//// Required props
+//export interface IProps extends Partial<IDefaultProps> {
+//    id: string;
+//}
+
 
 /***
  * User/Auth:
@@ -99,20 +114,22 @@ export type AuthAction =
 export const SET_POST = 'SET_POST';
 export const SET_POSTS = 'SET_POSTS';
 
-export interface Post {
-    id?: string;
+export interface IPostFormData {
     title: string;
+    slug: string;
     subtitle: string;
     content: string;
     trip: string;
-    //progress: string | number,
-    position: any; //google.maps.LatLng;
+    position: any; //google.maps.LatLng; //Todo
     draft: boolean;
-    created_at?: {
+}
+
+export interface Post extends IPostFormData {
+    created_at: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at?: {
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     };

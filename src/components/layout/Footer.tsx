@@ -1,3 +1,5 @@
+import {FC} from 'react';
+
 import moment from 'moment/moment';
 
 import Row from 'react-bootstrap/Row';
@@ -8,7 +10,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCode} from '@fortawesome/free-solid-svg-icons/faCode';
 import {faGithub} from '@fortawesome/free-brands-svg-icons/faGithub';
 
-const Footer = () => {
+
+const Footer: FC = () => {
     return (
         <footer className="footer mt-auto">
             <Container>

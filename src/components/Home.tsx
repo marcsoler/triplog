@@ -105,10 +105,10 @@ const Home: FC = () => {
 
                             <Col md={6} sm={12}>
                                 <article className="article-teaser">
-                                    <h3 className="h1 article-title"><Link to={`/post/${latestPost.id}`}>{latestPost.title}</Link></h3>
+                                    <h3 className="h1 article-title"><Link to={`/post/${latestPost.slug}`}>{latestPost.title}</Link></h3>
                                     <p><small>Posted on {moment.unix(latestPost.created_at!.seconds).format('MMMM Do YYYY')}{ latestPost.updated_at && ', edited'}</small></p>
                                     <p className="lead">{latestPost.subtitle}</p>
-                                    <p><Button href={`/post/${latestPost.id}`} variant="primary">Read more...</Button></p>
+                                    <p><Button href={`/post/${latestPost.slug}`} variant="primary">Read more...</Button></p>
                                 </article>
                             </Col>
                             <Col>

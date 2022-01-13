@@ -44,13 +44,14 @@ const Dashboard: FC = () => {
     const dispatch = useDispatch();
 
 
-    const promptPostDeletion = (postId: string) => {
-        const post = posts!.find((p) => {
-            return p.id === postId;
-        })
-        setPostToDelete(post);
-        setShowPostModal(true);
-        return;
+    const promptPostDeletion = (slug: string) => {
+        if(posts) {
+            const post = posts.find((p) => {
+                return p.slug === slug;
+            })
+            setPostToDelete(post);
+            setShowPostModal(true);
+        }
     }
 
     const handlePostDeletion = () => {
@@ -137,7 +138,7 @@ const Dashboard: FC = () => {
                     {
                         filteredPosts && filteredPosts.map((p) => {
 
-                            return (<tr key={p.id}>
+                            return (<tr key={p.slug}>
                                 <td>
                                     {p.title} {(p.draft && <Badge bg="secondary">Draft</Badge>)}
                                 </td>
@@ -153,13 +154,13 @@ const Dashboard: FC = () => {
                                 <td>
                                     <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
                                         <Link className="btn btn-outline-primary" role="button"
-                                              to={`/post/${p.id}`}><FontAwesomeIcon
+                                              to={`/post/${p.slug}`}><FontAwesomeIcon
                                             icon={faSearch}/>View</Link>
                                         <Link className="btn btn-outline-secondary" role="button"
-                                              to={`/dashboard/post/edit/${p.id}`}><FontAwesomeIcon
+                                              to={`/dashboard/post/edit/${p.slug}`}><FontAwesomeIcon
                                             icon={faEdit}/> Edit</Link>
                                         <Button variant="outline-danger"
-                                                onClick={(e) => promptPostDeletion(p.id!)}><FontAwesomeIcon
+                                                onClick={(e) => promptPostDeletion(p.slug!)}><FontAwesomeIcon
                                             icon={faTrash}/> Delete</Button>
                                     </ButtonGroup>
                                 </td>

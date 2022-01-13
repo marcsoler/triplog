@@ -16,7 +16,7 @@ const Comments: FC = () => {
 
     useEffect(() => {
         if(post) {
-            dispatch(getCommentsByPostId(post.id!));
+            dispatch(getCommentsByPostId(post.slug));
         }
     }, [dispatch, post]);
 

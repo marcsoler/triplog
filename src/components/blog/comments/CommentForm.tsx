@@ -31,10 +31,14 @@ const CommentForm: FC = () => {
     }, [post, reset]);
 
     const onSubmit: SubmitHandler<CommentFormInputs> = (data) => {
+        if(!post) {
+            console.error('No post set');
+            return;
+        }
         const comment: Comment = {
             text: data.text,
             user: authenticated ? user : undefined,
-            post_id: post!.id!,
+            post_id: post.slug,
             reactions: [],
         }
         dispatch(storeComment(comment));

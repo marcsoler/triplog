@@ -9,7 +9,7 @@ import RelatedPost from './RelatedPost';
 
 import {useDispatch} from 'react-redux';
 import {RouteComponentProps} from 'react-router-dom';
-import {getPostById, getPosts} from '../../store/actions/postActions';
+import {getPostBySlug, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
 
@@ -21,7 +21,7 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getPostById(postId));
+        dispatch(getPostBySlug(postId));
         dispatch(getPosts());
     }, [dispatch, postId]);
 

@@ -37,7 +37,7 @@ const BlogArticle: FC<Post> = (post) => {
                     {user && user.admin && false && (
                         <Col xs={2}>
                             <div className="d-grip gap-0">
-                            <Link to={`/dashboard/post/edit/${post.id}`}>
+                            <Link to={`/dashboard/post/edit/${post.slug}`}>
                                 <Button variant="outline-primary" size="sm">
                                     <FontAwesomeIcon icon={faEdit} /> Edit
                                 </Button>

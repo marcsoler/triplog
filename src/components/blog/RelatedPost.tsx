@@ -9,7 +9,7 @@ const RelatedPost = ({post}: any) => {
 
     return (
         <ListGroup variant="flush" className="related-post">
-            <ListGroup.Item as={NavLink} to={'/post/' + post.id} active={activePost.post && (post.id === activePost.post.id)}>
+            <ListGroup.Item as={NavLink} to={'/post/' + post.slug} active={activePost.post && (post.id === activePost.post.slug)}>
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{post.title}</h5>
                     <small>{moment.unix(post.created_at.seconds).format('MMMM Do YYYY')}</small>

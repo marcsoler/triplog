@@ -20,7 +20,7 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
 
     return (
         <Col>
-            <Link to={`/post/${latestPost && latestPost.id}`}>
+            <Link to={`/post/${latestPost && latestPost.slug}`}>
                 <Figure className="trip-cover-image tilted">
                     <Figure.Image src={trip.imageUrl} alt={`Cover image of ${trip.name}`} loading="lazy" />
                     <Figure.Caption className="trip-cover-name display-6">{trip.name}</Figure.Caption>
