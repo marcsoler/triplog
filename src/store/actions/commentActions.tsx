@@ -16,15 +16,15 @@ import {
 } from 'firebase/firestore';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../index';
-import {Comment, CommentAction, CommentsAction, Reaction, SET_COMMENTS, User} from '../types';
+import {Comment, CommentAction, CommentsAction, ICommentFormData, Reaction, SET_COMMENTS, User} from '../types';
 
 
 const db = getFirestore(firebaseApp);
 
 const commentsRef = collection(db, 'comments');
 
-const getComments = async (postId: string): Promise<Comment[]> => {
-    const q = query(commentsRef, where('post_id', '==', postId), orderBy('created_at', 'asc'));
+const getComments = async (): Promise<Comment[]> => {
+    const q = query(commentsRef, orderBy('created_at', 'asc'));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((c) => {
         return {id: c.id, ...c.data()} as Comment;
@@ -32,21 +32,21 @@ const getComments = async (postId: string): Promise<Comment[]> => {
 }
 
 
-export const storeComment = (comment: Comment): ThunkAction<void, RootState, null, CommentsAction> => {
+export const storeComment = (data: ICommentFormData): ThunkAction<void, RootState, null, CommentsAction> => {
     return async dispatch => {
+
+        console.log('dispatching', data);
+
         await addDoc(commentsRef, {
-            text: comment.text,
-            user: comment.user ? comment.user : null,
-            post_id: comment.post_id,
-            reactions: [],
-            approved_at: comment.user ? Timestamp.now() : null,
+            ...data,
+            approved_at: data.user ? Timestamp.now() : null,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
-        } as Comment).catch((error) => {
-            console.error('commentsActions:storeComment()', error);
+        }).catch((error) => {
+            console.error('commentsActions:storeComment()', error); //todo
         });
 
-        const commentsData = await getComments(comment.post_id);
+        const commentsData = await getComments();
 
         dispatch({
             type: SET_COMMENTS,
@@ -83,7 +83,7 @@ export const addReaction = (comment: Comment, user: User, onVote: () => void, on
             return c.data() as Comment;
         });
 
-        if (c.reactions.length) {
+        if (c.reactions) {
             if (c.reactions.find((r) => {
                 return r.user_id === user.id
             })) {
@@ -117,7 +117,7 @@ export const approveComment = (comment: Comment): ThunkAction<void, RootState, n
             approved_at: Timestamp.now()
         }, {merge: true}).then(async () => {
 
-            const commentsData = await getComments(comment.post_id);
+            const commentsData = await getComments();
             dispatch({
                 type: SET_COMMENTS,
                 payload: commentsData,
@@ -133,7 +133,7 @@ export const deleteComment = (comment: Comment): ThunkAction<void, RootState, nu
 
         await deleteDoc(commentDocRef).then(async () => {
 
-            const commentsData = await getComments(comment.post_id);
+            const commentsData = await getComments();
 
             dispatch({
                 type: SET_COMMENTS,
