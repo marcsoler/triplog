@@ -18,20 +18,13 @@ import {mapContainerStyle, mapsOptions} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
 import {storeTrip} from '../../store/actions/tripActions';
-import {Trip} from '../../store/types';
+import {ITripFormData} from '../../store/types';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 
 import {SubmitHandler, useForm} from 'react-hook-form';
-
-interface ITripForm {
-    tripMode: string;
-    tripName: string;
-    tripImage: string;
-    tripPolyline: string;
-}
 
 
 const CreateTrip: FC = () => {
@@ -55,7 +48,7 @@ const CreateTrip: FC = () => {
     });
 
 
-    const setTravelMode = (e: ChangeEvent<HTMLSelectElement>): void => {
+    const setTravelMode = (e: ChangeEvent<HTMLSelectElement>) => {
         switch (e.target.value) {
             case 'DRIVING':
                 return setMode(google.maps.TravelMode.DRIVING);
@@ -66,7 +59,7 @@ const CreateTrip: FC = () => {
         }
     }
 
-    const drawPath = (e: google.maps.MapMouseEvent): void => {
+    const drawPath = (e: google.maps.MapMouseEvent) => {
         if (e.latLng) {
             setWaypoints(waypoints => [...waypoints, e.latLng!]);
         }
@@ -115,15 +108,8 @@ const CreateTrip: FC = () => {
 
     const dispatch = useDispatch();
 
-    const onSubmit: SubmitHandler<ITripForm> = data => {
-        const newTrip: Trip = {
-            name: data.tripName,
-            mode: data.tripMode,
-            imageUrl: imageUrl!,
-            waypoints: waypoints,
-            polyline: data.tripPolyline,
-        }
-        dispatch(storeTrip(newTrip));
+    const onSubmit: SubmitHandler<ITripFormData> = data => {
+        dispatch(storeTrip(data));
     }
 
     const {
@@ -132,7 +118,7 @@ const CreateTrip: FC = () => {
         handleSubmit,
         setValue,
         reset
-    } = useForm<ITripForm>();
+    } = useForm<ITripFormData>();
 
     const uploadCoverImage = (e: any) => {
         const file = e.target.files[0];
@@ -157,7 +143,7 @@ const CreateTrip: FC = () => {
         if (dirRef) {
             const directions = dirRef.getDirections();
             if (directions) {
-                setValue('tripPolyline', directions.routes[0].overview_polyline);
+                setValue('polyline', directions.routes[0].overview_polyline);
             }
         }
     }, [dirRef, waypoints]);
@@ -194,10 +180,10 @@ const CreateTrip: FC = () => {
     const handleFormReset = () => {
         if (window.confirm('Are you sure?')) {
             reset({
-                tripMode: '',
-                tripName: '',
-                tripImage: '',
-                tripPolyline: '',
+                mode: '',
+                name: '',
+                imageUrl: '',
+                polyline: '',
             });
             if (startMarker) {
                 startMarker.setMap(null);
@@ -218,35 +204,35 @@ const CreateTrip: FC = () => {
                 <Row className="mt-3 mb-3">
                     <Col xs={12}>
                         {renderMap()}
-                        <input type="hidden" defaultValue={''} {...register('tripPolyline', {required: true})} />
-                        {errors.tripPolyline && <p className="form-validation-failed">A route must be defined</p>}
+                        <input type="hidden" defaultValue={''} {...register('polyline', {required: true})} />
+                        {errors.polyline && <p className="form-validation-failed">A route must be defined</p>}
                     </Col>
                 </Row>
 
                 <FloatingLabel label="Transport method" controlId="method" className="mb-3">
                     <Form.Select
-                        aria-label="Select the transportation mode" {...register('tripMode', {required: true})}
+                        aria-label="Select the transportation mode" {...register('mode', {required: true})}
                         onChange={(e) => setTravelMode(e)}>
                         <option value="">Select the transportation mode</option>
                         <option value="BICYCLE">Bicycle</option>
                         <option value="DRIVING">Driving</option>
                         <option value="WALKING">Walking</option>
                     </Form.Select>
-                    {errors.tripMode && <p className="form-validation-failed">The transport method is required</p>}
+                    {errors.mode && <p className="form-validation-failed">The transport method is required</p>}
                 </FloatingLabel>
                 <Form.Group className="mb-3" controlId="name">
                     <FloatingLabel label="Trip name" controlId="name">
-                        <Form.Control type="text" placeholder="name" {...register('tripName', {required: true})}
+                        <Form.Control type="text" placeholder="name" {...register('name', {required: true})}
                                       onChange={e => setName(e.currentTarget.value)}/>
                     </FloatingLabel>
-                    {errors.tripName && <p className="form-validation-failed">The trip name is required</p>}
+                    {errors.name && <p className="form-validation-failed">The trip name is required</p>}
                 </Form.Group>
                 <Row>
                     <Col xs={12} md={6}>
                         <Form.Control type="file" placeholder="Cover image" size="lg" accept="image/*"
-                                      {...register('tripImage', {required: true})}
+                                      {...register('imageUrl', {required: true})}
                                       onChange={(e) => uploadCoverImage(e)}/>
-                        {errors.tripImage && <p className="form-validation-failed">A cover image is required</p>}
+                        {errors.imageUrl && <p className="form-validation-failed">A cover image is required</p>}
                     </Col>
                     <Col xs={12} md={6}>
 

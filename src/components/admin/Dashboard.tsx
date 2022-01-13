@@ -21,6 +21,7 @@ import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
 import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
+import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
 
 import moment from 'moment';
 import usePostsSelector from '../../hooks/usePostsSelector';
@@ -62,10 +63,10 @@ const Dashboard: FC = () => {
     }
 
     const staticMapSrc = (trip: Trip): string => {
-        const start = trip.waypoints[0];
-        const end = trip.waypoints[trip.waypoints.length - 1];
+        //const start = trip.waypoints[0];
+        //const end = trip.waypoints[trip.waypoints.length - 1]; //todo: decode polyline, set first and last coord as markers
         // @ts-ignore
-        return `https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x300&path=enc%3A${trip.polyline}&maptype=roadmap&key=${process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : ''}&format=png&visual_refresh=true&markers=size:mid%7C${start._lat},${start._long}&markers=size:mid%7C${end._lat},${end._long}`;
+        return `https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x300&path=enc%3A${trip.polyline}&maptype=roadmap&key=${process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : ''}&format=png&visual_refresh=true`;
     }
 
 
@@ -151,7 +152,7 @@ const Dashboard: FC = () => {
                                 </td>
                                 <td>{p.created_at && moment.unix(p.created_at.seconds).format('DD.MM.YYYY')}</td>
                                 <td>{p.updated_at ? moment.unix(p.updated_at.seconds).format('DD.MM.YYYY') : 'Never'}</td>
-                                <td>
+                                <td className="text-end">
                                     <ButtonGroup size="sm" aria-label={`Actions for post ${p.title}`}>
                                         <Link className="btn btn-outline-primary" role="button"
                                               to={`/post/${p.slug}`}><FontAwesomeIcon
@@ -182,6 +183,11 @@ const Dashboard: FC = () => {
                     </Col>
                 </Row>
             )}
+            <Row>
+                <Col className="text-md-end">
+                    <Link role="button" to="/dashboard/post/create" className="btn btn-outline-primary"><FontAwesomeIcon icon={faPlus} /> Create Post</Link>
+                </Col>
+            </Row>
 
 
             <h2 className="color-darkcyan mt-5">Trips</h2>
@@ -216,6 +222,11 @@ const Dashboard: FC = () => {
                         </Col>
                     );
                 })}
+            </Row>
+            <Row>
+                <Col className="text-md-end">
+                    <Link role="button" to="/dashboard/trip/create" className="btn btn-outline-primary"><FontAwesomeIcon icon={faPlus} /> Create Trip</Link>
+                </Col>
             </Row>
 
             <Modal show={showPostModal} onHide={() => setShowPostModal(false)}>

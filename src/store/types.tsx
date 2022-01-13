@@ -8,21 +8,6 @@ export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
 export const SET_MODAL = 'SET_MODAL'
 
-
-//// Optional props
-//export interface IDefaultProps {
-//    updated_at: {
-//        seconds: number,
-//        nanoseconds: number,
-//    }
-//}
-//
-//// Required props
-//export interface IProps extends Partial<IDefaultProps> {
-//    id: string;
-//}
-
-
 /***
  * User/Auth:
  */
@@ -37,15 +22,19 @@ export interface User {
         seconds: number,
         nanoseconds: number,
     };
+    updated_at: {
+        seconds: number,
+        nanoseconds: number,
+    }
 }
 
 export interface AuthState {
     user?: User;
     authenticated: boolean;
     loading: boolean;
+    success: string;
     error: string;
     needVerification: boolean;
-    success: string;
     showModal: boolean;
 }
 
@@ -145,12 +134,12 @@ interface SetPostAction {
 }
 
 export interface PostsState {
-    posts?: Array<Post>;
+    posts?: Post[];
 }
 
 interface SetPostsAction {
     type: typeof SET_POSTS;
-    payload: Array<Post>;
+    payload: Post[];
 }
 
 export type PostAction = SetPostAction;
@@ -166,18 +155,21 @@ export const SET_TRIP_MODAL = 'SET_TRIP_MODAL';
 //export const SET_TRIP_SUCCESS = 'SET_TRIP_SUCCESS';
 //export const SET_TRIP_ALERT = 'SET_TRIP_ALERT';
 
-export interface Trip {
-    id?: string;
+export interface ITripFormData {
     name: string;
     mode: string;
     imageUrl: string;
-    waypoints: Array<google.maps.LatLng>
-    polyline: string,
-    created_at?: {
+    //waypoints: google.maps.LatLng[];
+    polyline: string;
+}
+
+export interface Trip extends ITripFormData {
+    id: string;
+    created_at: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at?: {
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     }
@@ -196,7 +188,7 @@ export interface TripState {
 }
 
 export interface TripsState {
-    trips?: Array<Trip>;
+    trips?: Trip[]
 }
 
 export const SET_TRIP = 'SET_TRIP';

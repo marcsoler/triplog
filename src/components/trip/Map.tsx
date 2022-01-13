@@ -44,13 +44,12 @@ const Map: FC = () => {
 
 
     const drawPolyline = (): google.maps.LatLng[] => {
-        const encodedPolyline = trip!.polyline;
-        const decodedPath = google.maps.geometry.encoding.decodePath(encodedPolyline);
+        const decodedPath = google.maps.geometry.encoding.decodePath(trip!.polyline);
         const bounds = new google.maps.LatLngBounds();
         decodedPath.forEach((point) => {
             bounds.extend(point);
         });
-        mapRef?.fitBounds(bounds);
+        mapRef!.fitBounds(bounds);
         return decodedPath;
     }
 
@@ -66,7 +65,7 @@ const Map: FC = () => {
             onLoad={onMapLoad}
             options={mapsOptions}>
             <Polyline path={drawPolyline()} options={{strokeColor: '#600'}} />
-            {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE}/>}
+            {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE} />}
         </GoogleMap>)
     }
 

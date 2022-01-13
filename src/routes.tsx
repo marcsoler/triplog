@@ -41,27 +41,6 @@ const routes: Route[] = [
         }
     },
     {
-        routeType: 'publicOnly',
-        params: {
-            path: '/register',
-            component: SignUp,
-        }
-    },
-    {
-        routeType: 'publicOnly',
-        params: {
-            path: '/login',
-            component: SignIn,
-        }
-    },
-    {
-        routeType: 'publicOnly',
-        params: {
-            path: '/recover',
-            component: ForgotPassword,
-        }
-    },
-    {
         routeType: 'private',
         params: {
             path: '/dashboard',

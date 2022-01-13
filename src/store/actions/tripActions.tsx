@@ -1,5 +1,6 @@
 import firebaseApp from '../../firebase/firebaseApp';
 import {
+    ITripFormData,
     Post,
     SET_TRIP,
     SET_TRIP_MODAL,
@@ -58,16 +59,16 @@ export const getTrips = (): ThunkAction<void, RootState, null, TripsAction> => {
 }
 
 
-export const storeTrip = (trip: Trip): ThunkAction<void, RootState, null, TripAction> => {
+export const storeTrip = (tripData: ITripFormData): ThunkAction<void, RootState, null, TripAction> => {
     return async dispatch => {
 
 
         await addDoc(tripsRef, {
-            name: trip.name,
-            imageUrl: trip.imageUrl,
-            mode: trip.mode,
-            waypoints: trip.waypoints.map(wp => new GeoPoint(wp.lat(), wp.lng())),
-            polyline: trip.polyline,
+            name: tripData.name,
+            mode: tripData.mode,
+            imageUrl: tripData.imageUrl,
+            //waypoints: tripData.waypoints.map(wp => new GeoPoint(wp.lat(), wp.lng())),
+            polyline: tripData.polyline,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
