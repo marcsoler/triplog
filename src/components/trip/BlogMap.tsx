@@ -12,7 +12,7 @@ import {Post} from '../../store/types';
 import {mapsOptions, mapContainerStyle} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 
-const Map: FC = () => {
+const BlogMap: FC = () => {
 
     const dispatch = useDispatch();
     const {post} = usePostSelector();
@@ -44,12 +44,13 @@ const Map: FC = () => {
 
 
     const drawPolyline = (): google.maps.LatLng[] => {
-        const decodedPath = google.maps.geometry.encoding.decodePath(trip!.polyline);
+        const encodedPolyline = trip!.polyline;
+        const decodedPath = google.maps.geometry.encoding.decodePath(encodedPolyline);
         const bounds = new google.maps.LatLngBounds();
         decodedPath.forEach((point) => {
             bounds.extend(point);
         });
-        mapRef!.fitBounds(bounds);
+        mapRef?.fitBounds(bounds);
         return decodedPath;
     }
 
@@ -65,7 +66,7 @@ const Map: FC = () => {
             onLoad={onMapLoad}
             options={mapsOptions}>
             <Polyline path={drawPolyline()} options={{strokeColor: '#600'}} />
-            {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE} />}
+            {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE}/>}
         </GoogleMap>)
     }
 
@@ -76,4 +77,4 @@ const Map: FC = () => {
     return (isLoaded && trip) ? renderMap() : <Loading/>
 }
 
-export default Map;
+export default BlogMap;

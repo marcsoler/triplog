@@ -12,6 +12,7 @@ import {RouteComponentProps} from 'react-router-dom';
 import {getPostBySlug, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
+import {Post} from '../../store/types';
 
 
 const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
@@ -41,8 +42,8 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
                 {relatedPosts && (
                     <Col as="aside" className="blog-aside" md={4}>
                         <div className="related-posts sticky-md-top">
-                            {relatedPosts.map((post: any) => {
-                                return (<RelatedPost key={post.id} post={post}/>)
+                            {relatedPosts.map((post: Post) => {
+                                return (<RelatedPost key={post.slug} post={post}/>)
                             })}
                         </div>
                     </Col>

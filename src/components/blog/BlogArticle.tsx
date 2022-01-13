@@ -10,7 +10,7 @@ import {faEdit} from '@fortawesome/free-solid-svg-icons';
 
 import Comments from './comments/Comments';
 import CommentForm from './comments/CommentForm';
-import Map from '../trip/Map';
+import BlogMap from '../trip/BlogMap';
 
 import {Post} from '../../store/types';
 import useAuthSelector from '../../hooks/useAuthSelector';
@@ -30,7 +30,7 @@ const BlogArticle: FC<Post> = (post) => {
                 <Row>
                     <Col>
                         <h1 className="mb-5">{post.title}</h1>
-                        <Map />
+                        <BlogMap />
                         <p className="article-date"><small>Posted on {moment.unix(post.created_at!.seconds).format('MMMM Do YYYY')}{ post.updated_at && ', edited'}</small></p>
                         {post.subtitle && <h2 className="lead">{post.subtitle}</h2>}
                     </Col>
