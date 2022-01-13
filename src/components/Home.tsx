@@ -38,14 +38,18 @@ const Home: FC = () => {
     const {trips} = useTripsSelector();
 
     useEffect(() => {
-        const post = posts![posts!.length-1];
-        setLatestPost(post);
-        setLatestPostTrip(trips!.find((t) => {
-            return t.id === post.trip;
-        }));
-        setOtherTrips(trips!.filter((t) => {
-            return t.id !== post.trip;
-        }))
+        if(posts && posts.length) {
+            const post = posts[posts!.length-1]
+            setLatestPost(post);
+            if(trips && trips.length) {
+                setLatestPostTrip(trips.find((t) => {
+                    return t.id === post.trip;
+                }));
+                setOtherTrips(trips.filter((t) => {
+                    return t.id !== post.trip;
+                }))
+            }
+        }
     }, [posts, trips]);
 
     const articlesRef = useRef<HTMLElement | null>(null);
