@@ -1,8 +1,8 @@
+import {FC, useEffect, useState} from 'react';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-import {FC, useEffect} from 'react';
 
 import BlogArticle from './BlogArticle';
 import RelatedPost from './RelatedPost';
@@ -19,6 +19,8 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
 
     const postId = props.match.params.id;
 
+    const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,9 +31,13 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
     const {post} = usePostSelector();
     const {posts} = usePostsSelector();
 
-    const relatedPosts = posts?.filter((p) => {
-        return p.trip === post?.trip;
-    })
+    useEffect(() => {
+        if(posts && post) {
+            setRelatedPosts(posts.filter((p) => {
+                return p.trip === post.trip;
+            }));
+        }
+    }, [post, posts]);
 
     return (
         <Container className="blog content">
