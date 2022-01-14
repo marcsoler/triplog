@@ -53,7 +53,7 @@ const TripModal: FC = () => {
                 {tripModal.message}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>Close</Button>
+                <Button variant={tripModal.variant} onClick={handleClose}>Close</Button>
             </Modal.Footer>
         </Modal>
     )

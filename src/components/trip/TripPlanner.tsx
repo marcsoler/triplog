@@ -17,7 +17,7 @@ import {DirectionsRenderer, GoogleMap, useJsApiLoader} from '@react-google-maps/
 import {mapContainerStyle, defaultMapCenter, defaultMapOptions} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
-import {storeTrip} from '../../store/actions/tripActions';
+import {setTripModal, storeTrip} from '../../store/actions/tripActions';
 import {ITripFormData} from '../../store/types';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -26,6 +26,7 @@ import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {generateRoute, isValidLocation} from '../../libs/mapsHelper';
+import tripModal from './TripModal';
 
 
 const TripPlanner: FC = () => {
@@ -64,6 +65,12 @@ const TripPlanner: FC = () => {
             isValidLocation(e.latLng, () => {
                 setWaypoints(waypoints => [...waypoints, e.latLng!]);
                 return;
+            }, (e) => {
+                dispatch(setTripModal({
+                    show: true,
+                    variant: 'danger',
+                    message: e,
+                }));
             });
         }
     }
@@ -77,11 +84,16 @@ const TripPlanner: FC = () => {
     useEffect(() => {
         if (waypoints.length > 1) {
             if (mode) {
-                generateRoute(waypoints, mode, ((r) => {
-                    console.log('response (r)', r);
+                generateRoute(waypoints, mode, (r) => {
                     setDirectionsLoaded(true);
                     setDirResponse(r);
-                }));
+                }, (error) => {
+                    setTripModal({
+                        show: true,
+                        variant: 'danger',
+                        message: 'An error happened from the direction-service (Google Maps API): ' + error
+                    })
+                });
             }
         }
     }, [waypoints, mode])
