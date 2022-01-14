@@ -1,7 +1,6 @@
 import {FC, useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
 
-import {deletePost, getPosts} from '../../store/actions/postActions';
+import {useDispatch} from 'react-redux';
 
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
@@ -9,6 +8,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Image from 'react-bootstrap/Image';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
@@ -24,11 +24,11 @@ import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
 
 import moment from 'moment';
+import {deletePost, getPosts} from '../../store/actions/postActions';
 import usePostsSelector from '../../hooks/usePostsSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
 import {deleteTrip, getTrips} from '../../store/actions/tripActions';
-import {Post, Trip} from '../../store/types';
-import Image from 'react-bootstrap/Image';
+import {Post, Trip} from '../../store/types'
 import {Link} from 'react-router-dom';
 
 const Dashboard: FC = () => {
@@ -63,20 +63,15 @@ const Dashboard: FC = () => {
     }
 
     const staticMapSrc = (trip: Trip): string => {
-        //const start = trip.waypoints[0];
-        //const end = trip.waypoints[trip.waypoints.length - 1]; //todo: decode polyline, set first and last coord as markers
-        // @ts-ignore
         return `https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x300&path=enc%3A${trip.polyline}&maptype=roadmap&key=${process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : ''}&format=png&visual_refresh=true`;
     }
-
-
 
     useEffect(() => {
         dispatch(getPosts());
         dispatch(getTrips());
     }, [dispatch]);
 
-    const filterTable = (trip: Trip): void => {
+    const filterTable = (trip: Trip) => {
         setTripFilter(trip);
     }
 
@@ -85,8 +80,8 @@ const Dashboard: FC = () => {
     }
 
     useEffect(() => {
-        if (tripFilter) {
-            setFilteredPosts(posts?.filter((p) => {
+        if (tripFilter && posts) {
+            setFilteredPosts(posts.filter((p) => {
                 return p.trip === tripFilter.id;
             }))
         } else {
@@ -95,11 +90,13 @@ const Dashboard: FC = () => {
     }, [tripFilter, posts]);
 
     const promptTripDeletion = (tripId: string) => {
-        const trip = trips!.find((t) => {
-            return t.id === tripId;
-        })
-        setTripToDelete(trip);
-        setShowTripModal(true);
+        if(trips) {
+            const trip = trips.find((t) => {
+                return t.id === tripId;
+            })
+            setTripToDelete(trip);
+            setShowTripModal(true);
+        }
         return;
     }
 
@@ -212,7 +209,7 @@ const Dashboard: FC = () => {
                                                 <Dropdown.Item href="#"><FontAwesomeIcon
                                                     icon={faEdit}/> Edit</Dropdown.Item>
                                                 <Dropdown.Divider/>
-                                                <Dropdown.Item onClick={(e) => promptTripDeletion(trip.id!)}><FontAwesomeIcon
+                                                <Dropdown.Item onClick={(e) => promptTripDeletion(trip.id)}><FontAwesomeIcon
                                                     icon={faTrash}/> Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>

@@ -12,14 +12,14 @@ import {RouteComponentProps} from 'react-router-dom';
 import {getPostBySlug, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
-import {Post as PostType} from '../../store/types';
+import {Post} from '../../store/types';
 
 
 const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
 
     const postId = props.match.params.id;
 
-    const [relatedPosts, setRelatedPosts] = useState<PostType[]>([]);
+    const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
 
     const dispatch = useDispatch();
 
