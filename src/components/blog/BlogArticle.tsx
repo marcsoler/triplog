@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faEdit} from '@fortawesome/free-solid-svg-icons';
 
-import Comments from './comments/Comments';
+import CommentList from './comments/CommentList';
 import CommentForm from './comments/CommentForm';
 import BlogMap from '../trip/BlogMap';
 
@@ -50,7 +50,7 @@ const BlogArticle: FC<Post> = (post) => {
                 </Row>
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
 
-                <Comments/>
+                <CommentList/>
 
                 <CommentForm/>
 

@@ -11,7 +11,7 @@ import {setAuthModal} from '../../../store/actions/authActions';
 const ReactionButton: FC<Comment> = (comment) => {
 
     const {authenticated, user} = useAuthSelector();
-    const [reactions] = useState<Reaction[]>(comment.reactions);
+    const [reactions] = useState<Reaction[]>([]);
 
     const alreadyVoted = (): boolean => {
         if (authenticated) {

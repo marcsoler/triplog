@@ -1,17 +1,11 @@
 import React, {FC} from 'react';
-import {Comment as CommentType} from '../../../store/types';
+import {Comment} from '../../../store/types';
 import {Row, Col} from 'react-bootstrap';
 import moment from 'moment/moment';
 import ReactionButton from './ReactionButton';
 import CommentText from './CommentText';
 
-
-interface CommentProps {
-    key: string;
-    comment: CommentType;
-}
-
-const Comment: FC<CommentProps> = ({comment}) => {
+const CommentPartial: FC<Comment> = (comment) => {
 
     const metaStyle = {
         display: 'flex',
@@ -38,4 +32,4 @@ const Comment: FC<CommentProps> = ({comment}) => {
     )
 }
 
-export default Comment;
+export default CommentPartial;
