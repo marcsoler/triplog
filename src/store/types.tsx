@@ -218,21 +218,24 @@ export type TripsAction = SetTripsAction;
  * Comments:
  */
 
-export interface Comment {
-    id?: string;
+export interface ICommentFormData {
     text: string;
-    user?: User;
     post_id: string;
+    user?: User;
+}
+
+export interface Comment extends ICommentFormData {
+    id: string;
     reactions: Array<Reaction>;
-    approved_at?: {
+    approved_at: {
         seconds: number,
         nanoseconds: number,
     };
-    created_at?: {
+    created_at: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at?: {
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     }

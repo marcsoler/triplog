@@ -45,11 +45,13 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
                 <Col as="article" className="article" xs={12} md={relatedPosts ? 8 : 12}>
                     {post && <BlogArticle {...post} />}
                 </Col>
-                {relatedPosts && (
+                {post && relatedPosts && (
                     <Col as="aside" className="blog-aside" md={4}>
                         <div className="related-posts sticky-md-top">
-                            {relatedPosts.map((post: Post) => {
-                                return (<RelatedPost key={post.slug} post={post}/>)
+                            {relatedPosts.map((p) => {
+                                return (
+                                    <RelatedPost key={p.slug} {...p} />
+                                )
                             })}
                         </div>
                     </Col>
