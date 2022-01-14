@@ -14,7 +14,7 @@ import Row from 'react-bootstrap/Row';
 import Loading from '../misc/Loading';
 
 import {DirectionsRenderer, GoogleMap, useJsApiLoader} from '@react-google-maps/api';
-import {mapContainerStyle, mapsOptions} from './mapsOptions';
+import {mapContainerStyle, defaultMapCenter, defaultMapOptions} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
 import {storeTrip} from '../../store/actions/tripActions';
@@ -25,12 +25,12 @@ import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 
 import {SubmitHandler, useForm} from 'react-hook-form';
+import {generateRoute, isValidLocation} from '../../libs/mapsHelper';
 
 
-const CreateTrip: FC = () => {
+const TripPlanner: FC = () => {
 
     const [mapRef, setMapRef] = useState<google.maps.Map>();
-    const [center] = useState<google.maps.LatLngLiteral>({lat: 47.2238663, lng: 8.8156291});
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
     const [mode, setMode] = useState<google.maps.TravelMode>();
     const [name, setName] = useState<string>('');
@@ -61,50 +61,45 @@ const CreateTrip: FC = () => {
 
     const drawPath = (e: google.maps.MapMouseEvent) => {
         if (e.latLng) {
-            setWaypoints(waypoints => [...waypoints, e.latLng!]);
+            isValidLocation(e.latLng, () => {
+                setWaypoints(waypoints => [...waypoints, e.latLng!]);
+                return;
+            });
         }
     }
 
+    useEffect(() => {
+        if (!mode && isLoaded) {
+            setMode(google.maps.TravelMode.BICYCLING);
+        }
+    }, [isLoaded, mode]);
 
     useEffect(() => {
-        if (waypoints.length === 1) {
+        if (waypoints.length > 1) {
+            if (mode) {
+                generateRoute(waypoints, mode, ((r) => {
+                    console.log('response (r)', r);
+                    setDirectionsLoaded(true);
+                    setDirResponse(r);
+                }));
+            }
+        }
+    }, [waypoints, mode])
+
+    useEffect(() => {
+        if (waypoints.length === 1 && !startMarker) {
             setStartMarker(new google.maps.Marker({
                 position: waypoints[0],
                 map: mapRef,
                 title: 'Starting point',
             }));
-        }
-
-        if (waypoints.length > 1) {
-            const betweenWps: google.maps.DirectionsWaypoint[] = [];
+        } else {
             if (startMarker) {
                 startMarker.setMap(null);
             }
-
-            if (waypoints.length > 2) {
-                waypoints.slice(1, -1).forEach((wp) => {
-                    betweenWps.push({
-                        location: wp,
-                        stopover: false,
-                    });
-                });
-            }
-
-            const directionService = new google.maps.DirectionsService();
-            directionService.route({
-                origin: waypoints[0],
-                waypoints: betweenWps,
-                optimizeWaypoints: true,
-                destination: waypoints[waypoints.length - 1],
-                travelMode: mode ? mode : google.maps.TravelMode.BICYCLING,
-            }, (response, status) => {
-                if (status === google.maps.DirectionsStatus.OK) {
-                    setDirectionsLoaded(true);
-                    setDirResponse(response);
-                }
-            }).then();
         }
-    }, [waypoints, mode])
+    }, [waypoints, startMarker, mapRef]);
+
 
     const dispatch = useDispatch();
 
@@ -161,11 +156,11 @@ const CreateTrip: FC = () => {
         return isLoaded ? (
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
-                center={center}
+                center={defaultMapCenter}
                 onLoad={onMapLoad}
                 onClick={(e => drawPath(e))}
                 zoom={4}
-                options={{...mapsOptions, draggableCursor: 'crosshair'}}>
+                options={{...defaultMapOptions, draggableCursor: 'crosshair'}}>
 
                 {dirResponse &&
                     <DirectionsRenderer onLoad={dir => setDirRef(dir)} directions={dirResponse}/>}
@@ -245,6 +240,8 @@ const CreateTrip: FC = () => {
 
                     </Col>
                 </Row>
+
+
                 {uploadProgress > 0 && uploadProgress < 100 &&
                     <Form.Text className="mt-3">{`Uploading... ${uploadProgress}%`}</Form.Text>}
                 {imageUrl &&
@@ -255,4 +252,4 @@ const CreateTrip: FC = () => {
     )
 }
 
-export default CreateTrip;
+export default TripPlanner;
