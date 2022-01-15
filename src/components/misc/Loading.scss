@@ -1,23 +1,6 @@
-.spinner {
+.loading {
     display: flex;
     height: 90vh;
     justify-content: center;
     align-items: center;
-    .fa {
-        color: grey;
-        animation-name: spinning;
-        animation-duration: 1s;
-        animation-iteration-count: infinite;
-        animation-timing-function: linear;
-    }
-
-}
-
-@keyframes spinning {
-    from {
-        transform: rotate(0);
-    }
-    to {
-        transform: rotate(360deg);
-    }
 }

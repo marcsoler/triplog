@@ -2,26 +2,19 @@ import {FC, useState, useEffect} from 'react';
 
 import {useDispatch} from 'react-redux';
 
-import Badge from 'react-bootstrap/Badge';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Dropdown from 'react-bootstrap/Dropdown';
-import Image from 'react-bootstrap/Image';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
-import Table from 'react-bootstrap/Table';
+import {Badge, Button, ButtonGroup, Col, Container, Dropdown, Image, Modal, Row, Table} from 'react-bootstrap'
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch';
-import {faEdit} from '@fortawesome/free-solid-svg-icons';
-import {faTrash} from '@fortawesome/free-solid-svg-icons/faTrash';
-import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo';
-import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
-import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
-import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
-import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus';
+import {
+    faSearch,
+    faEdit,
+    faTrash,
+    faUndo,
+    faTimes,
+    faExclamationTriangle,
+    faFilter,
+    faPlus
+} from '@fortawesome/free-solid-svg-icons';
 
 import moment from 'moment';
 import {deletePost, getPosts} from '../../store/actions/postActions';
@@ -30,6 +23,7 @@ import useTripsSelector from '../../hooks/useTripsSelector';
 import {deleteTrip, getTrips} from '../../store/actions/tripActions';
 import {Post, Trip} from '../../store/types'
 import {Link} from 'react-router-dom';
+import {generateStaticMap} from '../../libs/mapsHelper';
 
 const Dashboard: FC = () => {
 
@@ -46,7 +40,7 @@ const Dashboard: FC = () => {
 
 
     const promptPostDeletion = (slug: string) => {
-        if(posts) {
+        if (posts) {
             const post = posts.find((p) => {
                 return p.slug === slug;
             })
@@ -60,10 +54,6 @@ const Dashboard: FC = () => {
             dispatch(deletePost(postToDelete));
         }
         setShowPostModal(false);
-    }
-
-    const staticMapSrc = (trip: Trip): string => {
-        return `https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x300&path=enc%3A${trip.polyline}&maptype=roadmap&key=${process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : ''}&format=png&visual_refresh=true`;
     }
 
     useEffect(() => {
@@ -90,7 +80,7 @@ const Dashboard: FC = () => {
     }, [tripFilter, posts]);
 
     const promptTripDeletion = (tripId: string) => {
-        if(trips) {
+        if (trips) {
             const trip = trips.find((t) => {
                 return t.id === tripId;
             })
@@ -182,7 +172,8 @@ const Dashboard: FC = () => {
             )}
             <Row>
                 <Col className="text-md-end">
-                    <Link role="button" to="/dashboard/post/create" className="btn btn-outline-primary"><FontAwesomeIcon icon={faPlus} /> Create Post</Link>
+                    <Link role="button" to="/dashboard/post/create" className="btn btn-outline-primary"><FontAwesomeIcon
+                        icon={faPlus}/> Create Post</Link>
                 </Col>
             </Row>
 
@@ -194,7 +185,7 @@ const Dashboard: FC = () => {
                         <Col key={trip.id}>
 
                             <div className="dashboard-trip mb-3">
-                                <Image src={staticMapSrc(trip)} style={{maxWidth: '100%'}} loading="lazy"/>
+                                <Image src={generateStaticMap(trip)} style={{maxWidth: '100%'}} loading="lazy"/>
                                 <div className="dashboard-trip-overlay">
                                     <div className="dashboard-trip-overlay-inner">
                                         <h4 className="dashboard-trip-name color-black">{trip.name}</h4>
@@ -209,7 +200,8 @@ const Dashboard: FC = () => {
                                                 <Dropdown.Item href="#"><FontAwesomeIcon
                                                     icon={faEdit}/> Edit</Dropdown.Item>
                                                 <Dropdown.Divider/>
-                                                <Dropdown.Item onClick={(e) => promptTripDeletion(trip.id)}><FontAwesomeIcon
+                                                <Dropdown.Item
+                                                    onClick={(e) => promptTripDeletion(trip.id)}><FontAwesomeIcon
                                                     icon={faTrash}/> Delete</Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
@@ -222,7 +214,8 @@ const Dashboard: FC = () => {
             </Row>
             <Row>
                 <Col className="text-md-end">
-                    <Link role="button" to="/dashboard/trip/create" className="btn btn-outline-primary"><FontAwesomeIcon icon={faPlus} /> Create Trip</Link>
+                    <Link role="button" to="/dashboard/trip/create" className="btn btn-outline-primary"><FontAwesomeIcon
+                        icon={faPlus}/> Create Trip</Link>
                 </Col>
             </Row>
 

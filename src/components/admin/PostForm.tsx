@@ -1,18 +1,9 @@
 import {FC, FormEvent, useEffect, useState} from 'react';
 
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { Col,Container,FloatingLabel,Form,InputGroup,Row,Button,ButtonGroup} from 'react-bootstrap';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSignature} from '@fortawesome/free-solid-svg-icons/faSignature';
-import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
-import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import {faSignature, faCheck, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
 
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {createPost, getPostBySlug} from '../../store/actions/postActions';
@@ -20,7 +11,7 @@ import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {IPostFormData, Post, Trip} from '../../store/types';
+import {IPostFormData, Trip} from '../../store/types';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';

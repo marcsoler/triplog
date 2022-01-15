@@ -2,9 +2,7 @@ import {FC} from 'react';
 
 import {Link} from 'react-router-dom';
 
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
+import {Col, Container, Row} from 'react-bootstrap';
 
 const NotFound: FC = () => {
     return (

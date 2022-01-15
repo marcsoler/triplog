@@ -1,15 +1,14 @@
 import {FC} from 'react';
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCircleNotch} from '@fortawesome/free-solid-svg-icons/faCircleNotch';
-
 import './Loading.scss';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Loading: FC = () => {
     return (
-        <div className="spinner">
-            <FontAwesomeIcon icon={faCircleNotch} size="6x" className="fa" />
-            <span className="sr-only">Loading</span>
+        <div className="loading">
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading&hellip;</span>
+            </Spinner>
         </div>
     )
 }

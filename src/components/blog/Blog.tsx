@@ -1,8 +1,6 @@
 import {FC, useEffect, useState} from 'react';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import {Container, Col, Row} from 'react-bootstrap';
 
 import BlogArticle from './BlogArticle';
 import RelatedPost from './RelatedPost';

@@ -1,9 +1,6 @@
 import {FC, useEffect, useRef, useState} from 'react';
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import {Button, Col, Container, Row} from 'react-bootstrap';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faChevronDown, faMapMarkedAlt} from '@fortawesome/free-solid-svg-icons'

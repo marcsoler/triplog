@@ -1,3 +1,5 @@
+import {Trip} from '../store/types';
+
 const apiKey: string = process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '';
 
 export const isValidLocation = (location: google.maps.LatLng, isValid: () => void, onError: (msg: string) => void) => {
@@ -40,4 +42,8 @@ export const generateRoute = (waypoints: google.maps.LatLng[], mode: google.maps
     }).catch((error) => {
         onError(`Something stange happend! Google Maps API: ${error}`);
     })
+}
+
+export const generateStaticMap = (trip: Trip) => {
+    return `https://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=600x300&path=enc%3A${trip.polyline}&maptype=roadmap&key=${apiKey}&format=png&visual_refresh=true;`
 }

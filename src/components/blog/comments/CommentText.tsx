@@ -4,8 +4,8 @@ import {Comment} from '../../../store/types';
 import {useDispatch} from 'react-redux';
 import {approveComment} from '../../../store/actions/commentActions';
 import {deleteComment} from '../../../store/actions/commentActions';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+
+import {Button, ButtonGroup} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck, faTrash} from '@fortawesome/free-solid-svg-icons';
 

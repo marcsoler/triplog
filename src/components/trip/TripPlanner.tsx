@@ -1,15 +1,6 @@
 import {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
 
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button'
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-import Image from 'react-bootstrap/Image';
-import Row from 'react-bootstrap/Row';
-
+import {Alert, Button, ButtonGroup, Col, Container, FloatingLabel, Form, Image, Row} from 'react-bootstrap';
 
 import Loading from '../misc/Loading';
 
@@ -20,8 +11,7 @@ import {useDispatch} from 'react-redux';
 import {setTripModal, storeTrip} from '../../store/actions/tripActions';
 import {ITripFormData, TripCoverImage} from '../../store/types';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
-import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
+import {faCheck, faTimes} from '@fortawesome/free-solid-svg-icons';
 
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {generateRoute, isValidLocation} from '../../libs/mapsHelper';
@@ -139,13 +129,12 @@ const TripPlanner: FC = () => {
         }
 
 
-
     }
 
 
     const coverImg = watch('imageUrl');
     useEffect(() => {
-        if(coverImg && coverImg.length) {
+        if (coverImg && coverImg.length) {
 
             optimizeImages(coverImg as unknown as FileList, (result: compressedFileType[]) => {
 
@@ -153,7 +142,7 @@ const TripPlanner: FC = () => {
 
                 result.forEach((compressedFile) => {
                     uploadToStorage(compressedFile.file, compressedFile.variant, (url) => {
-                        newFiles.push({ url: url, variant: compressedFile.variant});
+                        newFiles.push({url: url, variant: compressedFile.variant});
                     }).then();
                 });
 
@@ -165,12 +154,10 @@ const TripPlanner: FC = () => {
     }, [coverImg]);
 
     useEffect(() => {
-        if(processedFiles) {
+        if (processedFiles) {
             console.log(processedFiles);
         }
     }, [processedFiles]);
-
-
 
 
     const onMapLoad = useCallback(
@@ -186,8 +173,8 @@ const TripPlanner: FC = () => {
     );
 
     const onCenterChanged = () => {
-        if(infoWindow && mapRef) {
-            infoWindow.setPosition({lat:mapRef.getCenter()!.lat(), lng: mapRef.getCenter()!.lng()})
+        if (infoWindow && mapRef) {
+            infoWindow.setPosition({lat: mapRef.getCenter()!.lat(), lng: mapRef.getCenter()!.lng()})
         }
     }
 
@@ -259,10 +246,11 @@ const TripPlanner: FC = () => {
                 </Form.Group>
                 <Row>
                     <Col xs={12} md={6}>
-                        <Form.Control type="file" placeholder="Cover image" size="lg" accept="image/*" {...register('imageUrl', {
-                            required: "A cover image is required",
+                        <Form.Control type="file" placeholder="Cover image" size="lg"
+                                      accept="image/*" {...register('imageUrl', {
+                            required: 'A cover image is required',
                         })} />
-                        {errors.imageUrl && <p className="form-validation-failed">{errors.imageUrl.message}</p> }
+                        {errors.imageUrl && <p className="form-validation-failed">{errors.imageUrl.message}</p>}
                     </Col>
                     <Col xs={12} md={6}>
 

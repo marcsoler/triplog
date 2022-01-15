@@ -1,10 +1,8 @@
 import {FC, useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
+import {Alert, Button, FloatingLabel, Form} from 'react-bootstrap';
+
 
 import {signup, setError} from '../../store/actions/authActions';
 

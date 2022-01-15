@@ -1,6 +1,6 @@
 import {FC, useEffect, useState} from 'react';
-import Col from 'react-bootstrap/Col';
-import Figure from 'react-bootstrap/Figure';
+
+import {Col, Figure} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {Post, Trip, TripCoverImage} from '../../store/types';
 import usePostsSelector from '../../hooks/usePostsSelector';

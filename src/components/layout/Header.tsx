@@ -1,9 +1,7 @@
 import {FC, useState, useEffect} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
+import {Container, Nav, Navbar} from 'react-bootstrap';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faRoute} from '@fortawesome/free-solid-svg-icons'
