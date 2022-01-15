@@ -1,9 +1,6 @@
 import {FC} from 'react';
 
-import Modal from 'react-bootstrap/Modal';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-
+import {Modal, Tab, Tabs} from 'react-bootstrap';
 
 import SignIn from './SignIn';
 import SignUp from './SignUp';

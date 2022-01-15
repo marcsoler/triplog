@@ -1,48 +1,28 @@
 import {FC, FormEvent, useEffect, useState} from 'react';
 
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { Col,Container,FloatingLabel,Form,InputGroup,Row,Button,ButtonGroup} from 'react-bootstrap';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faSignature} from '@fortawesome/free-solid-svg-icons/faSignature';
-import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
-import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle';
+import {faSignature, faCheck, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
 
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
-import {createPost, getPostById} from '../../store/actions/postActions';
+import {createPost, getPostBySlug} from '../../store/actions/postActions';
 import slugify from 'slugify';
 import {useDispatch} from 'react-redux';
 import usePostSelector from '../../hooks/usePostSelector';
 import useTripsSelector from '../../hooks/useTripsSelector';
-import {Post, Trip} from '../../store/types';
+import {IPostFormData, Trip} from '../../store/types';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FormMap from '../trip/FormMap';
 import usePostsSelector from '../../hooks/usePostsSelector';
 
-
-interface IPostFormInput {
-    title: string;
-    slug: string;
-    subtitle: string;
-    content: string;
-    trip: string;
-    position: google.maps.LatLng;
-    draft: boolean;
-}
-
 interface PostFormProps {
-    postId?: string;
+    slug?: string;
 }
 
-const PostForm: FC<PostFormProps> = ({postId}) => {
+const PostForm: FC<PostFormProps> = ({slug}) => {
 
     const dispatch = useDispatch();
 
@@ -55,35 +35,35 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
 
     useEffect(() => {
-        if (postId) {
-            dispatch(getPostById(postId));
+        if (slug) {
+            dispatch(getPostBySlug(slug));
         }
-    }, [dispatch, postId]);
+    }, [dispatch, slug]);
 
 
     const {post} = usePostSelector();
 
     useEffect(() => {
-        if (trips && post && postId) {
+        if (trips && post && slug) {
             const trip = trips?.find((t) => {
                 return t.id === post.trip;
             });
             setSelectedTrip(trip);
         }
-    }, [post, trips, postId]);
+    }, [post, trips, slug]);
 
 
     const {
         register,
         control,
-        formState: {errors, isDirty},
+        formState: {errors},
         handleSubmit,
         setValue,
         getValues
-    } = useForm<IPostFormInput>({
-        defaultValues: postId ? {
+    } = useForm<IPostFormData>({
+        defaultValues: slug ? {
             title: post?.title,
-            slug: post?.id,
+            slug: post?.slug,
             subtitle: post?.subtitle,
             content: post?.content,
             trip: post?.trip,
@@ -107,17 +87,8 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
      */
 
 
-    const onSubmit: SubmitHandler<IPostFormInput> = data => {
-        const post: Post = {
-            id: data.slug,
-            title: data.title,
-            subtitle: data.subtitle,
-            content: data.content,
-            trip: data.trip,
-            position: data.position,
-            draft: data.draft,
-        }
-        dispatch(createPost(post, () => console.error('An error happened!')));
+    const onSubmit: SubmitHandler<IPostFormData> = data => {
+        dispatch(createPost(data));
     };
 
     const slugifyTitle = (title: string): void => {
@@ -131,19 +102,19 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
     useEffect(() => {
         setPostSlugTaken(!!posts?.find((p) => {
-            return p.id === selectedSlug
+            return p.slug === selectedSlug
         }));
     }, [selectedSlug, posts]);
 
 
-    const loadTrip = (e: FormEvent<HTMLSelectElement>): void => {
-
+    const loadTrip = (e: FormEvent<HTMLSelectElement>) => {
         const tripId = e.currentTarget.value;
-
-        const trip = trips?.find((t) => {
-            return t.id === tripId;
-        });
-        setSelectedTrip(trip);
+        if(trips) {
+            const trip = trips.find((t) => {
+                return t.id === tripId;
+            });
+            setSelectedTrip(trip);
+        }
     }
 
     useEffect(() => {
@@ -156,7 +127,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
             <Row>
                 <Col xs={12}>
 
-                    <h1 className="mb-3">{postId ? 'Edit post' : 'New post'}</h1>
+                    <h1 className="mb-3">{slug ? 'Edit post' : 'New post'}</h1>
 
                     <Form onSubmit={handleSubmit(onSubmit)}>
 
@@ -165,7 +136,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                 <Form.Control className={(errors.title && 'is-invalid')}
                                               type="text" placeholder="Title" {...register('title', {
                                     required: true,
-                                    onChange: (e) => !postId ? slugifyTitle(e.currentTarget.value) : void (0)
+                                    onChange: (e) => !slug ? slugifyTitle(e.currentTarget.value) : void (0)
                                 })} />
                             </FloatingLabel>
                             {errors.title && <p className="form-validation-failed">The title is a required field!</p>}
@@ -205,7 +176,6 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                             <ReactQuill placeholder="Write here your story&hellip;" onChange={onChange}
                                                         value={value}
                                                         className={(errors.content && 'is-invalid')}
-                                                //scrollingContainer={'#scrolling-container'}
                                                         modules={{
                                                             toolbar: {
                                                                 container: [
@@ -242,7 +212,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
 
                         {selectedTrip &&
                             <FormMap trip={selectedTrip} position={(p: google.maps.LatLng) => setValue('position', p)}
-                                     preDefinedPosition={postId && post && post.position}/>}
+                                     preDefinedPosition={slug && post && post.position}/>}
                         {!errors.trip && errors.position &&
                             <p className="form-validation-failed">Add a position by clicking on the map</p>}
 
@@ -253,7 +223,7 @@ const PostForm: FC<PostFormProps> = ({postId}) => {
                                 <FontAwesomeIcon icon={faSignature}/> Save as Draft
                             </Button>
                             <Button variant="outline-primary" type="submit" onClick={() => setValue('draft', false)}>
-                                <FontAwesomeIcon icon={faCheck}/> {postId ? 'Update post' : 'Submit post'}
+                                <FontAwesomeIcon icon={faCheck}/> {slug ? 'Update post' : 'Submit post'}
                             </Button>
                         </ButtonGroup>
 

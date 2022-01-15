@@ -3,12 +3,12 @@ import {RouteComponentProps} from 'react-router-dom';
 import PostForm from './PostForm';
 
 
-const EditPost: FC<RouteComponentProps<{ id: string }>> = (props) => {
+const EditPost: FC<RouteComponentProps<{ slug: string }>> = (props) => {
 
-    const postId = props.match.params.id;
+    const slug = props.match.params.slug;
 
     return (
-        <PostForm postId={postId}/>
+        <PostForm slug={slug}/>
     )
 }
 

@@ -9,10 +9,10 @@ import usePostSelector from '../../hooks/usePostSelector';
 import {getTripByPost} from '../../store/actions/tripActions';
 import {Post} from '../../store/types';
 
-import {mapsOptions, mapContainerStyle} from './mapsOptions';
+import {defaultMapOptions, mapContainerStyle} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 
-const Map: FC = () => {
+const BlogMap: FC = () => {
 
     const dispatch = useDispatch();
     const {post} = usePostSelector();
@@ -64,7 +64,7 @@ const Map: FC = () => {
             mapContainerStyle={mapContainerStyle}
             zoom={4}
             onLoad={onMapLoad}
-            options={mapsOptions}>
+            options={defaultMapOptions}>
             <Polyline path={drawPolyline()} options={{strokeColor: '#600'}} />
             {post && <Marker position={getPostPosition(post)} animation={google.maps.Animation.BOUNCE}/>}
         </GoogleMap>)
@@ -77,4 +77,4 @@ const Map: FC = () => {
     return (isLoaded && trip) ? renderMap() : <Loading/>
 }
 
-export default Map;
+export default BlogMap;

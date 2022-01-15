@@ -21,17 +21,6 @@ const tripReducer = (state = initialState, action: TripAction) => {
                 ...state,
                 tripModal: action.payload,
             }
-        //case SET_TRIP_SUCCESS:
-        //    return {
-        //        ...state,
-        //        successMsg: action.payload,
-        //    }
-        //case SET_TRIP_ALERT:
-        //    return {
-        //        ...state,
-        //        alertMsg: action.payload,
-        //    }
-
         default:
             return state;
 

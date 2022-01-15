@@ -6,7 +6,7 @@ export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR';
 export const NEED_VERIFICATION = 'NEED_VERIFICATION';
 export const SET_SUCCESS = 'SET_SUCCESS';
-export const SET_MODAL = 'SET_MODAL';
+export const SET_MODAL = 'SET_MODAL'
 
 /***
  * User/Auth:
@@ -22,15 +22,19 @@ export interface User {
         seconds: number,
         nanoseconds: number,
     };
+    updated_at: {
+        seconds: number,
+        nanoseconds: number,
+    }
 }
 
 export interface AuthState {
     user?: User;
     authenticated: boolean;
     loading: boolean;
+    success: string;
     error: string;
     needVerification: boolean;
-    success: string;
     showModal: boolean;
 }
 
@@ -99,20 +103,22 @@ export type AuthAction =
 export const SET_POST = 'SET_POST';
 export const SET_POSTS = 'SET_POSTS';
 
-export interface Post {
-    id?: string;
+export interface IPostFormData {
     title: string;
+    slug: string;
     subtitle: string;
     content: string;
     trip: string;
-    //progress: string | number,
-    position: any; //google.maps.LatLng;
+    position: any; //google.maps.LatLng; //Todo
     draft: boolean;
-    created_at?: {
+}
+
+export interface Post extends IPostFormData {
+    created_at: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at?: {
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     };
@@ -128,12 +134,12 @@ interface SetPostAction {
 }
 
 export interface PostsState {
-    posts?: Array<Post>;
+    posts?: Post[];
 }
 
 interface SetPostsAction {
     type: typeof SET_POSTS;
-    payload: Array<Post>;
+    payload: Post[];
 }
 
 export type PostAction = SetPostAction;
@@ -149,18 +155,27 @@ export const SET_TRIP_MODAL = 'SET_TRIP_MODAL';
 //export const SET_TRIP_SUCCESS = 'SET_TRIP_SUCCESS';
 //export const SET_TRIP_ALERT = 'SET_TRIP_ALERT';
 
-export interface Trip {
-    id?: string;
+export interface TripCoverImage {
+    url: string,
+    variant: string,
+}
+
+export interface ITripFormData {
     name: string;
     mode: string;
-    imageUrl: string;
-    waypoints: Array<google.maps.LatLng>
-    polyline: string,
-    created_at?: {
+    //imageUrl: string;
+    //waypoints: google.maps.LatLng[];
+    polyline: string;
+    coverImg: TripCoverImage[];
+}
+
+export interface Trip extends ITripFormData {
+    id: string;
+    created_at: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at?: {
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     }
@@ -179,7 +194,7 @@ export interface TripState {
 }
 
 export interface TripsState {
-    trips?: Array<Trip>;
+    trips?: Trip[]
 }
 
 export const SET_TRIP = 'SET_TRIP';
@@ -209,21 +224,24 @@ export type TripsAction = SetTripsAction;
  * Comments:
  */
 
-export interface Comment {
-    id?: string;
+export interface ICommentFormData {
     text: string;
-    user?: User;
     post_id: string;
+    user?: User;
+}
+
+export interface Comment extends ICommentFormData {
+    id: string;
     reactions: Array<Reaction>;
-    approved_at?: {
+    approved_at: {
         seconds: number,
         nanoseconds: number,
     };
-    created_at?: {
+    created_at: {
         seconds: number,
         nanoseconds: number,
     };
-    updated_at?: {
+    updated_at: {
         seconds: number,
         nanoseconds: number,
     }

@@ -1,28 +1,19 @@
-import {FC, useEffect, useState} from 'react';
+import {FC, useEffect} from 'react';
 import useAuthSelector from '../../../hooks/useAuthSelector';
 import {SubmitHandler, useForm} from 'react-hook-form';
-import {Button, FloatingLabel, Form, Modal} from 'react-bootstrap';
+import {Button, FloatingLabel, Form} from 'react-bootstrap';
 import usePostSelector from '../../../hooks/usePostSelector';
 import {useDispatch} from 'react-redux';
 import {storeComment} from '../../../store/actions/commentActions';
-import {Comment} from '../../../store/types';
-
-type CommentFormInputs = {
-    text: string,
-}
+import {ICommentFormData} from '../../../store/types';
 
 const CommentForm: FC = () => {
 
-    const {authenticated, user} = useAuthSelector();
-
-    const {register, handleSubmit, reset} = useForm<CommentFormInputs>({
-        defaultValues: {
-            text: '',
-        }
-    });
-
+    const {user} = useAuthSelector();
     const {post} = usePostSelector();
     const dispatch = useDispatch();
+
+    const {register, handleSubmit, reset} = useForm();
 
     useEffect(() => {
         return () => {
@@ -30,40 +21,25 @@ const CommentForm: FC = () => {
         };
     }, [post, reset]);
 
-    const onSubmit: SubmitHandler<CommentFormInputs> = (data) => {
-        const comment: Comment = {
-            text: data.text,
-            user: authenticated ? user : undefined,
-            post_id: post!.id!,
-            reactions: [],
+    const onSubmit: SubmitHandler<ICommentFormData> = (data) => {
+        if(post) {
+            dispatch(storeComment({...data, user, post_id: post.slug}));
         }
-        dispatch(storeComment(comment));
+
     }
 
-    const [showModal, setShowModal] = useState(false);
-
     return (
-        <>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <FloatingLabel controlId="text" label="Leave a comment here">
-                    <Form.Control
-                        as="textarea"
-                        placeholder="Leave a comment here"
-                        style={{height: '100px'}}
-                        {...register('text', {required: true})}
-                    />
-                </FloatingLabel>
-                <Button variant="primary" type="submit">Submit</Button>
-            </Form>
-
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header>Are you a robot?</Modal.Header>
-                <Modal.Body>
-
-                </Modal.Body>
-            </Modal>
-
-        </>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            <FloatingLabel controlId="text" label="Leave a comment here">
+                <Form.Control
+                    as="textarea"
+                    placeholder="Leave a comment here"
+                    style={{height: '100px'}}
+                    {...register('text', {required: true})}
+                />
+            </FloatingLabel>
+            <Button variant="primary" type="submit">Submit</Button>
+        </Form>
     )
 }
 

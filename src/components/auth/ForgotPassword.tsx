@@ -1,10 +1,7 @@
 import {FC, useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
+import {Alert, Button, FloatingLabel, Form} from 'react-bootstrap';
 
 import {sendResetEmail, setError, setSuccess} from '../../store/actions/authActions';
 
@@ -35,7 +32,7 @@ const ForgotPassword: FC = () => {
 
     const onSubmit: SubmitHandler<IRecoveryForm> = data => {
         setIsLoading(true);
-        dispatch(sendResetEmail(data.recoveryEmail,'Success! Follow the instruction on your E-mail'));
+        dispatch(sendResetEmail(data.recoveryEmail, 'Success! Follow the instruction on your E-mail'));
         setIsLoading(false);
     };
 
@@ -45,7 +42,7 @@ const ForgotPassword: FC = () => {
         handleSubmit,
     } = useForm<IRecoveryForm>();
 
-    if(success) {
+    if (success) {
         return <Alert variant="success">{success}</Alert>
     }
 

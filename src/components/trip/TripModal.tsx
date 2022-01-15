@@ -1,17 +1,14 @@
 import {FC, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import {Button, Modal} from 'react-bootstrap';
 
 import {useDispatch} from 'react-redux';
 import useTripSelector from '../../hooks/useTripSelector';
 import {clearTripModal} from '../../store/actions/tripActions';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCheckCircle} from '@fortawesome/free-solid-svg-icons/faCheckCircle';
-import {faExclamationCircle} from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
-import {faInfoCircle} from '@fortawesome/free-solid-svg-icons/faInfoCircle';
+import {faCheckCircle, faExclamationCircle, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from '@fortawesome/fontawesome-svg-core';
 
 
@@ -53,7 +50,7 @@ const TripModal: FC = () => {
                 {tripModal.message}
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>Close</Button>
+                <Button variant={tripModal.variant} onClick={handleClose}>Close</Button>
             </Modal.Footer>
         </Modal>
     )
