@@ -25,6 +25,7 @@ import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {generateRoute, isValidLocation} from '../../libs/mapsHelper';
+import optimizeImage from '../../libs/imageUploader';
 
 
 const TripPlanner: FC = () => {
@@ -144,8 +145,9 @@ const TripPlanner: FC = () => {
 
     const coverImg = watch('imageUrl');
     useEffect(() => {
-        if(coverImg) {
+        if(coverImg && coverImg.length) {
             console.log('imageUrl changed', coverImg);
+            optimizeImage(coverImg);
         }
     }, [coverImg]);
 
