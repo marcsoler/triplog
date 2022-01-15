@@ -15,7 +15,6 @@ import {
     addDoc,
     collection,
     Timestamp,
-    GeoPoint,
     query,
     getDocs,
     orderBy, getDoc, doc, deleteDoc,

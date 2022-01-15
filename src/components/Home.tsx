@@ -10,7 +10,7 @@ import {Link} from 'react-router-dom';
 import TripTeaser from './trip/TripTeaser';
 
 import {getPosts} from '../store/actions/postActions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {getTrips} from '../store/actions/tripActions';
 import useTripsSelector from '../hooks/useTripsSelector';
 import moment from 'moment/moment';

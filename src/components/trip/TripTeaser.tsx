@@ -24,16 +24,21 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
         if (trip.coverImg) {
             const imgs = trip.coverImg;
 
-            // @ts-ignore
+
             const originalCI: TripCoverImage = imgs.find((i) => {
                 return i.variant === 'original';
-            });
-
-            return originalCI.url;
+            })!;
+            if(originalCI) {
+                return originalCI.url;
+            }
         }
 
+        //legacy mode of old db structure:
         // @ts-ignore
-        return trip.imageUrl; //todo: clear legacy data...
+        if(trip.imageUrl) {
+            // @ts-ignore
+            return trip.imageUrl; //todo: clear legacy data...
+        }
     }
 
     const getSrcSet = (trip: Trip) => {
@@ -43,14 +48,9 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
         ];
 
         if (trip.coverImg) {
-
             const srcset: string[] = [];
-
             sizes.forEach((size) => {
-
                 const ci = trip.coverImg.find((i) => { return i.variant === size} );
-
-
                 if(ci) {
                     switch (size) {
                         case 'small':
@@ -64,14 +64,10 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
                             break;
                     }
                 }
-
             });
-
             return srcset.join(', ');
-
         }
         return '';
-
     }
 
 

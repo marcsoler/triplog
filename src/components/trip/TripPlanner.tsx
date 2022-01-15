@@ -1,6 +1,6 @@
 import {ChangeEvent, FC, useCallback, useEffect, useState} from 'react';
 
-import {Alert, Button, ButtonGroup, Col, Container, FloatingLabel, Form, Image, Row} from 'react-bootstrap';
+import {Alert, Button, ButtonGroup, Col, Container, FloatingLabel, Form, Row} from 'react-bootstrap';
 
 import Loading from '../misc/Loading';
 
@@ -24,8 +24,6 @@ const TripPlanner: FC = () => {
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
     const [mode, setMode] = useState<google.maps.TravelMode>();
     const [name, setName] = useState<string>('');
-    const [uploadProgress, setUploadProgress] = useState<number>(0);
-    const [imageUrl, setImageUrl] = useState<string>();
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
@@ -206,7 +204,6 @@ const TripPlanner: FC = () => {
             }
             setDirResponse(null);
             setWaypoints([]);
-            setImageUrl(undefined);
         }
         return;
     }
@@ -263,13 +260,6 @@ const TripPlanner: FC = () => {
 
                     </Col>
                 </Row>
-
-
-                {uploadProgress > 0 && uploadProgress < 100 &&
-                    <Form.Text className="mt-3">{`Uploading... ${uploadProgress}%`}</Form.Text>}
-                {imageUrl &&
-                    <Image src={imageUrl} thumbnail={true} className="mt-3"
-                           style={{maxWidth: '350px', height: 'auto'}}/>}
             </Form>
         </Container>
     )
