@@ -25,7 +25,7 @@ import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
 
 import {SubmitHandler, useForm} from 'react-hook-form';
 import {generateRoute, isValidLocation} from '../../libs/mapsHelper';
-import optimizeImage from '../../libs/imageUploader';
+import {compressedFileType, optimizeImages, uploadToStorage} from '../../libs/mediaHelper';
 
 
 const TripPlanner: FC = () => {
@@ -146,8 +146,25 @@ const TripPlanner: FC = () => {
     const coverImg = watch('imageUrl');
     useEffect(() => {
         if(coverImg && coverImg.length) {
-            console.log('imageUrl changed', coverImg);
-            optimizeImage(coverImg);
+            const compressedFiles = [];
+            optimizeImages(coverImg as unknown as FileList, (result: compressedFileType[]) => {
+                //upload results?
+
+                console.log('optimizeImages:result', result);
+
+                /*
+                result.forEach((file) => {
+                    uploadToStorage(file, (link) => {
+                        console.log('LINK', link);
+                    }).then();
+                });
+                 */
+
+
+
+
+
+            }).then();
         }
     }, [coverImg]);
 
