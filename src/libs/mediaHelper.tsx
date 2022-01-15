@@ -15,6 +15,7 @@ const sizeGroup: IObjectKeys = {
     small: 340,
     medium: 450,
     large: 640,
+    original: 0,
 }
 
 
@@ -25,8 +26,8 @@ const compressImage = (file: File, size: number, sizeName: string): Promise<comp
     return new Promise<compressedFileType>((resolve, reject) => {
         new Compressor(file,
             {
-                maxWidth: size,
-                maxHeight: size,
+                maxWidth: size !== 0 ? size : undefined,
+                maxHeight:  size !== 0 ? size : undefined,
                 quality: 0.85,
                 resize: 'cover',
                 success: (result) => {
@@ -53,11 +54,13 @@ export async function optimizeImages(file: FileList, newFiles: (files: compresse
 }
 
 
-export async function uploadToStorage(file: File, uploadedUrl: (link: string) => void) {
+export async function uploadToStorage(file: File, variant: string, uploadedUrl: (link: string) => void) {
     return new Promise(function (resolve, reject) {
 
+        const baseFileName = file.name.replace(/\.[^/.]+$/, '');
 
-        const storageRef = ref(storage, `/t8/${file.name}`);
+
+        const storageRef = ref(storage, `/t9/${baseFileName}/${baseFileName}_${variant}`);
         //const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadBytes(storageRef, file).then((snapshot) => {

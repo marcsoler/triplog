@@ -18,7 +18,7 @@ import {mapContainerStyle, defaultMapCenter, defaultMapOptions} from './mapsOpti
 import mapStyle from './mapStyle.json';
 import {useDispatch} from 'react-redux';
 import {setTripModal, storeTrip} from '../../store/actions/tripActions';
-import {ITripFormData} from '../../store/types';
+import {ITripFormData, TripCoverImage} from '../../store/types';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCheck} from '@fortawesome/free-solid-svg-icons/faCheck';
 import {faTimes} from '@fortawesome/free-solid-svg-icons/faTimes';
@@ -41,7 +41,7 @@ const TripPlanner: FC = () => {
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
     const [startMarker, setStartMarker] = useState<google.maps.Marker>();
     const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow>();
-    //const [polyline, setPolyline] = useState<string>('');
+    const [processedFiles, setProcessedFiles] = useState<TripCoverImage[]>([]);
 
     const {isLoaded, loadError} = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY ? process.env.REACT_APP_MAPS_API_KEY : '',
@@ -120,7 +120,7 @@ const TripPlanner: FC = () => {
         formState: {errors},
         handleSubmit,
         watch,
-    } = useForm<ITripFormData>();
+    } = useForm();
 
     const onSubmit: SubmitHandler<ITripFormData> = data => {
 
@@ -130,9 +130,9 @@ const TripPlanner: FC = () => {
                 dispatch(storeTrip(
                     {
                         ...data,
-                        polyline: directions.routes[0].overview_polyline
+                        polyline: directions.routes[0].overview_polyline,
+                        coverImg: processedFiles,
                     },
-
                 ))
 
             }
@@ -146,27 +146,30 @@ const TripPlanner: FC = () => {
     const coverImg = watch('imageUrl');
     useEffect(() => {
         if(coverImg && coverImg.length) {
-            const compressedFiles = [];
+
             optimizeImages(coverImg as unknown as FileList, (result: compressedFileType[]) => {
-                //upload results?
 
-                console.log('optimizeImages:result', result);
+                const newFiles: TripCoverImage[] = [];
 
-                /*
-                result.forEach((file) => {
-                    uploadToStorage(file, (link) => {
-                        console.log('LINK', link);
+                result.forEach((compressedFile) => {
+                    uploadToStorage(compressedFile.file, compressedFile.variant, (url) => {
+                        newFiles.push({ url: url, variant: compressedFile.variant});
                     }).then();
                 });
-                 */
 
 
-
-
+                setProcessedFiles(newFiles);
 
             }).then();
         }
     }, [coverImg]);
+
+    useEffect(() => {
+        if(processedFiles) {
+            console.log(processedFiles);
+        }
+    }, [processedFiles]);
+
 
 
 
