@@ -91,7 +91,7 @@ $content-top-padding: 8rem;
 
 .content {
     padding-top: $content-top-padding;
-    padding-bottom: 5rem;
+    padding-bottom: 3rem;
 }
 
 .home {
@@ -121,7 +121,11 @@ $content-top-padding: 8rem;
 
     img {
         transition: transform .5s ease-in-out;
-        max-width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        margin: 0;
     }
 
     &:hover {
