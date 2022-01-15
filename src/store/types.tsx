@@ -158,9 +158,10 @@ export const SET_TRIP_MODAL = 'SET_TRIP_MODAL';
 export interface ITripFormData {
     name: string;
     mode: string;
-    imageUrl: string;
+    //imageUrl: string;
     //waypoints: google.maps.LatLng[];
     polyline: string;
+    imageUrl: string;
 }
 
 export interface Trip extends ITripFormData {

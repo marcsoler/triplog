@@ -6,7 +6,7 @@ export const isValidLocation = (location: google.maps.LatLng, isValid: () => voi
         return response.json().then((response: google.maps.GeocoderResponse) => {
             let foundRoute = false;
             response.results.forEach((r) => {
-                if(r.types.includes('route')) {
+                if (r.types.includes('route')) {
                     foundRoute = true;
                 }
             });
@@ -18,16 +18,13 @@ export const isValidLocation = (location: google.maps.LatLng, isValid: () => voi
     });
 }
 
-export const generateRoute = (waypoints: google.maps.LatLng[], mode: google.maps.TravelMode, routeResponse: (r: google.maps.DirectionsResult) => any, onError: (msg: string) => void) => {
-
+export const generateRoute = (waypoints: google.maps.LatLng[], mode: google.maps.TravelMode, routeResponse: (r: google.maps.DirectionsResult) => void, onError: (msg: string) => void) => {
     const directionService = new google.maps.DirectionsService();
-
     const betweenWps: google.maps.DirectionsWaypoint[] = [];
-
     waypoints.slice(1, -1).forEach((wp) => {
         betweenWps.push({
             location: wp,
-            stopover: false,
+            stopover: true,
         });
     });
     directionService.route({
@@ -41,6 +38,6 @@ export const generateRoute = (waypoints: google.maps.LatLng[], mode: google.maps
             routeResponse(response);
         }
     }).catch((error) => {
-        onError(error);
+        onError(`Something stange happend! Google Maps API: ${error}`);
     })
 }
