@@ -4,7 +4,7 @@ import {GoogleMap, Marker, Polyline, useJsApiLoader} from '@react-google-maps/ap
 import Alert from 'react-bootstrap/Alert';
 import Loading from '../misc/Loading';
 import {Trip} from '../../store/types';
-import {mapsOptions, mapContainerStyle} from './mapsOptions';
+import {defaultMapOptions, mapContainerStyle} from './mapsOptions';
 import mapStyle from './mapStyle.json';
 
 interface FormMapProps {
@@ -79,7 +79,7 @@ const FormMap: FC<FormMapProps> = ({trip, position, preDefinedPosition}: FormMap
             onLoad={onMapLoad}
             onClick={(e => onMapClick(e))}
             options={
-                {...mapsOptions, draggableCursor: 'crosshair'}}>
+                {...defaultMapOptions, draggableCursor: 'crosshair'}}>
             {trip && mapRef && <Polyline path={drawPolyline()} options={{strokeColor: '#600'}}/>}
             {markerPosition && <Marker onLoad={(m) => setMarkerRef(m)} position={markerPosition} draggable={true}
                                        onDragEnd={updatePosition}/>}

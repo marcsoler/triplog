@@ -155,12 +155,18 @@ export const SET_TRIP_MODAL = 'SET_TRIP_MODAL';
 //export const SET_TRIP_SUCCESS = 'SET_TRIP_SUCCESS';
 //export const SET_TRIP_ALERT = 'SET_TRIP_ALERT';
 
+export interface TripCoverImage {
+    url: string,
+    variant: string,
+}
+
 export interface ITripFormData {
     name: string;
     mode: string;
-    imageUrl: string;
+    //imageUrl: string;
     //waypoints: google.maps.LatLng[];
     polyline: string;
+    coverImg: TripCoverImage[];
 }
 
 export interface Trip extends ITripFormData {

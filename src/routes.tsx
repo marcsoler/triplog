@@ -1,12 +1,9 @@
 import Blog from './components/blog/Blog';
 import Home from './components/Home';
-import SignUp from './components/auth/SignUp';
-import SignIn from './components/auth/SignIn';
-import ForgotPassword from './components/auth/ForgotPassword';
 import Dashboard from './components/admin/Dashboard';
 import CreatePost from './components/admin/CreatePost';
 import EditPost from './components/admin/EditPost';
-import CreateTrip from './components/trip/CreateTrip';
+import TripPlanner from './components/trip/TripPlanner';
 
 interface Route {
     routeType: 'public' | 'private' | 'publicOnly';
@@ -68,7 +65,7 @@ const routes: Route[] = [
         routeType: 'private',
         params: {
             path: '/dashboard/trip/create',
-            component: CreateTrip
+            component: TripPlanner
         },
         adminOnly: true,
     }

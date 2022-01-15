@@ -66,9 +66,10 @@ export const storeTrip = (tripData: ITripFormData): ThunkAction<void, RootState,
         await addDoc(tripsRef, {
             name: tripData.name,
             mode: tripData.mode,
-            imageUrl: tripData.imageUrl,
+            //imageUrl: tripData.imageUrl,
             //waypoints: tripData.waypoints.map(wp => new GeoPoint(wp.lat(), wp.lng())),
             polyline: tripData.polyline,
+            coverImg: tripData.coverImg,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),
         }).catch((error) => {
