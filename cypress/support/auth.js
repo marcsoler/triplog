@@ -64,7 +64,7 @@ Cypress.Commands.add('logout', () => {
     })
 });
 
-Cypress.Commands.add('deleteUser', (email) => {
+Cypress.Commands.add('deleteTestUser', (email) => {
     deleteUser(email).then(() => {
 
     }).catch((error) => {

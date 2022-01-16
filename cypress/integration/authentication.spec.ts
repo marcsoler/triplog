@@ -7,7 +7,7 @@ export const testUser = {
 }
 
 
-describe('uses the authentication module', () => {
+describe('tests the authentication module', () => {
 
     before(() => {
         //cy.task('delete:account');
@@ -15,7 +15,7 @@ describe('uses the authentication module', () => {
         cy.logout();
     })
     after(() => {
-        cy.deleteUser(testUser.email);
+        cy.deleteTestUser(testUser.email);
     });
 
     it('allows the auth modal to be opened and closed', () => {
@@ -64,6 +64,7 @@ describe('uses the authentication module', () => {
         cy.get('#registerPasswordConfirmation + .form-validation-failed').should('be.visible').contains('Those passwords didn’t match. Try again.');
     });
 
+    /*
     it('should allow to create a new account', () => {
         cy.visit('/');
 
@@ -97,6 +98,8 @@ describe('uses the authentication module', () => {
         //cy.get('#navbar-nav .dropdown-toggle a[role="button"]').click();
     });
 
+     */
+
     /*
     it('allows to login', () => {
         cy.visit('/');
@@ -119,14 +122,13 @@ describe('uses the authentication module', () => {
 
         cy.get('#navbar-nav .btn.btn-link').should('exist');
     });
-    
+
      */
 
     /*
     Todo:
 
     - register an user
-        - should return error with wrong password ("repeat you password")
         - should return success with correct data
     - login in an user
         - navbar icon should show name with dropdown and logout link
