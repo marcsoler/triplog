@@ -55,7 +55,6 @@ export const getPostBySlug = (slug: string): ThunkAction<void, RootState, null, 
 
             if (docSnap.exists()) {
                 const postData = {slug: slug, ...docSnap.data()} as Post;
-                console.log('SET_POST');
                 dispatch({
                     type: SET_POST,
                     payload: postData

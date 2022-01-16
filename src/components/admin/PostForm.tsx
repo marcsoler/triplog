@@ -29,7 +29,6 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
     const [selectedTrip, setSelectedTrip] = useState<Trip>();
     const [selectedSlug, setSelectedSlug] = useState<string>();
     const [postSlugTaken, setPostSlugTaken] = useState<boolean>(false);
-    const [defaultValues, setDefaultValues] = useState({});
 
     const {trips} = useTripsSelector();
 
@@ -66,7 +65,7 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
             reset(post);
         }
     }, [post, reset]);
-    
+
 
 
     const onSubmit: SubmitHandler<IPostFormData> = data => {
