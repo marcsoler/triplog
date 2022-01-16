@@ -12,6 +12,13 @@ describe('tests the comments module', () => {
 
     before(() => {
         cy.logout();
+        cy.clearLocalStorage();
+        cy.wait(500);
+    });
+
+    after(() => {
+        cy.logout();
+        cy.clearLocalStorage();
         cy.wait(500);
     });
 

@@ -10,12 +10,19 @@ export const testUser = {
 describe('tests the authentication module', () => {
 
     before(() => {
-        //cy.task('delete:account');
-        cy.clearLocalStorage();
         cy.logout();
-    })
+        cy.clearLocalStorage();
+        cy.wait(500);
+    });
+
     after(() => {
-        cy.deleteTestUser(testUser.email);
+        cy.logout();
+        cy.clearLocalStorage();
+        cy.wait(500);
+    });
+
+    after(() => {
+        //cy.deleteTestUser(testUser.email);
     });
 
     it('allows the auth modal to be opened and closed', () => {
@@ -125,21 +132,5 @@ describe('tests the authentication module', () => {
 
      */
 
-    /*
-    Todo:
-
-    - register an user
-        - should return success with correct data
-    - login in an user
-        - navbar icon should show name with dropdown and logout link
-
-    - logout
-        - navbar should reset
-    - recover
-        - should return success message
-
-    - doent allow to register with same email
-
-     */
 
 });

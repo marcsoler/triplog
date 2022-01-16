@@ -68,6 +68,7 @@ const db = getFirestore(firebaseApp);
 
 Cypress.Commands.add('login', (email, password) => {
     signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        return userCredential;
     }).catch((error) => {
         console.error('Error on commands:login', error);
     });
@@ -81,11 +82,13 @@ Cypress.Commands.add('logout', () => {
     })
 });
 
+/*
 Cypress.Commands.add('deleteTestUser', (email) => {
-    deleteUser(email).then(() => {
+    deleteUser(user).then(() => {
 
     }).catch((error) => {
         console.error('Error on commands:deleteUser', error);
     });
 
 });
+*/
