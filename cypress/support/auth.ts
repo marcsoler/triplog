@@ -28,8 +28,7 @@
 // -- This is a parent command --
 
 import {initializeApp} from 'firebase/app';
-import {getAuth, signInWithEmailAndPassword, signOut, deleteUser} from 'firebase/auth';
-import {getFirestore} from 'firebase/firestore'
+import {getAuth, signInWithEmailAndPassword, signOut} from 'firebase/auth';
 
 declare global {
     namespace Cypress {
@@ -62,7 +61,6 @@ const fbConfig = {
 const firebaseApp = initializeApp(fbConfig);
 
 const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
 
 
 
@@ -81,14 +79,3 @@ Cypress.Commands.add('logout', () => {
         console.error('Error on commands:logout', error);
     })
 });
-
-/*
-Cypress.Commands.add('deleteTestUser', (email) => {
-    deleteUser(user).then(() => {
-
-    }).catch((error) => {
-        console.error('Error on commands:deleteUser', error);
-    });
-
-});
-*/

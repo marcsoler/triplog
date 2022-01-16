@@ -183,6 +183,7 @@ const TripPlanner: FC = () => {
         return isLoaded ? (
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
+                id="planner-map"
                 center={defaultMapCenter}
                 onLoad={onMapLoad}
                 onClick={(e => drawPath(e))}
