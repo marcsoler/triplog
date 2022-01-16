@@ -25,6 +25,7 @@ const CommentForm: FC = () => {
         if(post) {
             dispatch(storeComment({...data, user, post_id: post.slug}));
         }
+        reset();
 
     }
 
