@@ -67,32 +67,11 @@ export const storeComment = (data: ICommentFormData): ThunkAction<void, RootStat
     }
 }
 
-export const getCommentsByPostId = (postId: string): ThunkAction<void, RootState, null, CommentsAction> => {
-    return async dispatch => {
-        const q = query(commentsRef, where('post_id', '==', postId), orderBy('created_at', 'asc'));
-
-        const querySnapshot = await getDocs(q);
-
-        const commentsData: any = querySnapshot.docs.map((c) => {
-            return {id: c.id, ...c.data()} as Comment;
-        });
-
-        dispatch({
-            type: SET_COMMENTS,
-            payload: commentsData,
-        });
-
-    }
-}
-
 // get trips
 export const getComments = (): ThunkAction<void, RootState, null, CommentsAction> => {
     return async dispatch => {
         try {
-            const querySnapshot = await getDocs(query(commentsRef, orderBy('created_at', 'desc')));
-            const commentsData: Array<Comment> = querySnapshot.docs.map((p) => {
-                return {id: p.id, ...p.data()} as Comment;
-            });
+            const commentsData = await getAllComments();
             dispatch({
                 type: SET_COMMENTS,
                 payload: commentsData,
