@@ -48,6 +48,7 @@ export const storeComment = (data: ICommentFormData): ThunkAction<void, RootStat
             text: data.text,
             post_id: data.post_id,
             user: data.user ? data.user : null,
+            reactions: [],
             approved_at: data.user ? Timestamp.now() : null,
             created_at: Timestamp.now(),
             updated_at: Timestamp.now(),

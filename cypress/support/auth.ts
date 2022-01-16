@@ -27,11 +27,28 @@
 
 // -- This is a parent command --
 
-
-
 import {initializeApp} from 'firebase/app';
 import {getAuth, signInWithEmailAndPassword, signOut, deleteUser} from 'firebase/auth';
 import {getFirestore} from 'firebase/firestore'
+
+declare global {
+    namespace Cypress {
+        interface Chainable {
+
+            /**
+             * Custom command to log in the user
+             * @example cy.login('test@tester.dev', 'testing')
+             */
+            login(email: string, password: string): Chainable<Element>
+
+            /**
+             * Custom command to log out the user
+             * @example cy.logout()
+             */
+            logout(): Chainable<Element>
+        }
+    }
+}
 
 const fbConfig = {
     apiKey: Cypress.env('REACT_APP_FIREBASE_API_KEY'),

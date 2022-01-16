@@ -65,7 +65,7 @@ describe('tests the comments module', () => {
             url: 'https://firestore.googleapis.com*',
         }).as('fetchFirestore');
         cy.get('.comments .comment:last-of-type').should('exist');
-        cy.wait(500);
+        cy.wait(2500);
         cy.get('.comments .comment:last-of-type .comment-name').contains(testUser.firstName);
         cy.get('.comments .comment:last-of-type .comment-text').contains('Just a test');
     });
