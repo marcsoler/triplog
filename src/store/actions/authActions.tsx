@@ -53,7 +53,7 @@ export const getUserById = (id: string): ThunkAction<void, RootState, null, Auth
             const docSnap = await getDoc(docRef);
 
             if(docSnap.exists()) {
-                const userData = docSnap.data() as User;
+                const userData = {id: docSnap.id, ...docSnap.data()} as User;
                 dispatch({
                     type: SET_USER,
                     payload: userData,

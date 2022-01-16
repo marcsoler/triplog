@@ -50,6 +50,7 @@ describe('tests the comments module', () => {
 
         cy.get('#text').type(testText);
         cy.get('form > .btn.btn-primary').click();
+        cy.wait(2500);
         cy.get('.comments .comment:last-of-type').should('exist');
         cy.wait(500);
         cy.get('.comments .comment:last-of-type .reactions > button.btn > span').contains('0');

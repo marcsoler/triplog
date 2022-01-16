@@ -37,13 +37,15 @@ const ReactionButton: FC<Comment> = (comment) => {
             dispatch(setAuthModal(true));
             return;
         }
-        dispatch(addReaction(comment, user!, () => {
-            setVotes(votes + 1);
-            setVoted(true);
-        }, () => {
-            setVotes(votes - 1);
-            setVoted(false);
-        }));
+        if(authenticated && user){
+            dispatch(addReaction(comment, user.id, () => {
+                setVotes(votes + 1);
+                setVoted(true);
+            }, () => {
+                setVotes(votes - 1);
+                setVoted(false);
+            }));
+        }
         return;
     }
 
