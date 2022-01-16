@@ -6,7 +6,6 @@ import PostForm from './PostForm';
 const EditPost: FC<RouteComponentProps<{ slug: string }>> = (props) => {
 
     const slug = props.match.params.slug;
-
     return (
         <PostForm slug={slug}/>
     )

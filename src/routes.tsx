@@ -48,7 +48,7 @@ const routes: Route[] = [
     {
         routeType: 'private',
         params: {
-            path: '/dashboard/post/edit/:id',
+            path: '/dashboard/post/edit/:slug',
             component: EditPost,
         },
         adminOnly: true,

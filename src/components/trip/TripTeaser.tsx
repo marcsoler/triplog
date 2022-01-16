@@ -13,31 +13,24 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
     const {posts} = usePostsSelector();
 
     useEffect(() => {
-        const teaserPost = posts!.find((p) => {
-            return p.trip === trip.id;
-        })
-        setLatestPost(teaserPost);
+        if (posts) {
+            const teaserPost = posts!.find((p) => {
+                return p.trip === trip.id;
+            });
+            setLatestPost(teaserPost);
+        }
     }, [posts, trip]);
 
 
     const getFallbackImg = (trip: Trip) => {
         if (trip.coverImg) {
             const imgs = trip.coverImg;
-
-
             const originalCI: TripCoverImage = imgs.find((i) => {
                 return i.variant === 'original';
             })!;
-            if(originalCI) {
+            if (originalCI) {
                 return originalCI.url;
             }
-        }
-
-        //legacy mode of old db structure:
-        // @ts-ignore
-        if(trip.imageUrl) {
-            // @ts-ignore
-            return trip.imageUrl; //todo: clear legacy data...
         }
     }
 
@@ -50,8 +43,10 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
         if (trip.coverImg) {
             const srcset: string[] = [];
             sizes.forEach((size) => {
-                const ci = trip.coverImg.find((i) => { return i.variant === size} );
-                if(ci) {
+                const ci = trip.coverImg.find((i) => {
+                    return i.variant === size
+                });
+                if (ci) {
                     switch (size) {
                         case 'small':
                             srcset.push(ci.url + ' 340w');
@@ -70,16 +65,28 @@ const TripTeaser: FC<Trip> = (trip: Trip) => {
         return '';
     }
 
+    if (latestPost) {
+        return (
+            <Col>
+                <Link to={`/post/${latestPost && latestPost.slug}`}>
+                    <Figure className="trip-cover-image tilted">
+                        <Figure.Image src={getFallbackImg(trip)} srcSet={getSrcSet(trip)}
+                                      alt={`Cover image of ${trip.name}`} loading="lazy"/>
+                        <Figure.Caption className="trip-cover-name display-6">{trip.name}</Figure.Caption>
+                    </Figure>
+                </Link>
+            </Col>
+        )
+    }
+
 
     return (
         <Col>
-            <Link to={`/post/${latestPost && latestPost.slug}`}>
-                <Figure className="trip-cover-image tilted">
-                    <Figure.Image src={getFallbackImg(trip)} srcSet={getSrcSet(trip)}
-                                  alt={`Cover image of ${trip.name}`} loading="lazy"/>
-                    <Figure.Caption className="trip-cover-name display-6">{trip.name}</Figure.Caption>
-                </Figure>
-            </Link>
+            <Figure className="trip-cover-image tilted">
+                <Figure.Image src={getFallbackImg(trip)} srcSet={getSrcSet(trip)}
+                              alt={`Cover image of ${trip.name}`} loading="lazy"/>
+                <Figure.Caption className="trip-cover-name display-6">{trip.name}</Figure.Caption>
+            </Figure>
         </Col>
     )
 }
