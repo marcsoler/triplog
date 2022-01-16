@@ -86,8 +86,6 @@ export const addReaction = (comment: Comment, userId: string, onVote: () => void
     return async dispatch => {
         const commentDocRef = doc(db, 'comments', comment.id!);
 
-        console.log('DISPATCHING as', userId);
-
         const c = await getDoc(commentDocRef).then((c) => {
             return c.data() as Comment;
         });

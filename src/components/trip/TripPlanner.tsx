@@ -151,11 +151,14 @@ const TripPlanner: FC = () => {
         }
     }, [coverImg]);
 
+    /*
     useEffect(() => {
         if (processedFiles) {
             console.log(processedFiles);
         }
     }, [processedFiles]);
+
+     */
 
 
     const onMapLoad = useCallback(

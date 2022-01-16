@@ -18,7 +18,6 @@ const CommentList: FC = () => {
     useEffect(() => {
         if(post && comments) {
             const filteredComments = comments.filter((c) => { return c.post_id === post.slug})
-            console.log(filteredComments);
             setPostComments(filteredComments);
         }
     }, [post, comments]);
