@@ -10,11 +10,6 @@ export const testUser = {
 
 describe('tests the comments module', () => {
 
-    before(() => {
-        cy.logout();
-        cy.clearLocalStorage();
-        cy.wait(500);
-    });
 
     after(() => {
         cy.logout();
@@ -24,11 +19,17 @@ describe('tests the comments module', () => {
 
     beforeEach(() => {
         cy.visit('/');
+        cy.logout();
+        cy.clearLocalStorage();
+        cy.wait(500);
         cy.get('.last-post a.btn.btn-primary').click();
         cy.wait(2500);
     });
 
     it('anonymous user cannot add reaction', () => {
+
+        cy.logout();
+        cy.clearLocalStorage();
 
 
         cy.get('#text').type(testText);
@@ -62,10 +63,10 @@ describe('tests the comments module', () => {
         cy.wait(500);
         cy.get('.comments .comment:last-of-type .reactions > button.btn > span').contains('0');
         cy.get('.comments .comment:last-of-type .reactions > button.btn').click();
-        cy.wait(500);
+        cy.wait(2500);
         cy.get('.comments .comment:last-of-type .reactions > button.btn > span').contains('1');
         cy.get('.comments .comment:last-of-type .reactions > button.btn').click();
-        cy.wait(500);
+        cy.wait(2500);
         cy.get('.comments .comment:last-of-type .reactions > button.btn > span').contains('0');
 
     });

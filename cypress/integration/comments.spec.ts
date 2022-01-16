@@ -10,12 +10,6 @@ export const testUser = {
 
 describe('tests the comments module', () => {
 
-    before(() => {
-        cy.logout();
-        cy.clearLocalStorage();
-        cy.wait(500);
-    });
-
     after(() => {
         cy.logout();
         cy.clearLocalStorage();
@@ -24,6 +18,9 @@ describe('tests the comments module', () => {
 
     beforeEach(() => {
         cy.visit('/');
+        cy.logout();
+        cy.clearLocalStorage();
+        cy.wait(500);
         cy.get('.last-post a.btn.btn-primary').click();
         cy.wait(2500);
     });
@@ -37,7 +34,7 @@ describe('tests the comments module', () => {
             url: 'https://firestore.googleapis.com*',
         }).as('fetchFirestore');
         cy.get('.comments .comment:last-of-type').should('exist');
-        cy.wait(2500);
+        cy.wait(5000);
         cy.get('.comments .comment:last-of-type .comment-name').contains(`Anonymous`);
         cy.get('.comments .comment:last-of-type .comment-text').contains(`This comment hasn't been approved yet. Click to view.`);
 
@@ -72,7 +69,7 @@ describe('tests the comments module', () => {
             url: 'https://firestore.googleapis.com*',
         }).as('fetchFirestore');
         cy.get('.comments .comment:last-of-type').should('exist');
-        cy.wait(2500);
+        cy.wait(5000);
         cy.get('.comments .comment:last-of-type .comment-name').contains(testUser.firstName);
         cy.get('.comments .comment:last-of-type .comment-text').contains('Just a test');
     });
