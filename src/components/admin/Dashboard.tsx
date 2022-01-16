@@ -197,8 +197,6 @@ const Dashboard: FC = () => {
                                             <Dropdown.Menu>
                                                 <Dropdown.Item onClick={(e) => filterTable(trip)}><FontAwesomeIcon
                                                     icon={faFilter}/> Filter posts table</Dropdown.Item>
-                                                <Dropdown.Item href="#"><FontAwesomeIcon
-                                                    icon={faEdit}/> Edit</Dropdown.Item>
                                                 <Dropdown.Divider/>
                                                 <Dropdown.Item
                                                     onClick={(e) => promptTripDeletion(trip.id)}><FontAwesomeIcon

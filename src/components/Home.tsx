@@ -17,14 +17,12 @@ import moment from 'moment/moment';
 import usePostsSelector from '../hooks/usePostsSelector';
 import {Post, Trip} from '../store/types';
 
-
 const Home: FC = () => {
 
     const dispatch = useDispatch();
 
     const [latestPost, setLatestPost] = useState<Post>();
     const [latestPostTrip, setLatestPostTrip] = useState<Trip>();
-    const [otherTrips, setOtherTrips] = useState<Trip[]>();
 
     useEffect(() => {
         dispatch(getTrips());
@@ -42,9 +40,6 @@ const Home: FC = () => {
                 setLatestPostTrip(trips.find((t) => {
                     return t.id === post.trip;
                 }));
-                setOtherTrips(trips.filter((t) => {
-                    return t.id !== post.trip;
-                }))
             }
         }
     }, [posts, trips]);
@@ -108,26 +103,24 @@ const Home: FC = () => {
                                     <p><Button href={`/post/${latestPost.slug}`} variant="primary">Read more...</Button></p>
                                 </article>
                             </Col>
-                            <Col>
                                 <TripTeaser {...latestPostTrip} />
-                            </Col>
                         </Row>
 
                     </Container>
                 </section>
             )}
 
-            {otherTrips?.length ? (
+            {trips && (
                 <section className="content latest-trips">
                     <Container>
                         <Row>
                             <Col className="text-right">
-                                <h2 className="color-darkcyan">Past trips</h2>
+                                <h2 className="color-darkcyan">Our latest trips</h2>
                                 <hr/>
                             </Col>
                         </Row>
                         <Row xs={1} md={3} lg={7}>
-                            {otherTrips.map((t) => {
+                            {trips.map((t) => {
                                 return (
                                     <TripTeaser key={t.id} {...t} />
                                 )
@@ -135,7 +128,7 @@ const Home: FC = () => {
                         </Row>
                     </Container>
                 </section>
-            ):''}
+            )}
 
             {!latestPost && (
                 <section className="content">

@@ -1,6 +1,6 @@
 import {FC, FormEvent, useEffect, useState} from 'react';
 
-import { Col,Container,FloatingLabel,Form,InputGroup,Row,Button,ButtonGroup} from 'react-bootstrap';
+import {Col, Container, FloatingLabel, Form, InputGroup, Row, Button, ButtonGroup} from 'react-bootstrap';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faSignature, faCheck, faExclamationTriangle} from '@fortawesome/free-solid-svg-icons';
@@ -31,7 +31,7 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
     const [postSlugTaken, setPostSlugTaken] = useState<boolean>(false);
 
     const {trips} = useTripsSelector();
-    const {posts} = usePostsSelector();
+
 
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
         }
     }, [dispatch, slug]);
 
-
+    const {posts} = usePostsSelector();
     const {post} = usePostSelector();
 
     useEffect(() => {
@@ -52,14 +52,13 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
         }
     }, [post, trips, slug]);
 
-
     const {
         register,
         control,
         formState: {errors},
         handleSubmit,
         setValue,
-        getValues
+        getValues,
     } = useForm<IPostFormData>({
         defaultValues: slug ? {
             title: post?.title,
@@ -68,26 +67,14 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
             content: post?.content,
             trip: post?.trip,
             position: post?.position,
-            draft: post?.draft,
         } : {}
     });
 
-    /*
-    useEffect(() => {
-        const confirmDiscard = (e: BeforeUnloadEvent) => {
-            e.preventDefault();
-            e.returnValue = ''; //required by chrome
-        }
-        if (isDirty) {
-            window.addEventListener('beforeunload', confirmDiscard);
-        } else {
-            window.removeEventListener('beforeunload', confirmDiscard);
-        }
-    }, [isDirty]);
-     */
-
 
     const onSubmit: SubmitHandler<IPostFormData> = data => {
+
+        console.log(data);
+
         dispatch(createPost(data));
     };
 
@@ -109,7 +96,7 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
 
     const loadTrip = (e: FormEvent<HTMLSelectElement>) => {
         const tripId = e.currentTarget.value;
-        if(trips) {
+        if (trips) {
             const trip = trips.find((t) => {
                 return t.id === tripId;
             });

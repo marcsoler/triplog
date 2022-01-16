@@ -19,7 +19,6 @@ const sizeGroup: IObjectKeys = {
 }
 
 
-
 const storage = getStorage();
 
 const compressImage = (file: File, size: number, sizeName: string): Promise<compressedFileType> => {
@@ -60,7 +59,7 @@ export async function uploadToStorage(file: File, variant: string, uploadedUrl: 
         const baseFileName = file.name.replace(/\.[^/.]+$/, '');
 
 
-        const storageRef = ref(storage, `/t9/${baseFileName}/${baseFileName}_${variant}`);
+        const storageRef = ref(storage, `/trips/${baseFileName}/${baseFileName}_${variant}`);
         //const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadBytes(storageRef, file).then((snapshot) => {
@@ -70,19 +69,5 @@ export async function uploadToStorage(file: File, variant: string, uploadedUrl: 
 
         });
 
-        /*
-        uploadTask.on('state_changed', (snapshot) => {
-            //setUploadProgress(Math.ceil((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
-        }, (error) => {
-            console.error('An error happened during the upload', error.code);
-            console.error('https://firebase.google.com/docs/storage/web/handle-errors');
-        }, () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                //setImageUrl(downloadURL);
-                //setValue('imageUrl', downloadURL);
-            })
-        });
-
-         */
     });
 }
