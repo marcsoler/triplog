@@ -49,7 +49,7 @@ export async function optimizeImages(file: FileList, newFiles: (files: compresse
     // wait until these properties are resolved and loop through the result
     Promise.all(compressPromises).then((compressedFiles) => {
         newFiles(compressedFiles);
-    }).catch((error) => console.error(error))
+    }).catch((error) => console.error(error));
 }
 
 

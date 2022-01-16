@@ -134,7 +134,7 @@ const Dashboard: FC = () => {
                                     {
                                         trips!.find((t) => {
                                             return (t.id === p.trip)
-                                        })!.name
+                                        })?.name
                                     }
                                 </td>
                                 <td>{p.created_at && moment.unix(p.created_at.seconds).format('DD.MM.YYYY')}</td>
