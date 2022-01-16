@@ -1,7 +1,7 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronUp} from '@fortawesome/free-solid-svg-icons/faChevronUp';
 import Button from 'react-bootstrap/Button';
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {addReaction} from '../../../store/actions/commentActions';
 import useAuthSelector from '../../../hooks/useAuthSelector';
 import {useDispatch} from 'react-redux';
@@ -11,30 +11,41 @@ import {setAuthModal} from '../../../store/actions/authActions';
 const ReactionButton: FC<Comment> = (comment) => {
 
     const {authenticated, user} = useAuthSelector();
-    const [reactions] = useState<Reaction[]>([]);
 
-    const alreadyVoted = (): boolean => {
-        if (authenticated) {
-            return !!reactions.find(r => r.user_id === user!.id);
+    const [reactions, setReactions] = useState<Reaction[]>([]);
+    const [votes, setVotes] = useState(0);
+    const [voted, setVoted] = useState(false);
+
+    useEffect(() => {
+        if(comment.reactions) {
+            setVotes(comment.reactions.length);
+            setReactions(comment.reactions);
         }
-        return false;
-    }
+    }, [comment]);
 
-    const [votes, setVotes] = useState(reactions ? reactions.length : 0);
+    useEffect(() => {
+        if (user) {
+            return setVoted(!!reactions.find(r => r.user_id === user!.id));
+        }
+        return setVoted(false);
+    }, [user, reactions]);
+
     const dispatch = useDispatch();
-    const [voted, setVoted] = useState(alreadyVoted);
+
     const handleReaction = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!authenticated) {
             dispatch(setAuthModal(true));
             return;
         }
-        dispatch(addReaction(comment, user!, () => {
-            setVotes(votes + 1);
-            setVoted(true);
-        }, () => {
-            setVotes(votes - 1);
-            setVoted(false);
-        }));
+        if(authenticated && user){
+            dispatch(addReaction(comment, user.id, () => {
+                setVotes(votes + 1);
+                setVoted(true);
+            }, () => {
+                setVotes(votes - 1);
+                setVoted(false);
+            }));
+        }
         return;
     }
 
@@ -43,7 +54,6 @@ const ReactionButton: FC<Comment> = (comment) => {
         flexDirection: 'column',
         alignItems: 'center',
     }
-
 
     return (
         <Button type="button" variant="outline-dark" onClick={(e) => handleReaction(e)}

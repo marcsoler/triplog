@@ -44,17 +44,17 @@ const CommentText: FC<Comment> = (comment) => {
     }
 
     if (comment.approved_at) {
-        return <p>{comment.text}</p>
+        return <div className="comment-text mb-3">{comment.text}</div>
     }
 
     const commentStyle = {
         fontSize: '0.85em',
-        color: '#ccc',
+        color: approved ? 'inherit' : '#ccc',
         cursor: 'pointer',
     }
 
     return (
-        <p onClick={showComment} style={commentStyle}>{approved ? comment.text :
+        <p className="comment-text mb-3" onClick={showComment} style={commentStyle}>{approved ? comment.text :
             <em>This comment hasn't been approved yet. Click to view.</em>}</p>
     )
 }

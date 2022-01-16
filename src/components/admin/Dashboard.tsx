@@ -214,7 +214,7 @@ const Dashboard: FC = () => {
             </Row>
             <Row>
                 <Col className="text-md-end">
-                    <Link role="button" to="/dashboard/trip/create" className="btn btn-outline-primary"><FontAwesomeIcon
+                    <Link role="button" to="/dashboard/trip/create" id="createTripButton" className="btn btn-outline-primary"><FontAwesomeIcon
                         icon={faPlus}/> Create Trip</Link>
                 </Col>
             </Row>

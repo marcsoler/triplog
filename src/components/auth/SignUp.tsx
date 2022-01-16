@@ -1,4 +1,4 @@
-import {FC, useState, useEffect} from 'react';
+import {FC, useState, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Alert, Button, FloatingLabel, Form} from 'react-bootstrap';
@@ -15,7 +15,7 @@ interface IRegisterForm {
     registerLastname: string;
     registerEmail: string;
     registerPassword: string;
-    //registerPasswordConfirmation: string;
+    registerPasswordConfirmation: string;
 }
 
 const SignUp: FC = () => {
@@ -47,7 +47,11 @@ const SignUp: FC = () => {
         register,
         formState: {errors},
         handleSubmit,
+        watch
     } = useForm<IRegisterForm>();
+
+    const pw = useRef({});
+    pw.current = watch('registerPassword')
 
     return (
         <>
@@ -58,32 +62,42 @@ const SignUp: FC = () => {
                     <Form.Group className="mb-3">
                         <FloatingLabel label="First name" controlId="registerFirstname">
                             <Form.Control type="registerFirstname" placeholder="First name"
-                                          {...register('registerFirstname', {required: true})} />
+                                          {...register('registerFirstname', {required: "First name is required"})} />
                         </FloatingLabel>
-                        {errors.registerFirstname && <p className="form-validation-failed">First name is required</p>}
+                        {errors.registerFirstname && <p className="form-validation-failed">{errors.registerFirstname.message}</p>}
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <FloatingLabel label="Last name" controlId="registerLastname">
                             <Form.Control type="registerLastname" placeholder="Last name"
-                                          {...register('registerLastname', {required: true})}/>
+                                          {...register('registerLastname', {required: "Last name is required"})}/>
                         </FloatingLabel>
-                        {errors.registerLastname && <p className="form-validation-failed">Last name is required</p>}
+                        {errors.registerLastname && <p className="form-validation-failed">{errors.registerLastname.message}</p>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="registerEmail">
                         <FloatingLabel label="E-mail" controlId="registerEmail">
                             <Form.Control type="registerEmail" placeholder="E-email"
-                                          {...register('registerEmail', {required: true})}/>
+                                          {...register('registerEmail', {required: "E-mail is required"})}/>
                         </FloatingLabel>
-                        {errors.registerEmail && <p className="form-validation-failed">E-mail is required</p>}
+                        {errors.registerEmail && <p className="form-validation-failed">{errors.registerEmail.message}</p>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="registerPassword">
                         <FloatingLabel label="Password" controlId="registerPassword">
                             <Form.Control type="password" placeholder="Password"
-                                          {...register('registerPassword', {required: true})}/>
-                            {errors.registerPassword && <p className="form-validation-failed">Password is required</p>}
+                                          {...register('registerPassword', {required: "Password is required"})}/>
+                            {errors.registerPassword && <p className="form-validation-failed">{errors.registerPassword.message}</p>}
+                        </FloatingLabel>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="registerPasswordConfirmation">
+                        <FloatingLabel label="Password" controlId="registerPasswordConfirmation">
+                            <Form.Control type="password" placeholder="Password"
+                                          {...register('registerPasswordConfirmation', {
+                                              validate: value => value === pw.current || "Those passwords didn’t match. Try again."
+                                          })}/>
+                            {errors.registerPasswordConfirmation && <p className="form-validation-failed">{errors.registerPasswordConfirmation.message}</p>}
                         </FloatingLabel>
                     </Form.Group>
 

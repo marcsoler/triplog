@@ -11,6 +11,8 @@ import {getPostBySlug, getPosts} from '../../store/actions/postActions';
 import usePostSelector from '../../hooks/usePostSelector';
 import usePostsSelector from '../../hooks/usePostsSelector';
 import {Post} from '../../store/types';
+import useCommentsSelector from '../../hooks/useCommentsSelector';
+import {getComments} from '../../store/actions/commentActions';
 
 
 const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
@@ -24,9 +26,11 @@ const Blog: FC<RouteComponentProps<{ id: string }>> = (props) => {
     useEffect(() => {
         dispatch(getPostBySlug(postId));
         dispatch(getPosts());
+        dispatch(getComments());
     }, [dispatch, postId]);
 
     const {post} = usePostSelector();
+    const {comments} = useCommentsSelector();
     const {posts} = usePostsSelector();
 
     useEffect(() => {
