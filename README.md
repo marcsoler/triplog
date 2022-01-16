@@ -3,7 +3,7 @@
 
 Triplog is a small blogging application written in React which uses the Google Maps API to log about an adventure on the road.
 
-##Content
+## Content
 * [Prerequisites](#prerequisites)
 * [Getting started](#getting-started)
 * [Modules](#modules)

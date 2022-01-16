@@ -29,6 +29,7 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
     const [selectedTrip, setSelectedTrip] = useState<Trip>();
     const [selectedSlug, setSelectedSlug] = useState<string>();
     const [postSlugTaken, setPostSlugTaken] = useState<boolean>(false);
+    const [defaultValues, setDefaultValues] = useState({});
 
     const {trips} = useTripsSelector();
 
@@ -57,16 +58,15 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
         handleSubmit,
         setValue,
         getValues,
-    } = useForm<IPostFormData>({
-        defaultValues: slug ? {
-            title: post?.title,
-            slug: post?.slug,
-            subtitle: post?.subtitle,
-            content: post?.content,
-            trip: post?.trip,
-            position: post?.position,
-        } : {}
-    });
+        reset
+    } = useForm<IPostFormData>();
+
+    useEffect(() => {
+        if(post) {
+            reset(post);
+        }
+    }, [post, reset]);
+    
 
 
     const onSubmit: SubmitHandler<IPostFormData> = data => {
