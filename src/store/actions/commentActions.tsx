@@ -1,7 +1,6 @@
 import firebaseApp from '../../firebase/firebaseApp';
 
 import {
-    arrayUnion,
     arrayRemove,
     getFirestore,
     addDoc,
@@ -10,7 +9,7 @@ import {
     query,
     getDocs,
     orderBy,
-    where,
+    arrayUnion,
     doc,
     updateDoc, getDoc, setDoc, deleteDoc
 } from 'firebase/firestore';
@@ -62,8 +61,6 @@ export const storeComment = (data: ICommentFormData): ThunkAction<void, RootStat
             type: SET_COMMENTS,
             payload: commentsData,
         });
-
-
     }
 }
 
@@ -82,7 +79,7 @@ export const getComments = (): ThunkAction<void, RootState, null, CommentsAction
     }
 }
 
-export const addReaction = (comment: Comment, userId: string, onVote: () => void, onAlreadyVoted: () => void): ThunkAction<void, RootState, null, CommentAction> => {
+export const addReaction = (comment: Comment, user: User, onVote: () => void, onAlreadyVoted: () => void): ThunkAction<void, RootState, null, CommentAction> => {
     return async dispatch => {
         const commentDocRef = doc(db, 'comments', comment.id!);
 
@@ -92,11 +89,11 @@ export const addReaction = (comment: Comment, userId: string, onVote: () => void
 
         if (c.reactions) {
             if (c.reactions.find((r) => {
-                return r.user_id === userId;
+                return r.user_id === user.id;
             })) {
                 await updateDoc(commentDocRef, {
                     reactions: arrayRemove({
-                        user_id: userId
+                        user_id: user.id
                     } as Reaction)
                 }).then(() => {
                     onAlreadyVoted();
@@ -105,13 +102,14 @@ export const addReaction = (comment: Comment, userId: string, onVote: () => void
             }
         }
 
-        updateDoc(commentDocRef, {
+        /*
+        await updateDoc(commentDocRef, {
             reactions: [...c.reactions, {user_id: userId}] as Reaction[]
         }).then(() => {
             onVote();
         });
+         */
 
-        /*
         await updateDoc(commentDocRef, {
             reactions: arrayUnion({
                 user_id: user.id
@@ -119,8 +117,6 @@ export const addReaction = (comment: Comment, userId: string, onVote: () => void
         }).then(() => {
             onVote();
         });
-
-         */
 
         return;
     }
@@ -139,7 +135,6 @@ export const approveComment = (comment: Comment): ThunkAction<void, RootState, n
                 type: SET_COMMENTS,
                 payload: commentsData,
             });
-
         }).catch((error) => console.error('An error happened!'));
     }
 }

@@ -32,8 +32,6 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
 
     const {trips} = useTripsSelector();
 
-
-
     useEffect(() => {
         if (slug) {
             dispatch(getPostBySlug(slug));
@@ -72,9 +70,6 @@ const PostForm: FC<PostFormProps> = ({slug}) => {
 
 
     const onSubmit: SubmitHandler<IPostFormData> = data => {
-
-        console.log(data);
-
         dispatch(createPost(data));
     };
 

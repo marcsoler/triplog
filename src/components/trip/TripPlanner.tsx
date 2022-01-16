@@ -23,7 +23,6 @@ const TripPlanner: FC = () => {
     const [mapRef, setMapRef] = useState<google.maps.Map>();
     const [libraries] = useState<('drawing' | 'geometry' | 'localContext' | 'places' | 'visualization')[]>(['geometry']);
     const [mode, setMode] = useState<google.maps.TravelMode>();
-    const [name, setName] = useState<string>('');
     const [waypoints, setWaypoints] = useState<google.maps.LatLng[]>([]);
     const [dirRef, setDirRef] = useState<google.maps.DirectionsRenderer>()
     const [dirResponse, setDirResponse] = useState<google.maps.DirectionsResult | null>();
@@ -129,36 +128,20 @@ const TripPlanner: FC = () => {
 
     }
 
-
     const coverImg = watch('imageUrl');
     useEffect(() => {
         if (coverImg && coverImg.length) {
-
             optimizeImages(coverImg as unknown as FileList, (result: compressedFileType[]) => {
-
                 const newFiles: TripCoverImage[] = [];
-
                 result.forEach((compressedFile) => {
                     uploadToStorage(compressedFile.file, compressedFile.variant, (url) => {
                         newFiles.push({url: url, variant: compressedFile.variant});
                     }).then();
                 });
-
-
                 setProcessedFiles(newFiles);
-
             }).then();
         }
     }, [coverImg]);
-
-    /*
-    useEffect(() => {
-        if (processedFiles) {
-            console.log(processedFiles);
-        }
-    }, [processedFiles]);
-
-     */
 
 
     const onMapLoad = useCallback(
@@ -202,7 +185,7 @@ const TripPlanner: FC = () => {
     }
 
     const handleFormReset = () => {
-        if (window.confirm('Are you sure?')) { //todo: createAppConfirmModal
+        if (window.confirm('Are you sure?')) {
             if (startMarker) {
                 startMarker.setMap(null);
             }
@@ -211,7 +194,6 @@ const TripPlanner: FC = () => {
         }
         return;
     }
-
 
     return (
         <Container className="trip-planner content">
@@ -240,8 +222,7 @@ const TripPlanner: FC = () => {
                 </FloatingLabel>
                 <Form.Group className="mb-3" controlId="name">
                     <FloatingLabel label="Trip name" controlId="name">
-                        <Form.Control type="text" placeholder="name" {...register('name', {required: true})}
-                                      onChange={e => setName(e.currentTarget.value)}/>
+                        <Form.Control type="text" placeholder="name" {...register('name', {required: true})} />
                     </FloatingLabel>
                     {errors.name && <p className="form-validation-failed">The trip name is required</p>}
                 </Form.Group>
