@@ -117,7 +117,7 @@ const Home: FC = () => {
                 </section>
             )}
 
-            {otherTrips && (
+            {otherTrips?.length && (
                 <section className="content latest-trips">
                     <Container>
                         <Row>
