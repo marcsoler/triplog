@@ -117,7 +117,7 @@ const Home: FC = () => {
                 </section>
             )}
 
-            {otherTrips?.length && (
+            {otherTrips?.length ? (
                 <section className="content latest-trips">
                     <Container>
                         <Row>
@@ -135,10 +135,9 @@ const Home: FC = () => {
                         </Row>
                     </Container>
                 </section>
-            )}
+            ):''}
 
             {!latestPost && (
-
                 <section className="content">
                     <Container>
                         <Row>
